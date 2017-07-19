@@ -18,26 +18,30 @@
 <?php
 	foreach ($data['list'] as $it) {
 		?>
-		<div id="permission">
-		<a role="button" data-toggle="collapse" href="#collapse<?php echo $it->menuName;?>" aria-expanded="false" aria-controls="collapse<?php echo $it->menuName;?>" class="modal-title"><?php echo str_replace("_", " ", $it->menuName);?></a>
+		<div id="permission" class="permision_div">
+		<a role="button" data-toggle="collapse" href="#collapse<?php echo $it->menuName;?>" aria-expanded="false" aria-controls="collapse<?php echo $it->menuName;?>" class="modal-title">
+		<i class="fa fa-chevron-right" aria-hidden="true"></i>
+		<?php echo str_replace("_", " ", $it->menuName);?></a>
 		<div class="collapse" id="collapse<?php echo $it->menuName;?>">
-		  <div>
+		  <div class="sub_level">
 		    <?php
 		    	if(count($it->childrens) > 0)
 		    	{
 		    		foreach ($it->childrens as $c)
 		    		{
 		    			?>
-		    			<a role="button" data-toggle="collapse" href="#collapse<?php echo $c->menuName;?>" aria-expanded="false" aria-controls="collapse<?php echo $c->menuName;?>" class="modal-title"><i class="fa fa-fw fa-arrow-right" style="color: #00a65a"></i><?php echo str_replace("_", " ", $c->menuName);?></a><br>
+						<a role="button" data-toggle="collapse" href="#collapse<?php echo $c->menuName;?>" aria-expanded="false" aria-controls="collapse<?php echo $c->menuName;?>" class="modal-title ">
+						<i class="fa fa-fw fa-arrow-right" style="color: #00a65a"></i><?php echo str_replace("_", " ", $c->menuName);?></a>
 		    			<div class="collapse" id="collapse<?php echo $c->menuName;?>">
-		  					<div>
+		  					<div>	
 		  					<?php
 			  					foreach ($c->actions as $a) {
 			    						if($a['grpactId'] == null)
-						    				echo '<input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 10%;" '.($data['read'] == true ? 'disabled="disabled"' : '').'>'.$a['actDescription'].'<br>';
+						    				echo ' </div></duv>  <input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 10%;" '.($data['read'] == true ? 'disabled="disabled"' : '').'>'.$a['actDescription'].'';
 						    			else
-						    				echo '<input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 10%;" '.($data['read'] == true ? 'disabled="disabled"' : '').' checked>'.$a['actDescription'].'<br>';
+						    				echo ' <div class="action_item"> <input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 10%;" '.($data['read'] == true ? 'disabled="disabled"' : '').' checked>'.$a['actDescription'].'</div>';
 							    				}
+									
 		    				?>
 		  					</div>
 		  				</div>

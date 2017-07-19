@@ -27,7 +27,8 @@ body {
 body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    /*font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;*/
+    font-family: 'Open Sans', sans-serif;
     font-weight: 400;
     overflow-x: hidden;
     overflow-y: auto;
@@ -5401,4 +5402,48 @@ table.text-center th {
 
 .tt-suggestion p {
     margin: 0;
+}
+
+.permision_div {
+    padding: 10px 0px 15px 10px;
+}
+
+.permision_div a.modal-title {
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+}
+
+.permision_div .sub_level {
+    /*padding: 10px 0px 15px 10px;
+    border: 1px solid red !important;*/
+    height: auto;
+    min-height: 120px;
+}
+
+.permision_div .sub_level a {
+    height: auto;
+    float: left;
+    width: 100%;
+    margin-top: 10px;
+    padding-left: 5%;
+}
+
+.permision_div .sub_level .in {
+    min-height: 150px;
+    margin-bottom: 20px !important;
+}
+
+.permision_div .sub_level .in .action_item {
+    float: left;
+    margin-top: 2px;
+    width: 100%;
+    height: 30px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.permision_div .sub_level .in .action_item input {
+    margin-right: 10px;
 }

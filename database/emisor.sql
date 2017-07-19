@@ -1,0 +1,11 @@
+insert into sismenu VALUES (null, 'Agentes', 'fa fa-user-secret', 'agent', '',null);
+insert into sismenu VALUES (null, 'Emisores', 'fa fa-chevron-right', 'agent', 'emisor_list',(Select menuId from sismenu where menuName = 'Agentes'));
+insert into sismenuactions values (null, (Select menuId from sismenu where menuName = 'Emisores'),(select actId from sisactions where actDescription = 'Add'));
+insert into sismenuactions values (null, (Select menuId from sismenu where menuName = 'Emisores'),(select actId from sisactions where actDescription = 'Edit'));
+insert into sismenuactions values (null, (Select menuId from sismenu where menuName = 'Emisores'),(select actId from sisactions where actDescription = 'Del'));
+insert into sismenuactions values (null, (Select menuId from sismenu where menuName = 'Emisores'),(select actId from sisactions where actDescription = 'View'));
+insert into sismenu VALUES (null, 'Tenedores', 'fa fa-chevron-right', 'agent', 'tenedor_list',(Select menuId from sismenu where menuName = 'Agentes'));
+insert into sismenuactions values (null, (Select menuId from sismenu where menuName = 'Tenedores'),(select actId from sisactions where actDescription = 'Add'));
+insert into sismenuactions values (null, (Select menuId from sismenu where menuName = 'Tenedores'),(select actId from sisactions where actDescription = 'Edit'));
+insert into sismenuactions values (null, (Select menuId from sismenu where menuName = 'Tenedores'),(select actId from sisactions where actDescription = 'Del'));
+insert into sismenuactions values (null, (Select menuId from sismenu where menuName = 'Tenedores'),(select actId from sisactions where actDescription = 'View'));

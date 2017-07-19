@@ -8,11 +8,14 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.4 -->
     <link rel="stylesheet" href="<?php  echo base_url();?>assets/css/bootstrap.min.css">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="<?php  echo base_url();?>assets/css/font-awesome.min.css">
     <!-- <link rel="stylesheet" href="<?php  echo base_url();?>assets/css/font-awesome.min.css"> -->
     <!-- Theme style -->
-    <link rel="stylesheet" href="<?php  echo base_url();?>assets/css/AdminLTE.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+    <link rel="stylesheet" href="<?php  echo base_url();?>assets/css/AdminLTE.css">
+    
     <!-- iCheck -->
     <link rel="stylesheet" href="<?php  echo base_url();?>assets/plugin/iCheck/square/blue.css">
     <!-- Ionicons -->
