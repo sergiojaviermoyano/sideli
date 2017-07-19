@@ -1,6 +1,6 @@
       <footer class="main-footer">
         <div class="pull-right hidden-xs">
-          <b>Version</b> 1.0.0
+          <b>Version</b> <?php echo Globals::getVersion();?>
         </div>
         <strong>Copyright &copy; 2017 <a href="http://indevla.com">Indev</a>.</strong> Todos los derechos reservados.
       </footer>
