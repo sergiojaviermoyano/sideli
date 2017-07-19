@@ -5,9 +5,11 @@
         <!-- Logo -->
         <a href="#" class="logo">
           <!-- mini logo for sidebar mini 50x50 pixels -->
-          <span class="logo-mini">C<b>MC</b></span>
+          <!--<span class="logo-mini"><?php echo strtoupper(substr(Globals::getTitle(), 0, 1));?><b><?php echo strtoupper(substr(Globals::getTitle2(), 0, 1));?></b></span>-->
+          <span class="logo-mini"><b>S</b>d<b>L</b></span>
           <!-- logo for regular state and mobile devices -->
-          <span class="logo-lg">Cuyo<b> Materiales</b></span>
+          <!--<span class="logo-lg"><?php echo Globals::getTitle();?><b><?php echo Globals::getTitle2();?></b></span>-->
+          <span class="logo-lg"><b>Si</b>de<b>Li</b></span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
