@@ -31,8 +31,7 @@ class Configurations extends CI_Model
 			$insert = array(
 					'title1'				=> $data['title1'],
 					'title2'				=> $data['title2'],
-					'utilizaordendecompra'	=> $data['orcomp'],
-					'validezpresupuesto'	=> $data['dias']
+					'version'				=> $data['version']
 				);
 
 			if($this->db->update('configuracion', $insert) == false) {

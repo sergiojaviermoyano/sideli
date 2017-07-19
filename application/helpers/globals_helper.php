@@ -5,6 +5,7 @@ class Globals
 {
     private static $title;
     private static $title2;
+    private static $version;
 
     private static function initialize()
     {
@@ -17,6 +18,7 @@ class Globals
 
         self::$title = $data['conf']['title1'];
         self::$title2 = $data['conf']['title2'];
+        self::$version = $data['conf']['version'];
     }
 
     /*
@@ -37,5 +39,11 @@ class Globals
     {
         self::initialize();
         return self::$title2;
+    }
+
+    public static function getVersion()
+    {
+        self::initialize();
+        return self::$version;
     }
 }
