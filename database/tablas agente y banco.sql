@@ -44,12 +44,18 @@ CREATE TABLE `agente` (
 DROP TABLE IF EXISTS `banco`;
 CREATE TABLE `banco` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `razon_social` varchar(200) DEFAULT NULL,
-  `sucursal` varchar(150) DEFAULT NULL,
-  `estado` enum('ac','in') DEFAULT NULL,
-  `created` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `razon_social` varchar(200) NOT NULL,
+  `sucursal` varchar(150) NOT NULL,
+  `estado` enum('ac','in') DEFAULT 'ac',
+  `created` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `razon_social` (`razon_social`,`sucursal`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of banco
+-- ----------------------------
+INSERT INTO `banco` VALUES ('1', 'Nación', 'Caucete', 'ac', '2017-07-20 16:51:03');
 
 -- ----------------------------
 -- Records of banco
