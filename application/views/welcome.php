@@ -40,10 +40,14 @@
     }
 
     .content .btns{
+        margin-top: 20px;
         font-weight: 500;
         color: #2B2B2B;
         border-color: #2B2B2B;
         text-decoration: none;
+        border-radius: 0;
+        
+        width:150px;
     }
 
     </style>
@@ -51,7 +55,7 @@
     <div class="content">
         <h1>SE</h1>
         <h2>Soluciones Empresariales</h2>
-        <a href="login" class="btn btn-bs btns">Ingresar</a>
+        <a href="login" class="btn btn-default btn-flat btns">Ingresar</a>
     </div>
 
     <!-- jQuery first, then Tether, then Bootstrap JS. -->
