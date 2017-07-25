@@ -20,6 +20,25 @@
               </tr>
             </thead>
             <tbody>
+              <?php
+              	foreach($list as $g)
+		        {
+		                echo '<tr>';
+		                echo '<td>';
+                    if (strpos($permission,'Edit') !== false) {
+		                	echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadGrp('.$g['grpId'].',\'Edit\')"></i>';
+                    }
+		                if (strpos($permission,'Del') !== false) {
+                      echo '<i class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadGrp('.$g['grpId'].',\'Del\')"></i>';
+                    }
+		                if (strpos($permission,'View') !== false) {
+                      echo '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadGrp('.$g['grpId'].',\'View\')"></i>';
+                    }
+		                echo '</td>';
+		                echo '<td style="text-align: left">'.$g['grpName'].'</td>';
+		                echo '</tr>';
+		        }
+              ?>
             </tbody>
           </table>
         </div><!-- /.box-body -->
@@ -29,8 +48,6 @@
 </section><!-- /.content -->
 
 <script>
-
-  /*
   $(function () {
     //$("#groups").DataTable();
     $('#groups').DataTable({
@@ -53,115 +70,6 @@
                 }
           }
       });
-  });*/
-
-  $(function () {
-
-    var datatable_es={
-    "sProcessing":     "Procesando...",
-    "sLengthMenu":     "Mostrar _MENU_ registros",
-    "sZeroRecords":    "No se encontraron resultados",
-    "sEmptyTable":     "Ningún dato disponible en esta tabla",
-    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
-    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-    "sInfoPostFix":    "",
-    "sSearch":         "Buscar:",
-    "sUrl":            "",
-    "sInfoThousands":  ",",
-    "sLoadingRecords": "Cargando...",
-    "oPaginate": {
-        "sFirst":    "Primero",
-        "sLast":     "Último",
-        "sNext":     "Siguiente",
-        "sPrevious": "Anterior"
-    },
-    "oAria": {
-        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-    }
-};
-
-    var dataTable= $('#order_table').DataTable({
-      "processing": true,
-      "serverSide": true,
-      "paging": true,
-      "lengthChange": true,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": true,
-      "language":datatable_es,
-      'ajax':{
-          "dataType": 'json',
-          //"contentType": "application/json; charset=utf-8",
-          "method": "POST",
-          "url":'index.php/order/listingOrders',
-          "dataSrc": function (json) {
-            var output=[];
-            var permission=$("#permission").val();
-            permission= permission.split('-');
-            $.each(json.data,function(index,item){
-              var td_1="";
-                  td_1+='<i class="fa fa-fw fa-print" style="color: #A4A4A4; cursor: pointer; margin-left: 15px;" onclick="Print('+item.ocId+')"></i>';
-
-                  if(permission.indexOf("Edit")>0  && item.ocEstado=='AC'){
-                    td_1+='<i  class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadOrder('+item.ocId+',\'Edit\')"></i>';
-                  }
-
-                  if(permission.indexOf("Del")>0){
-                    td_1+='<i  class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadOrder('+item.ocId+',\'Del\')"></i>';
-                  }
-
-                  if(permission.indexOf("View")>0){
-                    td_1+='<i  class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadOrder('+item.ocId+',\'View\')"></i>';
-                  }
-
-              var td_2="";
-                 if(item.ocEsPresupuesto==1){
-                   td_2+= '<small class="label pull-left bg-navy" style="font-size: 14px; margin-right: 5px;" title="Presupuesto">P</small>  &nbsp; &nbsp; ';
-                 }
-                 td_2+= item.ocObservacion;//item.ocObservacion;
-              
-              var date = new Date(item.ocFecha);
-                        
-              var month = date.getMonth() + 1;
-              var td_3=("0"+date.getDate()).slice(-2)+'-'+("0"+ month).slice(-2)+'-'+("0"+date.getFullYear()).slice(-4)+' '+("0"+date.getHours()).slice(-2)+':'+("0"+date.getMinutes()).slice(-2);
-              
-              var td_4="";
-
-              switch (item.ocEstado) {
-                case 'AC':{
-                  td_4='<small class="label pull-left bg-green">Activa</small>';
-                  break;
-                }
-                case 'IN':{
-                  td_4='<small class="label pull-left bg-red">Inactiva</small>';
-                  break;
-                }
-                case 'FA':{
-                  td_4='<small class="label pull-left bg-blue">Facturada</small>';
-                  break;
-                }
-                default:{
-                  td_4='';
-                  break;
-                }
-              }
-              //for(i=0;i<=100000;i++){
-                output.push([td_1,td_2,td_3,td_4]);
-
-              //}
-
-            });
-            return output;
-          },
-          error:function(the_error){
-            console.debug(the_error);
-          }
-        }
-
-    });
   });
 
   var idGrupo = 0;
