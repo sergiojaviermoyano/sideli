@@ -4,7 +4,9 @@
     <div class="col-xs-12">
       <div class="box">
         <div class="box-header">
-          <h3 class="box-title">Emisores</h3>
+           
+          <h3 class="box-title"><?php echo ($type=='1')?'Emisores':'Tenedores';?> </h3>
+          <input type="hidden" name="agent_type" id="agent_type" value="<?php echo $type;?>">
           <?php
           if (strpos($permission,'Add') !== false) {
             echo '<button class="btn btn-block btn-success btn-flat" style="width: 100px; margin-top: 10px;" data-toggle="modal" onclick="LoadEmi(0,\'Add\')" id="btnAdd">Agregar</button>';
@@ -12,7 +14,7 @@
           ?>
         </div><!-- /.box-header -->
         <div class="box-body">
-          <table id="emisores" class="table table-bordered table-hover dataTable">
+          <table id="agentes_table" class="table table-bordered table-hover dataTable">
             <thead>
               <tr>
                 
@@ -42,7 +44,7 @@
     <div class="modal-content" >
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel"><span id="modalAction"> </span> Emisor</h4>
+        <h4 class="modal-title" id="myModalLabel"><span id="modalAction"> </span> <?php echo ($type=='1')?'Emisor':'Tenedor';?></h4>
       </div>
       <div class="modal-body form-horizontal" id="modalBodyEmisor" >
 
@@ -56,32 +58,8 @@
 </div>
 
 <script>
-    /*
-  $(function () {
-    $('#users').DataTable({
-            "paging": true,
-      "lengthChange": true,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": true,
-      "language": {
-            "lengthMenu": "Ver _MENU_ filas por página",
-            "zeroRecords": "No hay registros",
-            "info": "Mostrando pagina _PAGE_ de _PAGES_",
-            "infoEmpty": "No hay registros disponibles",
-            "infoFiltered": "(filtrando de un total de _MAX_ registros)",
-            "sSearch": "Buscar:  ",
-            "oPaginate": {
-                "sNext": "Sig.",
-                "sPrevious": "Ant."
-              }
-        }
-    });
-  });*/
 
   $(function () {
-
     var datatable_es={
     "sProcessing":     "Procesando...",
     "sLengthMenu":     "Mostrar _MENU_ registros",
@@ -107,7 +85,7 @@
     }
 };
 
-    var dataTable= $('#emisores').DataTable({
+    var dataTable= $('#agentes_table').DataTable({
       "processing": true,
       "serverSide": true,
       "paging": true,
@@ -121,16 +99,16 @@
           "dataType": 'json',
           //"contentType": "application/json; charset=utf-8",
           "method": "POST",
-          "url":'index.php/agent/listingEmisores',
+          "url":'index.php/agent/listingAgent/'+$("#agent_type").val(),
           "dataSrc": function (json) {
-            console.debug("==> resultado: %o",json);
+            //console.debug("==> resultado: %o",json);
             var output=[];
             var permission=$("#permission").val();
             permission= permission.split('-');
             $.each(json.data,function(index,item){
-              console.debug("==> permission: %o:",permission);
-              console.debug("==> permission: %o",permission.indexOf("Edit"));
-              console.debug("==> emisor: %o - %o:",index,item);
+              //console.debug("==> permission: %o:",permission);
+              //console.debug("==> permission: %o",permission.indexOf("Edit"));
+              //console.debug("==> emisor: %o - %o:",index,item);
               
               
               var td_2=item.nombre;
@@ -178,14 +156,17 @@
   function LoadEmi(id_, action){
   	idEmisor = id_;
   	acEmisor = action;
+    console.debug(" => id_: %o",id_);
+    console.debug(" => action: %o",action);
+    
   	LoadIconAction('modalAction',action);
   	WaitingOpen('Cargando Emisores');
       $.ajax({
           	type: 'POST',
           	data: { id : id_, act: action },
-    		url: 'index.php/agent/getEmisor', 
+    		url: 'index.php/agent/getAgente/'+$("#agent_type").val(), 
     		success: function(result){
-          console.debug(" => result: %o",result);
+          //console.debug(" => result: %o",result);
 			                WaitingClose();
 			                $("#modalBodyEmisor").html(result.html);
 			                setTimeout("$('#modalEmisor').modal('show')",800);
@@ -208,45 +189,45 @@
   	}
 
   	var hayError = false;
-    if($('#EmisorNombre').val() == '')
+    if($('#AgenteNombre').val() == '')
     {
     	hayError = true;
     }
 
-    if($('#EmisorApellido').val() == '')
+    if($('#AgenteApellido').val() == '')
     {
       hayError = true;
     }
 
-    if($('#EmisorCuit').val() == '')
+    if($('#AgenteCuit').val() == '')
     {
       hayError = true;
     }
     /*
-    if($('#EmisorRazonSocial').val() == '')
+    if($('#AgenteRazonSocial').val() == '')
     {
       hayError = true;
     }
-    if($('#EmisorDomicilio').val() == '')
+    if($('#AgenteDomicilio').val() == '')
     {
       hayError = true;
     }
-    if($('#EmisorTelefono').val() == '')
+    if($('#AgenteTelefono').val() == '')
     {
       hayError = true;
     }
-    if($('#EmisorCelular').val() == '')
+    if($('#AgenteCelular').val() == '')
     {
       hayError = true;
     }
-    if($('#EmisorEmail').val() == '')
+    if($('#AgenteEmail').val() == '')
     {
       hayError = true;
     }
     */
 
 
-    /*if($('#EmisorPassword').val() != $('#EmisorPasswordConf').val()){
+    /*if($('#AgentePassword').val() != $('#AgentePasswordConf').val()){
       hayError = true;
     }*/
     console.debug("===> hayError: %o",hayError);
@@ -261,22 +242,29 @@
       type: 'POST',
       data: { 
         act: acEmisor, 
-        id: $('#EmisorId').val(),        
-        nombre: $('#EmisorNombre').val(),
-        apellido: $('#EmisorApellido').val(),
-        cuit: $('#EmisorCuit').val(),
-        razon_social: $('#EmisorRazonSocial').val(),
-        domicilio: $('#EmisorDomicilio').val(),
-        telefono: $('#EmisorTelefono').val(),
-        celular: $('#EmisorCelular').val(),
-        email: $('#EmisorEmail').val(),        
-        tipo: $('#EmisorTipo').val()
+        id: $('#AgenteId').val(),        
+        nombre: $('#AgenteNombre').val(),
+        apellido: $('#AgenteApellido').val(),
+        cuit: $('#AgenteCuit').val(),
+        razon_social: $('#AgenteRazonSocial').val(),
+        domicilio: $('#AgenteDomicilio').val(),
+        telefono: $('#AgenteTelefono').val(),
+        celular: $('#AgenteCelular').val(),
+        email: $('#AgenteEmail').val(),        
+        tipo: $('#AgenteTipo').val()
       },
-      url: 'index.php/agent/setEmisor', 
+      url: 'index.php/agent/setAgente', 
       success: function(result){
         WaitingClose();
         $('#modalEmisor').modal('hide');
-        setTimeout("cargarView('user', 'index', '"+$('#permission').val()+"');",1000);
+        if($("#agent_type").val()==1){
+          setTimeout("cargarView('agent', 'emisor_list', '"+$('#permission').val()+"');",1000);
+        }else if($("#agent_type").val()==2){
+          setTimeout("cargarView('agent', 'tenedor_list', '"+$('#permission').val()+"');",1000);
+        }else{
+          setTimeout("cargarView('agent', 'emisor_list', '"+$('#permission').val()+"');",1000);
+        }
+        
       },
       error: function(result){
         WaitingClose();

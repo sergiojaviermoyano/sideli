@@ -12,52 +12,52 @@
 <div class="form-group">
   <label class="col-sm-3">Nombre <strong style="color: #dd4b39">*</strong>: </label>
   <div class="col-sm-9">
-    <input type="text" class="form-control" id="EmisorNombre" name="EmisorNombre" value="<?php echo $data['emisor']['nombre'] ?>"/>
+    <input type="text" class="form-control" id="AgenteNombre" name="AgenteNombre" value="<?php echo $data['agente']['nombre'] ?>"/>
   </div>
 </div>
 <div class="form-group">
   <label class="col-sm-3">Apellido <strong style="color: #dd4b39">*</strong>: </label>
   <div class="col-sm-9">
-    <input type="text" class="form-control" id="EmisorApellido" name="EmisorApellido" value="<?php echo $data['emisor']['apellido'] ?>"/>
+    <input type="text" class="form-control" id="AgenteApellido" name="AgenteApellido" value="<?php echo $data['agente']['apellido'] ?>"/>
   </div>
 </div>
 <div class="form-group">
   <label class="col-sm-3">Cuit <strong style="color: #dd4b39">*</strong>: </label>
   <div class="col-sm-9">
-    <input type="text" class="form-control" id="EmisorCuit" name="EmisorCuit" value="<?php echo $data['emisor']['cuit'] ?>"/>
+    <input type="text" class="form-control" id="AgenteCuit" name="AgenteCuit" value="<?php echo $data['agente']['cuit'] ?>"/>
   </div>
 </div>
 <div class="form-group">
   <label class="col-sm-3">Razon Social : </label>
   <div class="col-sm-9">
-    <input type="text" class="form-control" id="EmisorRazonSocial" name="EmisorRazonSocial" value="<?php echo $data['emisor']['razon_social'] ?>"/>
+    <input type="text" class="form-control" id="AgenteRazonSocial" name="AgenteRazonSocial" value="<?php echo $data['agente']['razon_social'] ?>"/>
   </div>
 </div>
 <div class="form-group">
   <label class="col-sm-3">Domicilio : </label>
   <div class="col-sm-9">
-    <input type="text" class="form-control" id="EmisorDomicilio" name="EmisorDomicilio"  value="<?php echo $data['emisor']['domicilio'] ?>"/>
+    <input type="text" class="form-control" id="AgenteDomicilio" name="AgenteDomicilio"  value="<?php echo $data['agente']['domicilio'] ?>"/>
   </div>
 </div>
 <div class="form-group">
   <label class="col-sm-3">Teléfono : </label>
   <div class="col-sm-9">
-    <input type="text" class="form-control" id="EmisorTelefono"  name="EmisorTelefono" name="EmisorTelefono" value="<?php echo $data['emisor']['telefono'] ?>"/>
+    <input type="text" class="form-control" id="AgenteTelefono"  name="AgenteTelefono" name="AgenteTelefono" value="<?php echo $data['agente']['telefono'] ?>"/>
   </div>
 </div>
 
 <div class="form-group">
   <label class="col-sm-3">Celular : </label>
   <div class="col-sm-9">
-    <input type="text" class="form-control" id="EmisorCelular" name="EmisorCelular" value="<?php echo $data['emisor']['celular'] ?>"/>
+    <input type="text" class="form-control" id="AgenteCelular" name="AgenteCelular" value="<?php echo $data['agente']['celular'] ?>"/>
   </div>
 </div>
 <div class="form-group">
   <label class="col-sm-3">Email : </label>
   <div class="col-sm-9">
-    <input type="email" class="form-control" id="EmisorEmail" name="EmisorEmail" value="<?php echo $data['emisor']['email'] ?>"/>
+    <input type="email" class="form-control" id="AgenteEmail" name="AgenteEmail" value="<?php echo $data['agente']['email'] ?>"/>
   </div>
 </div>
 
-<input type="hidden"  id="EmisorId" name="EmisorId" value="<?php echo $data['emisor']['id']?>" >
-<input type="hidden"  id="EmisorTipo" name="EmisorTipo" value="<?php echo $data['emisor']['tipo']?>" >
+<input type="hidden"  id="AgenteId" name="AgenteId" value="<?php echo $data['agente']['id']?>" >
+<input type="hidden"  id="AgenteTipo" name="AgenteTipo" value="<?php echo $data['agente']['tipo']?>" >

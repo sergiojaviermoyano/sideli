@@ -11,42 +11,49 @@ class agent extends CI_Controller {
 
 	public function index($permission)
 	{
-		$data['list'] = $this->Agents->Emisor_List();
+		$data['list'] = $this->Agents->Agent_List();
 		$data['permission'] = $permission;
 		echo json_encode($this->load->view('emisor/list', $data, true));
 	}
 
-	public function emisor_list($permission)
-	{
-		$data['list'] = $this->Agents->Emisor_List();
+	public function emisor_list($permission){
+		//$data['list'] = array();//$this->Agents->Agent_List(1);
+		$data['type'] = 1;
+		$data['permission'] = $permission;
+		echo json_encode($this->load->view('agent/emisor_list', $data, true));
+	}
+	public function tenedor_list($permission){
+		//$data['list'] = $this->Agents->Agent_List(2);
+		$data['type'] = 2;
 		$data['permission'] = $permission;
 		echo json_encode($this->load->view('agent/emisor_list', $data, true));
 	}
 
-	public function listingEmisores(){
-
-		$totalEmisores=$this->Agents->getTotalEmisores($_REQUEST);
-		$emisores = $this->Agents->Emisores_List_datatable($_REQUEST);
+	public function listingAgent($type=false){		
+		$totalAgentes=$this->Agents->getTotalAgentes($_REQUEST);
+		$agentes = $this->Agents->Agentes_List_datatable($_REQUEST,$type);
 
 		$result=array(
 			'draw'=>$_REQUEST['draw'],
-			'recordsTotal'=>$totalEmisores,
-			'recordsFiltered'=>$totalEmisores,
-			'data'=>$emisores,
+			'recordsTotal'=>$totalAgentes,
+			'recordsFiltered'=>$totalAgentes,
+			'data'=>$agentes,
 		);
 		echo json_encode($result);
 	}
 
-	public function getEmisor(){
 
-		$data['data'] = $this->Agents->getEmisor($this->input->post());
+
+	public function getAgente($type=false){
+		
+		$data['data'] = $this->Agents->getAgente($this->input->post(),$type);
 		$response['html'] = $this->load->view('agent/emisor_view_', $data, true);
 		echo json_encode($response);
 
 	}
 
-	public function setEmisor(){
-		$data = $this->Agents->setAgent($this->input->post());
+	public function setAgente(){
+		$data = $this->Agents->setAgente($this->input->post());
 		if($data  == false)
 		{
 			echo json_encode(false);
