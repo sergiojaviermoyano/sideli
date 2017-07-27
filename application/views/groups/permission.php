@@ -37,7 +37,7 @@
 		  					<?php
 			  					foreach ($c->actions as $a) {
 			    						if($a['grpactId'] == null)
-						    				echo ' </div></duv>  <input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 10%;" '.($data['read'] == true ? 'disabled="disabled"' : '').'>'.$a['actDescription'].'';
+						    				echo ' <div class="action_item"> <input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 10%;" '.($data['read'] == true ? 'disabled="disabled"' : '').'>'.$a['actDescription'].'</div>';
 						    			else
 						    				echo ' <div class="action_item"> <input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 10%;" '.($data['read'] == true ? 'disabled="disabled"' : '').' checked>'.$a['actDescription'].'</div>';
 							    				}
