@@ -34,4 +34,16 @@ class bank extends CI_Controller {
 			echo json_encode(true);	
 		}
 	}
+
+	public function buscadorDeBancos(){
+		$data = $this->Banks->search($this->input->post());
+		if($data  == false)
+		{
+			echo json_encode(false);
+		}
+		else
+		{
+			echo json_encode($data);
+		}
+	}
 }

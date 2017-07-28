@@ -173,7 +173,7 @@
     					},
     		error: function(result){
     					WaitingClose();
-    					alert("error");
+    					ProcesarError(result.responseText, 'modalEmisor');
     				},
           	dataType: 'json'
     		}); 

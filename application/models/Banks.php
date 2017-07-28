@@ -103,5 +103,30 @@ class Banks extends CI_Model
 
 		}
 	}
+
+	function search($data = null){
+		$str = '';
+		if($data != null){
+			$str = $data['code'];
+		}
+
+		$banks = array();
+
+		$this->db->select('*');
+		$this->db->from('banco');
+		$this->db->where(array('estado'=>'AC'));
+		if($str != ''){
+			$this->db->like('razon_social', $str);
+			$this->db->or_like('sucursal', $str);
+		}
+		$this->db->order_by('razon_social asc', 'sucursal asc');
+		$query = $this->db->get();
+		if ($query->num_rows()!=0)
+		{
+			$banks = $query->result_array();
+		}
+
+		return $banks;
+	}
 }
 ?>
