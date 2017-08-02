@@ -23,8 +23,8 @@ class check extends CI_Controller {
 		echo json_encode($response);
 	}
 	
-	public function setCheck(){
-		$data = $this->Checks->setCheck($this->input->post());
+	public function setCheck_(){
+		$data = $this->Checks->setCheck_($this->input->post());
 		if($data  == false)
 		{
 			echo json_encode(false);

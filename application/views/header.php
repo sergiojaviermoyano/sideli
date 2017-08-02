@@ -68,9 +68,13 @@
     <!-- Select2 -->
     <script src="<?php  echo base_url();?>assets/plugin/select2/select2.js"></script>
 
+    <!-- Mask iinput date -->
+    <script src="<?php  echo base_url();?>assets/plugin/input-mask/jquery.inputmask.js"></script>
+    <script src="<?php  echo base_url();?>assets/plugin/input-mask/jquery.inputmask.extensions.js"></script>
+    <script src="<?php  echo base_url();?>assets/plugin/input-mask/jquery.inputmask.date.extensions.js"></script>
+    
     <!--
     <script src="<?php  echo base_url();?>assets/plugin/input-mask/jquery.inputmask.js"></script>
-    <script src="<?php  echo base_url();?>assets/plugin/input-mask/jquery.inputmask.date.extensions.js"></script>
     <script src="<?php  echo base_url();?>assets/plugin/input-mask/jquery.inputmask.extensions.js"></script>
     -->
 

@@ -12,11 +12,11 @@
       <label style="margin-top: 7px;">Banco <strong style="color: #dd4b39">*</strong>: </label>
     </div>
   <div class="col-xs-4">
-      <input type="hidden" id="bancoId">
-      <input type="text" class="form-control" placeholder="" id="razon_social" value="" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
+      <input type="hidden" id="bancoId" value="<?php echo $data['check']['bancoId'];?>">
+      <input type="text" class="form-control" placeholder="" id="razon_social"  value="<?php echo $data['check']['banco'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
     </div>
   <div class="col-xs-1">
-      <button type="button" class="btn btn-info" id="btnBuscar"><i class="fa fa-search"></i></button>
+      <button type="button" class="btn btn-info" id="btnBuscarBanco"><i class="fa fa-search"></i></button>
   </div>
 </div><br>
 
@@ -25,13 +25,13 @@
       <label style="margin-top: 7px;">Fecha <strong style="color: #dd4b39">*</strong>: </label>
     </div>
   <div class="col-xs-4">
-      <input type="text" class="form-control" placeholder="" id="fecha" value="<?php echo $data['bank']['sucursal'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
+      <input class="form-control" type="text" id="fecha"  value="<?php echo $data['check']['fecha'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>>
     </div>
   <div class="col-xs-2">
       <label style="margin-top: 7px;">Número <strong style="color: #dd4b39">*</strong>: </label>
     </div>
   <div class="col-xs-4">
-      <input type="text" class="form-control" placeholder="" id="sucursal" value="<?php echo $data['bank']['sucursal'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
+      <input type="text" class="form-control" placeholder="" id="numero"  value="<?php echo $data['check']['numero'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
     </div>
 </div><br>
 
@@ -40,13 +40,13 @@
       <label style="margin-top: 7px;">Vencimiento <strong style="color: #dd4b39">*</strong>: </label>
     </div>
   <div class="col-xs-4">
-      <input type="text" class="form-control" placeholder="" id="sucursal" value="<?php echo $data['bank']['sucursal'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
+      <input class="form-control" type="text" id="vencimiento"  value="<?php echo $data['check']['vencimiento'];?>"vencimiento <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>>
     </div>
   <div class="col-xs-2">
       <label style="margin-top: 7px;">Importe <strong style="color: #dd4b39">*</strong>: </label>
     </div>
   <div class="col-xs-4">
-      <input type="text" class="form-control" placeholder="" id="sucursal" value="<?php echo $data['bank']['sucursal'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
+      <input type="text" class="form-control" placeholder="" id="importe" value="<?php echo $data['check']['importe'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
     </div>
 </div><br>
 
@@ -54,18 +54,13 @@
   <div class="col-xs-2">
       <label style="margin-top: 7px;">Emisor <strong style="color: #dd4b39">*</strong>: </label>
     </div>
-  <div class="col-xs-5">
-      <input type="text" class="form-control" placeholder="" id="sucursal" value="<?php echo $data['bank']['sucursal'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
+  <div class="col-xs-9">
+      <input type="hidden" id="agenteId" value="<?php echo $data['check']['agenteId'];?>">
+      <input type="text" class="form-control" placeholder="" id="agente" value="<?php echo $data['check']['emisor'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
     </div>
   <div class="col-xs-1">
-      <button type="button" class="btn btn-info" id="btnSave"><i class="fa fa-search"></i></button>
+      <button type="button" class="btn btn-info" id="btnBuscarAgente"><i class="fa fa-search"></i></button>
   </div>
-  <div class="col-xs-2">
-      <label style="margin-top: 7px;">Es Propio <strong style="color: #dd4b39">*</strong>: </label>
-    </div>
-  <div class="col-xs-1">
-      <input type="checkbox" style="margin-top: 10px;">
-    </div>
 </div><br>
 
 <div class="row">
@@ -73,7 +68,7 @@
       <label style="margin-top: 7px;">Observación <strong style="color: #dd4b39">*</strong>: </label>
     </div>
   <div class="col-xs-10">
-      <input type="text" class="form-control" placeholder="" id="sucursal" value="<?php echo $data['bank']['sucursal'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
+      <input type="text" class="form-control" placeholder="" id="observacion" value="<?php echo $data['check']['observacion'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
     </div>
 </div><br>
 
@@ -81,7 +76,7 @@
 </div>
 
 <script>
-$('#btnBuscar').click(function(){
+$('#btnBuscarBanco').click(function(){
   buscadorDeBancos($('#razon_social').val(), $('#bancoId'), $('#razon_social'), $('#fecha'));
 });
 
@@ -92,4 +87,17 @@ $('#razon_social').keyup(function(e){
       buscadorDeBancos($('#razon_social').val(), $('#bancoId'), $('#razon_social'), $('#fecha'));
     }
   });
+
+$('#btnBuscarAgente').click(function(){
+  buscadorDeAgentes($('#agente').val(), $('#agenteId'), $('#agente'), $('#observacion'), 'E');
+});
+
+$('#agente').keyup(function(e){
+    var code = e.which;
+    if(code==13){
+      e.preventDefault();
+      buscadorDeAgentes($('#agente').val(), $('#agenteId'), $('#agente'), $('#observacion'), 'E');
+    }
+  });
+
 </script>

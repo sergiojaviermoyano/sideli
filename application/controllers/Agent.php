@@ -63,4 +63,16 @@ class agent extends CI_Controller {
 			echo json_encode(true);
 		}
 	}
+
+	public function buscadorDeAgentes(){
+		$data = $this->Agents->search($this->input->post());
+		if($data  == false)
+		{
+			echo json_encode(false);
+		}
+		else
+		{
+			echo json_encode($data);
+		}
+	}
 }

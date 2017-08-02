@@ -175,6 +175,33 @@ class Agents extends CI_Model
 		}
 	}
 	
-	
+	function search($data = null){
+		$str = '';
+		$type = 0;
+		if($data != null){
+			$str = $data['code'];
+			$type = $data['type'] == 'E' ? 1 : 2;
+		}
+
+		$agents = array();
+
+		$this->db->select('id, nombre, apellido, razon_social, cuit');
+		$this->db->from('agente');
+		$this->db->where(array('estado'=>'AC', 'tipo' => $type));
+		if($str != ''){
+			$this->db->like('razon_social', $str);
+			$this->db->or_like('nombre', $str);
+			$this->db->or_like('apellido', $str);
+			$this->db->or_like('cuit', $str);
+		}
+		$this->db->order_by('apellido asc', 'nombre asc');
+		$query = $this->db->get();
+		if ($query->num_rows()!=0)
+		{
+			$agents = $query->result_array();
+		}
+
+		return $agents;
+	}
 }
 ?>

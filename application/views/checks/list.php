@@ -15,9 +15,10 @@
           <table id="checks" class="table table-bordered table-hover">
             <thead>
               <tr>
-                <th width="20%">Acciones</th>
+                <th width="10%">Acciones</th>
                 <th>Número</th>
                 <th>Banco</th>
+                <th>Emisor</th>
                 <th>Importe</th>
                 <th>Vencimiento</th>
                 <th>Estado</th>
@@ -43,9 +44,11 @@
   	                		
   	                echo '</td>';
   	                echo '<td style="text-align: right">'.$c['numero'].'</td>';
-                    echo '<td style="text-align: left">'.$c['bancoId'].'</td>';
+                    echo '<td style="text-align: left">'.$c['rsbco'].' Suc:'.$c['sucursal'].'</td>';
+                    echo '<td style="text-align: left">'.$c['apellido'].', '.$c['nombre'].' '.( $c['rsag'] != '' ? '('.$c['rsag'].')' : '').'</td>';
                     echo '<td style="text-align: right">'.$c['importe'].'</td>';
-                    echo '<td style="text-align: center">'.$c['vencimiento'].'</td>';
+                    $c['vencimiento'] = explode('-',$c['vencimiento']);
+                    echo '<td style="text-align: center">'.$c['vencimiento'][2].'-'.$c['vencimiento'][1].'-'.$c['vencimiento'][0].'</td>';
                     echo '<td style="text-align: center">'.($c['estado'] === 'AC' ? '<small class="label bg-green">AC</small>': '<small class="label bg-yellow">IN</small>') .'</td>';
   	                echo '</tr>';
       		        }
@@ -85,22 +88,26 @@
   });
 
   
-  var id_ = 0;
+  var idx = 0;
   var action = '';
   
   function LoadCheque(id__, action_){
-  	id_ = id__;
+  	idx = id__;
   	action = action_;
   	LoadIconAction('modalAction',action);
     WaitingOpen('Cargando...');
       $.ajax({
           	type: 'POST',
-          	data: { id : id_, act: action_ },
+          	data: { id : idx, act: action_ },
     		url: 'index.php/check/getCheck', 
     		success: function(result){
 			                WaitingClose();
 			                $("#modalBodyCheque").html(result.html);
-			                setTimeout("$('#modalCheque').modal('show')",800);
+                      $("#fecha").inputmask("dd-mm-yyyy",{ "clearIncomplete": true });
+                      $("#vencimiento").inputmask("dd-mm-yyyy",{ "clearIncomplete": true });
+                      $("#importe").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+			                setTimeout("$('#modalCheque').modal('show');",800);
+                      setTimeout("$('#razon_social').focus();",1500);
     					},
     		error: function(result){
     					WaitingClose();
@@ -120,12 +127,32 @@
   	}
 
   	var hayError = false;
-    if($('#razon_social').val() == '')
+    if($('#bancoId').val() == '')
     {
     	hayError = true;
     }
 
-    if($('#sucursal').val() == '')
+    if($('#fecha').val().length != 10)
+    {
+      hayError = true;
+    }
+
+    if($('#numero').val() == '')
+    {
+      hayError = true;
+    }
+
+    if($('#vencimiento').val().length != 10)
+    {
+      hayError = true;
+    }
+
+    if($('#importe').val() == '')
+    {
+      hayError = true;
+    }
+
+    if($('#agenteId').val() == '')
     {
       hayError = true;
     }
@@ -137,20 +164,25 @@
 
     $('#error').fadeOut('slow');
     WaitingOpen('Guardando cambios');
+    debugger;
     	$.ajax({
           	type: 'POST',
           	data: { 
-                    id : id_, 
-                    act: action, 
-                    name: $('#razon_social').val(),
-                    sucu: $('#sucursal').val(),
-                    esta: $('#estado').val()
+                    id : idx, 
+                    act: action,
+                    bancoId: $('#bancoId').val(),
+                    fecha: $('#fecha').val(),
+                    numero: $('#numero').val(),
+                    vencimiento: $('#vencimiento').val(),
+                    importe: $('#importe').val(),
+                    agenteId: $('#agenteId').val(),
+                    observacion: $('#observacion').val()
                   },
-    		url: 'index.php/bank/setBank', 
+    		url: 'index.php/check/setCheck_', 
     		success: function(result){
                 			WaitingClose();
                 			$('#modalCheque').modal('hide');
-                			setTimeout("cargarView('bank', 'index', '"+$('#permission').val()+"');",1000);
+                			setTimeout("cargarView('check', 'index', '"+$('#permission').val()+"');",1000);
     					},
     		error: function(result){
     					WaitingClose();
