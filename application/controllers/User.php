@@ -7,6 +7,7 @@ class user extends CI_Controller {
         {
 		parent::__construct();
 		$this->load->model('Users');
+		$this->Users->updateSession(true);
 	}
 
 	public function index($permission)

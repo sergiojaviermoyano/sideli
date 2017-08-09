@@ -7,6 +7,7 @@ class agent extends CI_Controller {
         {
 		parent::__construct();
 		$this->load->model('Agents');
+		$this->Users->updateSession(true);
 	}
 
 	public function index($permission)
