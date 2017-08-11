@@ -15,11 +15,11 @@
           <table id="users" class="table table-bordered table-hover">
             <thead>
               <tr>
-                <th width="20%">Acciones</th>
                 <th>Usuario</th>
                 <th>Nombre</th>
                 <th>Apellido</th>
                 <th>Comisión</th>
+                <th width="20%">Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -29,21 +29,21 @@
                   //var_dump($u);
                   
 	                echo '<tr>';
-	                echo '<td>';
-                  if (strpos($permission,'Add') !== false) {
-	                	echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadUsr('.$u['usrId'].',\'Edit\')"></i>';
-                  }
-                  if (strpos($permission,'Del') !== false) {
-	                	echo '<i class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadUsr('.$u['usrId'].',\'Del\')"></i>';
-                  }
-                  if (strpos($permission,'View') !== false) {
-	                	echo '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadUsr('.$u['usrId'].',\'View\')"></i>';
-                  }
-	                echo '</td>';
 	                echo '<td style="text-align: left">'.$u['usrNick'].'</td>';
                   echo '<td style="text-align: left">'.$u['usrName'].'</td>';
                   echo '<td style="text-align: left">'.$u['usrLastName'].'</td>';
                   echo '<td style="text-align: right">'.$u['usrComision'].' %</td>';
+                  echo '<td>';
+                  if (strpos($permission,'Add') !== false) {
+                    echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadUsr('.$u['usrId'].',\'Edit\')"></i>';
+                  }
+                  if (strpos($permission,'Del') !== false) {
+                    echo '<i class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadUsr('.$u['usrId'].',\'Del\')"></i>';
+                  }
+                  if (strpos($permission,'View') !== false) {
+                    echo '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadUsr('.$u['usrId'].',\'View\')"></i>';
+                  }
+                  echo '</td>';
 	                echo '</tr>';
                   
     		        }

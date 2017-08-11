@@ -15,29 +15,29 @@
           <table id="groups" class="table table-bordered table-hover">
             <thead>
               <tr>
-                <th width="20%">Acciones</th>
                 <th>Nombre</th>
+                <th width="20%">Acciones</th>
               </tr>
             </thead>
             <tbody>
               <?php
-              	foreach($list as $g)
-		        {
+              foreach($list as $g)
+		          {
 		                echo '<tr>';
-		                echo '<td>';
+		                echo '<td style="text-align: left">'.$g['grpName'].'</td>';
+                    echo '<td>';
                     if (strpos($permission,'Edit') !== false) {
-		                	echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadGrp('.$g['grpId'].',\'Edit\')"></i>';
+                      echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadGrp('.$g['grpId'].',\'Edit\')"></i>';
                     }
-		                if (strpos($permission,'Del') !== false) {
+                    if (strpos($permission,'Del') !== false) {
                       echo '<i class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadGrp('.$g['grpId'].',\'Del\')"></i>';
                     }
-		                if (strpos($permission,'View') !== false) {
+                    if (strpos($permission,'View') !== false) {
                       echo '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadGrp('.$g['grpId'].',\'View\')"></i>';
                     }
-		                echo '</td>';
-		                echo '<td style="text-align: left">'.$g['grpName'].'</td>';
+                    echo '</td>';
 		                echo '</tr>';
-		        }
+		          }
               ?>
             </tbody>
           </table>
