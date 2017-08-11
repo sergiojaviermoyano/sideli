@@ -66,7 +66,7 @@ function BuscarBancoIn(){
                           $.each(resultList, function(index, result){
                               var row_ = '<tr>';
                               row_ += '<td width="1%"><i style="color: #00a65a; cursor: pointer;" class="fa fa-fw fa-check-square"';
-                              row_ += 'onClick="seleccionarBanco('+result.id+', \''+result.razon_social+'\', \''+result.sucursal+'\')"></i></td>';
+                              row_ += 'onClick="seleccionarBanco('+result.id+', \''+result.razon_social+'\', \'Suc: '+result.sucursal+'\')"></i></td>';
                               row_ += '<td>'+result.razon_social+'</td>';
                               row_ += '<td> Suc: '+result.sucursal+'</td>';
                               row_ += '<td style="display: none">'+result.id+'</td>';
