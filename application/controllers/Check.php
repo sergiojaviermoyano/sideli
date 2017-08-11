@@ -12,9 +12,22 @@ class check extends CI_Controller {
 
 	public function index($permission)
 	{
-		$data['list'] = $this->Checks->Check_List();
+		$data['list'] = array();
 		$data['permission'] = $permission;
 		echo json_encode($this->load->view('checks/list', $data, true));
+	}
+
+	public function listingCheques(){		
+		$totalCheques=$this->Checks->getTotalCheques($_REQUEST);
+		$cheques = $this->Checks->Cheques_List_datatable($_REQUEST);
+
+		$result=array(
+			'draw'=>$_REQUEST['draw'],
+			'recordsTotal'=>$totalCheques,
+			'recordsFiltered'=>$totalCheques,
+			'data'=>$cheques,
+		);
+		echo json_encode($result);
 	}
 
 	public function getCheck(){
