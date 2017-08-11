@@ -15,10 +15,10 @@
           <table id="fiscals" class="table table-bordered table-hover">
             <thead>
               <tr>
-                <th width="20%">Acciones</th>
                 <th>Nombre</th>
                 <th>Sucursal</th>
                 <th>Estado</th>
+                <th width="20%">Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -28,21 +28,21 @@
                 	foreach($list as $i)
       		        {
   	                echo '<tr>';                  
+  	                echo '<td style="text-align: left">'.$i['razon_social'].'</td>';
+                    echo '<td style="text-align: left">'.$i['sucursal'].'</td>';
+                    echo '<td style="text-align: center">'.($i['estado'] === 'ac' ? '<small class="label bg-green">AC</small>': '<small class="label bg-yellow">IN</small>') .'</td>';
                     echo '<td>';
                     if (strpos($permission,'Edit') !== false) {
                         echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadBanco('.$i['id'].',\'Edit\')"></i>';
                     }
-  	                if (strpos($permission,'Del') !== false) {
+                    if (strpos($permission,'Del') !== false) {
                         echo '<i class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadBanco('.$i['id'].',\'Del\')"></i>';
                     }
                     if (strpos($permission,'View') !== false) {
                         echo '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadBanco('.$i['id'].',\'View\')"></i> ';
                     }
-  	                		
-  	                echo '</td>';
-  	                echo '<td style="text-align: left">'.$i['razon_social'].'</td>';
-                    echo '<td style="text-align: left">'.$i['sucursal'].'</td>';
-                    echo '<td style="text-align: center">'.($i['estado'] === 'ac' ? '<small class="label bg-green">AC</small>': '<small class="label bg-yellow">IN</small>') .'</td>';
+                        
+                    echo '</td>';
   	                echo '</tr>';
       		        }
                 }
