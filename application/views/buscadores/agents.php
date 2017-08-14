@@ -79,7 +79,8 @@ function BuscarAgenteIn(){
                           $.each(resultList, function(index, result){
                               var row_ = '<tr>';
                               row_ += '<td width="1%"><i style="color: #00a65a; cursor: pointer;" class="fa fa-fw fa-check-square"';
-                              row_ += 'onClick="seleccionarAgente('+result.id+',  \''+result.nombre+'\' \, \''+result.apellido+'\'  '+( result.razon_social != '' ? '('+result.razon_social+')' : '')+', \''+result.cuit+'\')"></i></td>';
+                              var string = '\''+result.apellido+' ,'+result.nombre + ( result.razon_social != '' ? '('+result.razon_social+')' : '')+'\'';
+                              row_ += 'onClick="seleccionarAgente('+result.id+', '+string+', \''+result.cuit+'\')"></i></td>';
                               row_ += '<td>'+result.apellido+', '+result.nombre+' '+ ( result.razon_social != '' ? '('+result.razon_social+')' : '')+'</td>';
                               row_ += '<td>'+result.cuit+'</td>';
                               row_ += '<td style="display: none">'+result.id+'</td>';

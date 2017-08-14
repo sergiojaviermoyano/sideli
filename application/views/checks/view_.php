@@ -16,7 +16,7 @@
       <input type="text" class="form-control" placeholder="" id="razon_social"  value="<?php echo $data['check']['banco'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
     </div>
   <div class="col-xs-1">
-      <button type="button" class="btn btn-info" id="btnBuscarBanco"><i class="fa fa-search"></i></button>
+      <button type="button" class="btn btn-info" id="btnBuscarBanco"  <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>><i class="fa fa-search"></i></button>
   </div>
 </div><br>
 
@@ -59,7 +59,7 @@
       <input type="text" class="form-control" placeholder="" id="agente" value="<?php echo $data['check']['emisor'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
     </div>
   <div class="col-xs-1">
-      <button type="button" class="btn btn-info" id="btnBuscarAgente"><i class="fa fa-search"></i></button>
+      <button type="button" class="btn btn-info" id="btnBuscarAgente" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>><i class="fa fa-search"></i></button>
   </div>
 </div><br>
 

@@ -15,7 +15,6 @@ class Checks extends CI_Model
 		$this->db->join('banco bo','bo.id=ch.bancoId');
 		$this->db->join('agente ag','ag.id=ch.agenteId');
 		$query = $this->db->get();
-		//$query= $this->db->get('cheques');
 		
 		if ($query->num_rows()!=0)
 		{
@@ -24,6 +23,65 @@ class Checks extends CI_Model
 		else
 		{
 			return false;
+		}
+	}
+
+	function getTotalCheques($data=null){
+
+		$this->db->order_by('created', 'desc');
+		if($data['search']['value']!=''){
+            $this->db->group_start();
+			$this->db->like('numero', $data['search']['value']);
+			$this->db->or_like('importe', $data['search']['value']);
+			$this->db->or_like('bo.razon_social', $data['search']['value']);
+			$this->db->or_like('ag.nombre', $data['search']['value']);
+			$this->db->or_like('ag.apellido', $data['search']['value']);
+			$this->db->or_like('ag.razon_social', $data['search']['value']); //DATE_FORMAT(date,'%d/%m/%Y')
+			//$this->db->or_like('DATE_FORMAT(vencimiento, "%d-%m-%Y")', $data['search']['value']);
+			$this->db->limit($data['length'],$data['start']);
+            $this->db->group_end();
+		}
+        
+		$this->db->select("ch.*, bo.razon_social as rsbco, bo.sucursal, ag.nombre, ag.apellido, ag.razon_social as rsag");
+		$this->db->from('cheques ch');
+		$this->db->join('banco bo','bo.id=ch.bancoId');
+		$this->db->join('agente ag','ag.id=ch.agenteId');
+		$query= $this->db->get();
+        
+		return $query->num_rows();
+		
+	}
+
+	function Cheques_List_datatable($data=null, $type=false){
+
+
+		$this->db->order_by('created', 'desc');
+		$this->db->limit($data['length'],$data['start']);
+		if($data['search']['value']!=''){
+			$this->db->group_start();
+			$this->db->like('numero', $data['search']['value']);
+			$this->db->or_like('importe', $data['search']['value']);
+			$this->db->or_like('bo.razon_social', $data['search']['value']);
+			$this->db->or_like('ag.nombre', $data['search']['value']);
+			$this->db->or_like('ag.apellido', $data['search']['value']);
+			$this->db->or_like('ag.razon_social', $data['search']['value']);
+			//$this->db->or_like('DATE_FORMAT(vencimiento, "%d-%m-%Y")', $data['search']['value']);
+			$this->db->limit($data['length'],$data['start']);
+            $this->db->group_end();
+		}
+		$this->db->select("ch.*, bo.razon_social as rsbco, bo.sucursal, ag.nombre, ag.apellido, ag.razon_social as rsag");
+		$this->db->from('cheques ch');
+		$this->db->join('banco bo','bo.id=ch.bancoId');
+		$this->db->join('agente ag','ag.id=ch.agenteId');
+		$query= $this->db->get();
+        
+		if ($query->num_rows()!=0)
+		{
+			return $query->result_array();
+		}
+		else
+		{
+			return array();
 		}
 	}
 	

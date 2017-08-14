@@ -4,20 +4,16 @@
     <div class="col-xs-12">
       <div class="box">
         <div class="box-header">
-          <h3 class="box-title">Bancos</h3>
-          <?php
-            if (strpos($permission,'Add') !== false) {
-              echo '<button class="btn btn-block btn-success" style="width: 100px; margin-top: 10px;" data-toggle="modal" onclick="LoadBanco(0,\'Add\')" id="btnAdd">Agregar</button>';
-            }
-          ?>
+          <h3 class="box-title">Valores</h3>
         </div><!-- /.box-header -->
         <div class="box-body">
-          <table id="fiscals" class="table table-bordered table-hover">
+          <table id="values" class="table table-bordered table-hover">
             <thead>
               <tr>
-                <th>Nombre</th>
-                <th>Sucursal</th>
-                <th>Estado</th>
+                <th>Tasa</th>
+                <th>Impuesto</th>
+                <th>Gastos</th>
+                <th>Comisión</th>
                 <th width="20%">Acciones</th>
               </tr>
             </thead>
@@ -25,21 +21,19 @@
               <?php
                 if(isset($list)){
                   if($list != false)
-                	foreach($list as $i)
+                	foreach($list as $v)
       		        {
   	                echo '<tr>';                  
-  	                echo '<td style="text-align: left">'.$i['razon_social'].'</td>';
-                    echo '<td style="text-align: left">'.$i['sucursal'].'</td>';
-                    echo '<td style="text-align: center">'.($i['estado'] === 'ac' ? '<small class="label bg-green">AC</small>': '<small class="label bg-yellow">IN</small>') .'</td>';
+  	                echo '<td style="text-align: right">'.$v['tasa'].'</td>';
+                    echo '<td style="text-align: right">'.$v['impuestos'].'</td>';
+                    echo '<td style="text-align: right">'.$v['gastos'].'</td>';
+                    echo '<td style="text-align: right">'.$v['comision'].'</td>';
                     echo '<td>';
                     if (strpos($permission,'Edit') !== false) {
-                        echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadBanco('.$i['id'].',\'Edit\')"></i>';
-                    }
-                    if (strpos($permission,'Del') !== false) {
-                        echo '<i class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadBanco('.$i['id'].',\'Del\')"></i>';
+                        echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadValue('.$v['id'].',\'Edit\')"></i>';
                     }
                     if (strpos($permission,'View') !== false) {
-                        echo '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadBanco('.$i['id'].',\'View\')"></i> ';
+                        echo '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadValue('.$v['id'].',\'View\')"></i> ';
                     }
                         
                     echo '</td>';
@@ -58,7 +52,7 @@
 <script>
   $(function () {
     //$("#groups").DataTable();
-    $('#fiscals').DataTable({
+    $('#values').DataTable({
         "paging": true,
         "lengthChange": true,
         "searching": true,
@@ -84,7 +78,7 @@
   var id_ = 0;
   var action = '';
   
-  function LoadBanco(id__, action_){
+  function LoadValue(id__, action_){
   	id_ = id__;
   	action = action_;
   	LoadIconAction('modalAction',action);
@@ -92,15 +86,19 @@
       $.ajax({
           	type: 'POST',
           	data: { id : id_, act: action_ },
-    		url: 'index.php/bank/getBank', 
+    		url: 'index.php/valuegral/getValue', 
     		success: function(result){
 			                WaitingClose();
-			                $("#modalBodyFiscal").html(result.html);
-			                setTimeout("$('#modalFiscal').modal('show')",800);
+			                $("#modalBodyValuegral").html(result.html);
+                      $("#tasa").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+                      $("#impuestos").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+                      $("#gastos").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+                      $("#comision").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+			                setTimeout("$('#modalValuegral').modal('show')",800);
     					},
     		error: function(result){
     					WaitingClose();
-    					ProcesarError(result.responseText, 'modalFiscal');
+    					ProcesarError(result.responseText, 'modalValuegral');
     				},
           	dataType: 'json'
     		});
@@ -111,17 +109,27 @@
   	
   	if(action == 'View')
   	{
-  		$('#modalFiscal').modal('hide');
+  		$('#modalValuegral').modal('hide');
   		return;
   	}
 
   	var hayError = false;
-    if($('#razon_social').val() == '')
+    if($('#taza').val() == '')
     {
     	hayError = true;
     }
 
-    if($('#sucursal').val() == '')
+    if($('#impuestos').val() == '')
+    {
+      hayError = true;
+    }
+
+    if($('#gastos').val() == '')
+    {
+      hayError = true;
+    }
+
+    if($('#comision').val() == '')
     {
       hayError = true;
     }
@@ -138,19 +146,20 @@
           	data: { 
                     id : id_, 
                     act: action, 
-                    name: $('#razon_social').val(),
-                    sucu: $('#sucursal').val(),
-                    esta: $('#estado').val()
+                    tasa: $('#tasa').val(),
+                    impu: $('#impuestos').val(),
+                    gast: $('#gastos').val(),
+                    comi: $('#comision').val()
                   },
-    		url: 'index.php/bank/setBank', 
+    		url: 'index.php/valuegral/setValue', 
     		success: function(result){
                 			WaitingClose();
-                			$('#modalFiscal').modal('hide');
-                			setTimeout("cargarView('bank', 'index', '"+$('#permission').val()+"');",1000);
+                			$('#modalValuegral').modal('hide');
+                			setTimeout("cargarView('valuegral', 'index', '"+$('#permission').val()+"');",1000);
     					},
     		error: function(result){
     					WaitingClose();
-    					ProcesarError(result.responseText, 'modalFiscal');
+    					ProcesarError(result.responseText, 'modalValuegral');
     				},
           	dataType: 'json'
     		});
@@ -160,14 +169,14 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="modalFiscal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="modalValuegral" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel"><span id="modalAction"> </span> Banco</h4> 
+        <h4 class="modal-title" id="myModalLabel"><span id="modalAction"> </span> Valores</h4> 
       </div>
-      <div class="modal-body" id="modalBodyFiscal">
+      <div class="modal-body" id="modalBodyValuegral">
         
       </div>
       <div class="modal-footer">

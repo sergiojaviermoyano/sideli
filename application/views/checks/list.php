@@ -15,17 +15,18 @@
           <table id="checks" class="table table-bordered table-hover">
             <thead>
               <tr>
-                <th width="10%">Acciones</th>
                 <th>Número</th>
                 <th>Banco</th>
                 <th>Emisor</th>
                 <th>Importe</th>
                 <th>Vencimiento</th>
                 <th>Estado</th>
+                <th width="10%">Acciones</th>
               </tr>
             </thead>
             <tbody>
               <?php
+                /*
                 if(isset($list)){
                   if($list != false)
                 	foreach($list as $c)
@@ -49,10 +50,11 @@
                     echo '<td style="text-align: right">'.$c['importe'].'</td>';
                     $c['vencimiento'] = explode('-',$c['vencimiento']);
                     echo '<td style="text-align: center">'.$c['vencimiento'][2].'-'.$c['vencimiento'][1].'-'.$c['vencimiento'][0].'</td>';
-                    echo '<td style="text-align: center">'.($c['estado'] === 'AC' ? '<small class="label bg-green">AC</small>': '<small class="label bg-yellow">IN</small>') .'</td>';
+                    echo '<td style="text-align: center">'. .'</td>';
   	                echo '</tr>';
       		        }
                 }
+                */
               ?>
             </tbody>
           </table>
@@ -64,26 +66,89 @@
 
 <script>
   $(function () {
-    //$("#groups").DataTable();
-    $('#checks').DataTable({
-        "paging": true,
-        "lengthChange": true,
-        "searching": true,
-        "ordering": true,
-        "info": true,
-        "autoWidth": true,
-        "language": {
-              "lengthMenu": "Ver _MENU_ filas por página",
-              "zeroRecords": "No hay registros",
-              "info": "Mostrando página _PAGE_ de _PAGES_",
-              "infoEmpty": "No hay registros disponibles",
-              "infoFiltered": "(filtrando de un total de _MAX_ registros)",
-              "sSearch": "Buscar:  ",
-              "oPaginate": {
-                  "sNext": "Sig.",
-                  "sPrevious": "Ant."
-                }
+    var datatable_es={
+    "sProcessing":     "Procesando...",
+    "sLengthMenu":     "Mostrar _MENU_ registros",
+    "sZeroRecords":    "No se encontraron resultados",
+    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+    "sInfoPostFix":    "",
+    "sSearch":         "Buscar:",
+    "sUrl":            "",
+    "sInfoThousands":  ",",
+    "sLoadingRecords": "Cargando...",
+    "oPaginate": {
+        "sFirst":    "Primero",
+        "sLast":     "Último",
+        "sNext":     "Siguiente",
+        "sPrevious": "Anterior"
+    },
+    "oAria": {
+        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+    }
+};
+
+      var dataTable= $('#checks').DataTable({
+      "processing": true,
+      "serverSide": true,
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true,
+      "language":datatable_es,
+      'ajax':{
+          "dataType": 'json',
+          "method": "POST",
+          "url":'index.php/check/listingCheques',
+          "dataSrc": function (json) {
+            var output=[];
+            var permission=$("#permission").val();
+            permission= permission.split('-');
+            $.each(json.data,function(index,item){              
+              
+              var td_2=item.numero;
+              var td_3=item.rsbco;
+              var td_4=item.apellido + ' ,' + item.nombre + (item.rsag != null && item.rsag != '' ? '( ' + item.rsag + ') ' : '');
+              var td_5=item.importe;
+              var d = new Date(item.vencimiento);
+              var td_6= d.getDate()  + "-" + (d.getMonth()+1) + "-" + d.getFullYear();
+              switch(item.estado){
+                case 'AC':
+                  var td_7='<small class="label bg-green">AC</small>';
+                  break;
+
+                case 'IN':
+                  var td_7='<small class="label bg-yellow">IN</small>';
+                  break;
+              }
+              
+
+              var td_1="";
+                  if(permission.indexOf("Edit")>0  ){
+                    td_1+='<i  class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadCheque('+item.id+',\'Edit\')"></i>';
+                  }
+
+                  if(permission.indexOf("Del")>0){
+                    td_1+='<i  class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadCheque('+item.id+',\'Del\')"></i>';
+                  }
+
+                  if(permission.indexOf("View")>0){
+                    td_1+='<i  class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadCheque('+item.id+',\'View\')"></i>';
+                  }
+                output.push([td_2,td_3,td_4,td_5,td_6,td_7,td_1]);
+            });
+            return output;
+          },
+          error:function(the_error){
+            console.debug(the_error);
+          }
         }
+
     });
   });
 
