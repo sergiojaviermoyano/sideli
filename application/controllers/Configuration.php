@@ -7,6 +7,7 @@ class configuration extends CI_Controller {
         {
 		parent::__construct();
 		$this->load->model('Configurations');
+		$this->load->model('Groups');
 		$this->Users->updateSession(true);
 	}
 
@@ -26,6 +27,21 @@ class configuration extends CI_Controller {
 		{
 			echo json_encode(true);
 		}
+	}
+
+	public function menu(){
+		
+		$data['data'] =null;
+		//echo json_encode($this->load->view('configuration/menu', $data, true));
+		$this->load->view('header');
+		$userdata = $this->session->userdata('user_data');
+		$data['userName'] = $userdata[0]['usrNick'];
+		$this->load->view('dash', $data);
+		$menu['menu'] = $this->Groups->buildMenu();
+		$this->load->view('menu',$menu);
+		$this->load->view('configuration/menu');
+		$this->load->view('footerdash');
+		$this->load->view('footer');
 	}
 
 }

@@ -17,28 +17,28 @@
 <div class="form-group">
   <label class="col-sm-3">Razon Social : </label>
   <div class="col-sm-9">
-    <input type="text" class="form-control" id="InversorRazonSocial" name="InversorRazonSocial" value="<?php echo $data['inversor']['razon_social'] ?>"/>
+    <input type="text" class="form-control" id="InversorRazonSocial" name="InversorRazonSocial" value="<?php echo $data['inversor']['razon_social'] ?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>/>
   </div>
 </div>
 
 <div class="form-group">
   <label class="col-sm-3">Cuit <strong style="color: #dd4b39">*</strong>: </label>
   <div class="col-sm-9">
-    <input type="text" class="form-control" id="InversorCuit" name="InversorCuit" value="<?php echo $data['inversor']['cuit'] ?>"/>
+    <input type="text" class="form-control" id="InversorCuit" name="InversorCuit" value="<?php echo $data['inversor']['cuit'] ?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>/>
   </div>
 </div>
 
 <div class="form-group">
   <label class="col-sm-3">Domicilio : </label>
   <div class="col-sm-9">
-    <input type="text" class="form-control" id="InversorDomicilio" name="InversorDomicilio"  value="<?php echo $data['inversor']['domicilio'] ?>"/>
+    <input type="text" class="form-control" id="InversorDomicilio" name="InversorDomicilio"  value="<?php echo $data['inversor']['domicilio'] ?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>/>
   </div>
 </div>
 
 <div class="form-group">
   <label class="col-sm-3">Habilitado : </label>
   <div class="col-sm-9">
-    <input type="checkbox" class="" id="InversorEstado" name="InversorEstado"  value="1" <?php echo ((int)$data['inversor']['estado']==1)?'checked':''; ?> />
+    <input type="checkbox" class="" id="InversorEstado" name="InversorEstado"  value="1" <?php echo ((int)$data['inversor']['estado']==1)?'checked':''; ?> <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?> />
   </div>
 </div>
 

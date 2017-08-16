@@ -16,15 +16,10 @@
         <div class="box-body">
           <table id="agentes_table" class="table table-bordered table-hover dataTable">
             <thead>
-              <tr>
-                
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Domicílio</th>
-                <th>Teléfono</th>
-                <th>Celular</th>
+              <tr>                
+                <th>Nombre y Apellido</th>
+                <th>Cuit</th>
                 <th>Estado</th>
-                <th>Ingresado</th>
                 <th width="20%">Acciones</th>
               </tr>
             </thead>
@@ -97,46 +92,34 @@
       "language":datatable_es,
       'ajax':{
           "dataType": 'json',
-          //"contentType": "application/json; charset=utf-8",
           "method": "POST",
           "url":'index.php/agent/listingAgent/'+$("#agent_type").val(),
           "dataSrc": function (json) {
-            //console.debug("==> resultado: %o",json);
             var output=[];
             var permission=$("#permission").val();
             permission= permission.split('-');
-            $.each(json.data,function(index,item){
-              //console.debug("==> permission: %o:",permission);
-              //console.debug("==> permission: %o",permission.indexOf("Edit"));
-              //console.debug("==> emisor: %o - %o:",index,item);
+            $.each(json.data,function(index,item){        
               
-              
-              var td_2=item.nombre;
-              var td_3=item.apellido;
-              var td_4=item.domicilio;
-              var td_5=item.telefono ;
-              var td_6=item.celular;
-              var td_7="";
-              var td_8=item.created;
+              var td_2=item.nombre + ' ' +item.apellido;
+              var td_3=item.cuit;
+
+
+              var td_4=item.estado ;
 
               var td_1="";
-                 // td_1+='<i class="fa fa-fw fa-print" style="color: #A4A4A4; cursor: pointer; margin-left: 15px;" onclick="Print('+item.id+')"></i>';
+              if(permission.indexOf("Edit")>0  ){
+                td_1+='<i  class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadEmi('+item.id+',\'Edit\')"></i>';
+              }
 
-                  if(permission.indexOf("Edit")>0  ){
-                    td_1+='<i  class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadEmi('+item.id+',\'Edit\')"></i>';
-                  }
+              if(permission.indexOf("Del")>0){
+                td_1+='<i  class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadEmi('+item.id+',\'Del\')"></i>';
+              }
 
-                  if(permission.indexOf("Del")>0){
-                    td_1+='<i  class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadEmi('+item.id+',\'Del\')"></i>';
-                  }
-
-                  if(permission.indexOf("View")>0){
-                    td_1+='<i  class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadEmi('+item.id+',\'View\')"></i>';
-                  }
-              //for(i=0;i<=100000;i++){
-                output.push([td_2,td_3,td_4,td_5,td_6,td_7,td_8,td_1]);
-
-              //}
+              if(permission.indexOf("View")>0){
+                td_1+='<i  class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadEmi('+item.id+',\'View\')"></i>';
+              }
+              
+              output.push([td_2,td_3,td_4,td_1]);
 
             });
             return output;
@@ -169,6 +152,7 @@
           //console.debug(" => result: %o",result);
 			                WaitingClose();
 			                $("#modalBodyEmisor").html(result.html);
+                       $("#AgenteCuit").inputmask("99-99999999-9",{ "clearIncomplete": true });
 			                setTimeout("$('#modalEmisor').modal('show')",800);
     					},
     		error: function(result){
@@ -203,34 +187,7 @@
     {
       hayError = true;
     }
-    /*
-    if($('#AgenteRazonSocial').val() == '')
-    {
-      hayError = true;
-    }
-    if($('#AgenteDomicilio').val() == '')
-    {
-      hayError = true;
-    }
-    if($('#AgenteTelefono').val() == '')
-    {
-      hayError = true;
-    }
-    if($('#AgenteCelular').val() == '')
-    {
-      hayError = true;
-    }
-    if($('#AgenteEmail').val() == '')
-    {
-      hayError = true;
-    }
-    */
 
-
-    /*if($('#AgentePassword').val() != $('#AgentePasswordConf').val()){
-      hayError = true;
-    }*/
-    console.debug("===> hayError: %o",hayError);
     if(hayError == true){
     	$('#error').fadeIn('slow');
     	return;
