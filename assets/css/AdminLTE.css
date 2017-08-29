@@ -3502,10 +3502,22 @@ table.text-center th {
     border: 0;
 }
 
+.div-border {
+    border: 1px solid #00733e;
+    padding-bottom: 10px;
+    width: 48%;
+}
+
 @media (min-width: 768px) {
     .modal-content {
         -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.125);
         box-shadow: 0 2px 3px rgba(0, 0, 0, 0.125);
+    }
+    .modal-dialog_main {
+        border: 1px solid red;
+        min-width: 600px;
+        width: 80% !important;
+        margin: 10px auto;
     }
 }
 
@@ -5450,4 +5462,18 @@ table.text-center th {
 
 .permision_div .sub_level .in .action_item input {
     margin-right: 10px;
+}
+
+.ope_form legend {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 0px;
+}
+
+.ope_form .form-group {
+    margin-bottom: 05px;
+}
+
+.ope_form .form-group .form-control {
+    height: 25px;
 }
