@@ -191,9 +191,12 @@ class Groups extends CI_Model
 		$this->db->join('sismenu', 'sismenu.menuId = sismenuactions.menuId');
 		$this->db->where('sisgroups.grpId', $grpId);
 		$this->db->group_by('sismenu.menuName');
-		$this->db->order_by("sismenu.menuId", "asc");
 		$this->db->order_by("sismenu.menuFather", "asc");
+		$this->db->order_by("sismenu.menuId", "asc");
+		
 		$query = $this->db->get();
+
+		//echo $this->db->last_query();
 		
 		$menu = $query->result_array();
 
@@ -238,7 +241,6 @@ class Groups extends CI_Model
 				$main_menu[] = $m;
 			}		
 		}
-		
 		return $main_menu;
 	}
 }
