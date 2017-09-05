@@ -7,7 +7,7 @@ class agent extends CI_Controller {
         {
 		parent::__construct();
 		$this->load->model('Agents');
-		$this->Users->updateSession(true);
+		//$this->Users->updateSession(true);
 	}
 
 	public function index($permission)
@@ -66,6 +66,7 @@ class agent extends CI_Controller {
 	}
 
 	public function buscadorDeAgentes(){
+		
 		$data = $this->Agents->search($this->input->post());
 		if($data  == false)
 		{

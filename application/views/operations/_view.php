@@ -11,12 +11,12 @@
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="home">
         <div class="form-group">
-        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-           <h3>Emisor</h3>
+        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 title_section">
+           <h3 class="h3_section">Emisor</h3>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-4  col-xs-12">
             <label class="">CUIT : </label>
-            <input type="text" class="form-control" id="operationEmisorCuit" name="agente_emisor_id" />
+            <input type="text" class="form-control typeahead" data-provide="typeahead"  id="operationEmisorCuit" name="agente_emisor_id" value="" />
             
         </div>
         <div class="col-lg-3 col-md-3 col-sm-4  col-xs-12">
@@ -39,8 +39,8 @@
     <hr>
     
     <div class="form-group">
-        <div class="col-lg-2">
-           <h3>Cheque</h3>
+        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 title_section ">
+           <h3 class="h3_section">Cheque</h3>
         </div>
         <div class="col-lg-3">
             <label class="">Nro : </label>
@@ -61,8 +61,8 @@
     <hr>
     
     <div class="form-group">
-        <div class="col-lg-2">
-           <h3>Tomador</h3>
+        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 title_section">
+           <h3 class="h3_section">Tomador</h3>
         </div>
         <div class="col-lg-3">
             <label class="">CUIT : </label>
@@ -90,9 +90,9 @@
     <div class="form-group">
         
         <div>
-            <div class="col-lg-2">
-            <h3>Plazo</h3>
-        </div>
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 title_section">
+                <h3 class="h3_section">Plazo</h3>
+            </div>
             <div class="col-lg-2">
                 <label class="">Vencimiento : </label>
                 <input type="text" class="form-control" id="" name="" />
@@ -106,7 +106,7 @@
         
         <div>
             <div class="col-lg-2 text-right">
-                <h3>Tasas</h3>
+                <h3 class="h3_section">Tasas</h3>
             </div>
             <div class="col-lg-1">
                 <label class="">Mensual : </label>
@@ -124,8 +124,8 @@
    <div class="form-group">
         
         <div>
-            <div class="col-lg-2">
-            <h3>Intereses</h3>
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 title_section">
+            <h3 class="h3_section">Intereses</h3>
         </div>
             <div class="col-lg-1">
                 <label class="">Cliente : </label>
@@ -137,7 +137,7 @@
         
         <div class="">
             <div class="col-lg-1 text-right">
-                <h3>Comisión:</h3>
+                <h3 class="h3_section">Comisión:</h3>
             </div>
             <div class="col-xs-1 text-center">
                 <label class="">% : </label>
@@ -152,7 +152,7 @@
 
         <div class="">
             <div class="col-lg-2 text-right">
-                <h3>Neto:</h3>
+                <h3 class="h3_section">Neto:</h3>
             </div>
             <div class="col-xs-2">
                 <label class="">$ : </label>
@@ -166,7 +166,7 @@
    <hr>
     <div class="form-group">
         <div class="col-lg-2 ">
-            <h3>Cobros Varios</h3>
+            <h3 class="h3_section">Cobros Varios</h3>
         </div>
         <div class="col-lg-2">
             <label class="">Impuesto Cheque: </label>
@@ -178,7 +178,7 @@
             <input type="text" class="form-control" id="" name="" />
         </div>
         <div class="col-lg-2 text-right">
-            <h3></h3>
+            <h3 class="h3_section"></h3>
         </div>
         <div class="col-lg-1 ">
             <label class="">IVA: </label>
@@ -199,3 +199,50 @@
     
        
 </form>
+
+
+<script>
+    $(function(){
+
+        var emisor_cuit_input=$(this).find("input#operationEmisorCuit");
+        console.debug("===> emisor_cuit_input: %o",emisor_cuit_input.val());
+        emisor_cuit_input.typeahead({
+            minLength: 3,
+            items: 'all',
+            showHintOnFocus: false,
+            scrollHeight: 0,
+            source: function(query, process) {
+                var data_ajax={
+                    type: "POST",
+                    url: 'agent/buscadorDeAgentes',
+                     
+                    data: { action: 'search', code: query, type: 'E' },
+                    success: function(data) {
+                        objects = [];
+                        map = {};
+                        $.each(data, function(i, object) {
+                            var key = object.cuit + " - " + object.razon_social
+                            map[key] = object;
+                            objects.push(key);
+                        });
+                        return process(objects);
+                    },
+                    error: function(error_msg) {
+                        console.debug("ERROR: %o",error_msg);
+                        alert("error_msg: " + error_msg);
+                    },
+                    dataType: 'json'
+                };
+                $.ajax(data_ajax);
+                
+            }, updater: function(item) {
+                var data = map[item];
+                console.debug("ERROR: %o",data);
+                $("#operationEmisorNombre").val(data.nombre);
+                $("#operationEmisorApellido").val(data.apellido);
+                return data.cuit;
+            }
+        });
+        
+    });
+</script>

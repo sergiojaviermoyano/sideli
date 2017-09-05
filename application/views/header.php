@@ -86,6 +86,7 @@
 
     <!-- bootstrap color picker -->
     <script src="<?php  echo base_url();?>assets/plugin/colorpicker/bootstrap-colorpicker.min.js"></script>
+    <script src="<?php  echo base_url();?>assets/Typeahead/bootstrap3-typeahead.js"></script>
 
   
   </head>
