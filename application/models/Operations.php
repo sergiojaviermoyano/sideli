@@ -43,14 +43,25 @@ class Operations extends CI_Model
 				$temp=$query->result_array();				
 				$data['operation'] = $temp[0];
 			} else {
-				$temp = array();/*
-				$temp['id'] = null;
-				$temp['razon_social'] = '';
-				$temp['cuit'] = '';
-				$temp['domicilio'] = '';
-				$temp['estado'] = 0;*/
+				$temp = array();
 				$data['operation'] = $temp;
+				$query_val= $this->db->get('valores');
+
+				if($query_val->num_rows()>0){
+					$data['valores']=$query_val->row_array();
+				}else{
+					$data['valores']=array(
+						'id' =>'',
+						'tasa' =>0,      
+						'impuestos' =>0,
+						'gastos' =>0,
+						'comision' => 0
+					);
+				}
+				
 			}
+
+
 			
 			//Readonly
 			$readonly = false;
