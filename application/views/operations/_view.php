@@ -158,7 +158,7 @@
             </div>
             <div class="col-xs-2">
                 <label class="">$ : </label>
-                <input type="text" class="form-control" id="" name="" />
+                <input type="text" class="form-control" id="operationNeto" name="neto" />
             </div>
             
         
@@ -172,23 +172,23 @@
         </div>
         <div class="col-lg-2">
             <label class="">Impuesto Cheque: </label>
-            <input type="text" class="form-control" id="" name="" />
+            <input type="text" class="form-control" id="operationImpuestoCheque" data-valor=" <?php echo number_format($data['valores']['impuestos'],3,",",".") ?>" name="impuesto_cheque" />
         </div>
 
         <div class="col-lg-2">
             <label class="">Gastos: </label>
-            <input type="text" class="form-control" id="" name="" />
+            <input type="text" class="form-control" id="operationGasto" name="gastos"  value=" <?php echo number_format($data['valores']['gastos'],2,",",".") ?>"/>
         </div>
         <div class="col-lg-2 text-right">
             <h3 class="h3_section"></h3>
         </div>
         <div class="col-lg-1 ">
             <label class="">IVA: </label>
-            <input type="text" class="form-control" id="" name="" />
+            <input type="text" class="form-control" id="operationIva" name="iva" value="21" />
         </div>
         <div class="col-lg-1 ">
             <label class="">Sellado: </label>
-            <input type="text" class="form-control" id="" name="" />
+            <input type="text" class="form-control" id="operationSellado" name="sellado" value="0.0" />
         </div>        
 
     </div>
@@ -217,24 +217,62 @@
         var interes_input=$(this).find("input#opterationInteres");
         var comision_input=$(this).find("input#opterationComision");
         var comision_total_input=$(this).find("input#opterationComisionTotal");
-
+        var impuesto_cheque_input=$(this).find("input#operationImpuestoCheque");
+        var gasto_input=$(this).find("input#operationGasto");
+        var iva_input=$(this).find("input#operationIva");
+        var sellado_input=$(this).find("input#operationSellado");
+        var neto_input=$(this).find("input#operationNeto");
+        
+        
+        importe_input.on('change',function(){
+            dias_input.trigger('change');
+        });
         dias_input.on('change',function(){
            console.debug("\n==> Importe: %o",importe_input.val());
            var importe=parseFloat(importe_input.val());
            var tAnual=parseFloat(tasa_anual_input.val());
            var cantDias=$(this).val();
            var comision=parseFloat(comision_input.val().replace(',','.'));
+           var impuesto=parseFloat(impuesto_cheque_input.data('valor').replace(',','.'));
+           var gastos=parseFloat(gasto_input.val().replace(',','.'));
+           var iva=parseFloat(iva_input.val().replace(',','.'));
+           var sellado=parseFloat(sellado_input.val().replace(',','.'));
+           
            console.debug("\n==> Importe: %o",importe);
            console.debug("\n==> TasaAnual: %o",tAnual);
            console.debug("\n==> cantDias: %o",cantDias);
            console.debug("\n==> comision: %o",comision);
+           console.debug("\n==> impuesto: %o",impuesto );
+           console.debug("\n==> iva: %o",iva );
+           console.debug("\n==> sellado: %o",sellado );
            
            var interes= importe * (tAnual/365) * (cantDias/100);
-           console.debug(interes);
+           console.debug("\n==> Interes: %o",interes);
            interes_input.val(interes.toFixed(2));
-           comision_total= interes.toFixed(2)*comision/100;
+           var comision_total= importe.toFixed(2)*comision / 100;
            console.debug("\n==> comision_total: %o",comision_total);
            comision_total_input.val(comision_total.toFixed(2));
+           impuesto_cheque=(importe * impuesto)/100;
+           console.debug("\n==> impuesto_cheque: %o",impuesto_cheque);
+           impuesto_cheque_input.val(impuesto_cheque.toFixed(2));
+           var compra= importe-interes-impuesto_cheque-gastos;
+           console.debug("\n==> compra: %o",compra);
+           var neto1=compra - comision_total;
+           console.debug("\n==> neto1: %o",neto1);
+           
+           var iva_total=(interes+comision_total) *(iva/100 );
+           console.debug("\n==> iva_total: %o",iva_total);
+           var sellado_total=(importe*(0.5/100))+(importe*(0.5/100)*(20/100))+(importe*(0.5/100)*(20/100));
+           console.debug("\n==> sellado: %o",sellado);
+           sellado_input.val(sellado_total.toFixed(2));
+           
+           var neto_final=neto1-iva_total-sellado_total;
+           console.debug("\n==> neto_final: %o",neto_final.toFixed(2));
+           neto_input.val(neto_final.toFixed(2));
+           
+           
+           
+           
         });
         var d = new Date();
         var today = new Date(d.getFullYear(), d.getMonth(), d.getDate());
