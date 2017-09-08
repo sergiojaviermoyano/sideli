@@ -268,7 +268,7 @@
            
            var neto_final=neto1-iva_total-sellado_total;
            console.debug("\n==> neto_final: %o",neto_final.toFixed(2));
-           neto_input.val(neto_final.toFixed(2));
+           neto_input.val(neto_final.toFixed(2) );
            
            
            

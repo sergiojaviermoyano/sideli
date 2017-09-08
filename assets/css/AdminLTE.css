@@ -5530,6 +5530,13 @@ table.text-center th {
     z-index: 1051;
 }
 
+hr {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: 0;
+    border-top: 1px solid #bbb;
+}
+
 .ui-menu-item>a.ui-corner-all {
     display: block;
     padding: 3px 15px;
@@ -5541,7 +5548,7 @@ table.text-center th {
 }
 
 .ui-state-hover,
-&.ui-state-active {
+.ui-state-active {
     color: #ffffff;
     text-decoration: none;
     background-color: #0088cc;
@@ -5549,10 +5556,7 @@ table.text-center th {
     -webkit-border-radius: 0px;
     -moz-border-radius: 0px;
     background-image: none;
-}
-
--webkit-border-radius: 0px;
--moz-border-radius: 0px;
-background-image: none;
-
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    background-image: none;
 }
