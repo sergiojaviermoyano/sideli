@@ -3,15 +3,14 @@
 
    <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
-    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
-    <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
-    <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+    <li role="presentation" ><a href="#step1" id="step1_lk" aria-controls="step1" role="tab" data-toggle="tab">Cheque</a></li>
+    <li role="presentation"class="active" ><a href="#step2" id="step2_lk" aria-controls="step2" role="tab" data-toggle="tab">Inversor</a></li>
+    <li role="presentation"><a href="#step3"  id="step3_lk"aria-controls="step3" role="tab" data-toggle="tab">Resumen</a></li>  
   </ul>
 
   <!-- Tab panes -->
   <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="home">
+    <div role="tabpanel" class="tab-pane " id="step1">
         <div class="form-group">
         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 title_section">
            <h3 class="h3_section">Emisor</h3>
@@ -193,8 +192,77 @@
 
     </div>
     </div>
-    <div role="tabpanel" class="tab-pane" id="profile">Form 2</div>
-    <div role="tabpanel" class="tab-pane" id="messages">Form 3</div>
+    <div role="tabpanel" class="tab-pane active" id="step2">
+        <div class="form-group">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 title_section">
+                <h3 class="h3_section">Inversores</h3>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-4  col-xs-12">
+                <br>                
+                <label class="radio-inline">
+                    <input type="radio" id="OperationInversor1" name="inversor_id"  value="1"> Inversor 1
+                </label>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-4  col-xs-12"> 
+                <br>                
+                               
+                <label class="radio-inline">
+                    <input type="radio" id="OperationInversor2" name="inversor_id" value="1"> Inversor 2
+                </label>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-4  col-xs-12"> 
+                <br>                
+                               
+                <label class="radio-inline">
+                    <input type="radio" id="OperationInversor3" name="inversor_id" value="1"> Inversor 3
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 title_section">
+                <h3 class="h3_section">Obvervación: </h3>
+            </div>
+            <div class="col-lg-10 col-md-10 col-sm-12  col-xs-12">
+                <br>
+                <textarea name="observacion" id="operationObservacion" class="form-control" rows="10"></textarea>
+            </div>
+
+        </div>
+
+         <div class="form-group">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 title_section">
+                <h3 class="h3_section">Cheques Entregados: </h3>
+            </div>
+            <div class="col-lg-10 col-md-10 col-sm-12  col-xs-12">
+                <br>
+                <div class="row" id="check_outputs_1">
+                    <div class="col-lg-3 col-md-3 col-sm-12  col-xs-12">
+                        <button class="btn btn-succcess btn-lg add_check_out">Agregar Cheque</button>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-12  col-xs-12">
+                        <button class="btn btn-succcess btn-lg add_check_out hidden" disabled>Agregar Tranferencia</button>
+                    </div>
+                    
+                </div>   
+                <div class="col-lg-9">
+                    <table id="salid_tb" class="table table-responsive">
+                    <thead>
+                        <tr >
+                            <th class="text-center">Cheque Nroº</th>
+                            <th class="text-center">Importe</th>
+                            <th class="text-center">Fecha</th>
+                            <th class="text-center"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>     
+                </div>            
+            </div>
+        </div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="step3">Form 3</div>
     <div role="tabpanel" class="tab-pane" id="settings">Form 4</div>
   </div>
     
@@ -222,6 +290,15 @@
         var iva_input=$(this).find("input#operationIva");
         var sellado_input=$(this).find("input#operationSellado");
         var neto_input=$(this).find("input#operationNeto");
+        var step1_tb= $(this).find("button#btnNext1");
+        var back1_tb= $(this).find("button#btnBack1");
+        var save_tb= $(this).find("button#btnSave");
+        var cheque_salida_nro= $(this).find("button#operationCheckOutNro");
+        var cheque_salida_importe= $(this).find("button#operationCheckOutImporte");
+        var cheque_salida_fecha= $(this).find("button#operationCheckOutFecha");
+        var add_cheque_salida_bt= $(this).find("button.add_check_out");
+
+
         
         
         importe_input.on('change',function(){
@@ -237,6 +314,7 @@
            var gastos=parseFloat(gasto_input.val().replace(',','.'));
            var iva=parseFloat(iva_input.val().replace(',','.'));
            var sellado=parseFloat(sellado_input.val().replace(',','.'));
+           
            
            console.debug("\n==> Importe: %o",importe);
            console.debug("\n==> TasaAnual: %o",tAnual);
@@ -258,22 +336,21 @@
            var compra= importe-interes-impuesto_cheque-gastos;
            console.debug("\n==> compra: %o",compra);
            var neto1=compra - comision_total;
-           console.debug("\n==> neto1: %o",neto1);
-           
+           console.debug("\n==> neto1: %o",neto1);           
            var iva_total=(interes+comision_total) *(iva/100 );
            console.debug("\n==> iva_total: %o",iva_total);
            var sellado_total=(importe*(0.5/100))+(importe*(0.5/100)*(20/100))+(importe*(0.5/100)*(20/100));
            console.debug("\n==> sellado: %o",sellado);
-           sellado_input.val(sellado_total.toFixed(2));
-           
+           sellado_input.val(sellado_total.toFixed(2));           
            var neto_final=neto1-iva_total-sellado_total;
            console.debug("\n==> neto_final: %o",neto_final.toFixed(2));
-           neto_input.val(neto_final.toFixed(2) );
-           
+           neto_input.val(neto_final.toFixed(2) );         
            
            
            
         });
+
+        // CampoFecha de Veciento
         var d = new Date();
         var today = new Date(d.getFullYear(), d.getMonth(), d.getDate());
         fecha_vencimiento.datepicker({
@@ -282,14 +359,17 @@
             setDate: today,
             onSelect:function(dateText,int){
                 var from_date=today;
-                var days_to=new Date(int.currentYear,int.currentMonth,int.currentDay);
-                
+                var days_to=new Date(int.currentYear,int.currentMonth,int.currentDay);                
                 var total_days = (days_to - from_date) / (1000 * 60 * 60 * 24);
-                console.debug("===> int:%o",total_days);
                 dias_input.val(Math.round(total_days)+2);
                 dias_input.trigger('change');
             }
         });
+
+
+        
+
+        //Campo Banco autocomplete
         banco_input.typeahead({
             minLength: 3,
             items: 'all',
@@ -298,8 +378,7 @@
             source: function(query, process) {
                 var data_ajax={
                     type: "POST",
-                    url: 'bank/buscadorDeBancos',
-                     
+                    url: 'bank/buscadorDeBancos',                     
                     data: { action: 'search', code: query, type: 'E' },
                     success: function(data) {
                         if(data==false){
@@ -308,14 +387,13 @@
                         objects = [];
                         map = {};                        
                         $.each(data, function(i, object) {
-                           var key = object.razon_social
+                            var key = object.razon_social
                             map[key] = object;
                             objects.push(key);
                         });
                         return process(objects);
                     },
                     error: function(error_msg) {
-                        console.debug("ERROR: %o",error_msg);
                         alert("error_msg: " + error_msg);
                     },
                     dataType: 'json'
@@ -323,24 +401,20 @@
                 $.ajax(data_ajax);
             }
         });
-        
+
+
+        // Campo Emisor Cuit autocomplete 
         emisor_cuit_input.typeahead({
             minLength: 3,
             items: 'all',
             showHintOnFocus: false,
             scrollHeight: 0,
             source: function(query, process) {
-                
-                console.debug("==>emisor: %o",query);
-                
-                query=query.split("-").join("");
-                console.debug(query);                
+                query=query.split("-").join("");   
                 query=query.split("_").join("");
-                console.debug(query);
                 var data_ajax={
                     type: "POST",
-                    url: 'agent/buscadorDeAgentes',
-                     
+                    url: 'agent/buscadorDeAgentes',                     
                     data: { action: 'search', code: query, type: 'E' },
                     success: function(data) {
                         if(data==false){
@@ -348,7 +422,6 @@
                         }
                         objects = [];
                         map = {};
-
                         $.each(data, function(i, object) {
                            var key = object.cuit + " - " + object.razon_social
                             map[key] = object;
@@ -366,7 +439,6 @@
                 
             }, updater: function(item) {
                 var data = map[item];
-                console.debug("ERROR: %o",data);
                 $("#operationEmisorNombre").val(data.nombre);
                 $("#operationEmisorApellido").val(data.apellido);
                 return data.cuit;
@@ -378,17 +450,15 @@
             items: 'all',
             showHintOnFocus: false,
             scrollHeight: 0,
-            source: function(query, process) {
-               
+            source: function(query, process) {               
                 var data_ajax={
                     type: "POST",
-                    url: 'agent/buscadorDeAgentes',
-                     
+                    url: 'agent/buscadorDeAgentes',                     
                     data: { action: 'search', code: query, type: 'T' },
                     success: function(data) {
-                         if(data==false){
-                    return false;
-                }
+                        if(data==false){
+                            return false;
+                        }
                         objects = [];
                         map = {};
                         $.each(data, function(i, object) {
@@ -414,6 +484,87 @@
                 return data.cuit;
             }
         });
+
+        back1_tb.on('click',function(){
+            var step=$(this).data('step');
+            console.debug("===> BUTTON back1_tb clicked: %o",step);
+            $('.nav-tabs > .active').prev('li').find('a').trigger('click');
+            
+            var tab_index=$('.nav-tabs > li.active').index();
+            console.debug("===> BACK tab active: %o",tab_index);
+            if(tab_index==0){
+                $(this).addClass("hidden");
+                step1_tb.removeClass("hidden");
+            }else{
+                $(this).removeClass("hidden");                
+            }
+            step1_tb.removeClass("hidden");
+            
+            
+        });
+
+        step1_tb.on('click',function(){
+            var step=$(this).data('step');            
+            console.debug("===> BUTTON step1_bt clicked: %o",step);
+            $('.nav-tabs > .active').next('li').find('a').trigger('click');
+            var tab_index=$('.nav-tabs > li.active').index();
+            console.debug("===> NEXT tab active: %o",tab_index);
+             if(tab_index==2){
+                $(this).addClass("hidden");
+            }else{
+                $(this).removeClass("hidden");                
+            }
+            back1_tb.removeClass("hidden");
+            
+        });
+
+        /*save_tb.on('click',funtion(){
+
+        });*/
+
+        cheque_salida_fecha.datepicker(
+            {
+                minDate: today,
+                dateFormat: 'dd-mm-yy',
+                setDate: today,
+            }
+        );
+        
+        add_cheque_salida_bt.on('click',function(){
+            console.debug("====> Agregar Nuevo Cheque");
+            total_rows=0;
+            if($("#salid_tb").find("tbody tr:last").length>0){
+                total_rows= $("#salid_tb").find("tbody tr").length;
+                next_row=$("#salid_tb").find("tbody tr:last").data('next')+1;
+            }else{
+                total_rows=0;
+                next_row=1;
+            }
+
+            var total_rows= $("#salid_tb").find("tbody tr").length;
+            var last= $("#salid_tb").find("tbody tr:last").data();
+            var new_row='<tr id="tr_'+(next_row-1)+'" data-next="'+next_row+'" >' ;
+                new_row+='<td><input type="text" class="form-control nro" name="cheque_salida[\''+next_row+'\'][\'nro\']" id="operation_'+next_row+'_CheckOutNro"  placeholder="Nro Cheque"></td>';
+                new_row+='<td><input type="text" class="form-control importe" name="cheque_salida[\''+next_row+'\'][\'importe\']" id="operation_'+next_row+'_CheckOutImporte"  placeholder="Importe"></td>';
+                new_row+='<td><input type="text" class="form-control datepicker" name="cheque_salida[\''+next_row+'\'][\'fecha\']" id="operation_'+next_row+'_CheckOutFecha"  placeholder="Fecha"></td>';
+                new_row+='<td><button class="btn btn-danger btn-xs bt_check_delete" data-id="'+(next_row-1)+'">Eliminar</button></td>'
+                new_row+='</tr>';
+            $("#salid_tb").find("tbody").append(new_row);
+            return false;
+        });
+
+        $(document).on('click','.bt_check_delete',function(){
+            var id=$(this).data('id');
+            console.debug("===> DELETE CHEQUE: %o",id);
+
+            if($("#salid_tb").find("tbody tr#tr_"+id).length>0){
+                $("#salid_tb").find("tbody tr#tr_"+id).remove();
+            }
+            return false;
+        });
+
+        
+
         
     });
 </script>

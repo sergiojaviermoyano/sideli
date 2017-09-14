@@ -70,6 +70,7 @@
         $.ajax({
             type: 'POST',
             //data: null,
+            //url: '<?php echo base_url(); ?>index.php/'+controller+'/'+metodh+'/'+actions,
             url: '<?php echo base_url(); ?>index.php/'+controller+'/'+metodh+'/'+actions,
             success: function(result){
                           WaitingClose();

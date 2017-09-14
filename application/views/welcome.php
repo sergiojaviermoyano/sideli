@@ -25,10 +25,14 @@
     }
 
     .content {
-        
+        background-image: url('./assets/images/bck1.jpg');
+        background-position: center center;
         text-align:center;
+        vertical-align: middle;
         margin-top:20%;
         color: #2B2B2B;
+        border: 1px solid red;
+        min-height:300px;
     }
     .content h1{
         font-family: 'Archivo Black', sans-serif;
