@@ -5,7 +5,7 @@
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" ><a href="#step1" id="step1_lk" aria-controls="step1" role="tab" data-toggle="tab">Cheque</a></li>
     <li role="presentation"class="active" ><a href="#step2" id="step2_lk" aria-controls="step2" role="tab" data-toggle="tab">Inversor</a></li>
-    <li role="presentation"><a href="#step3"  id="step3_lk"aria-controls="step3" role="tab" data-toggle="tab">Resumen</a></li>  
+    <li role="presentation" class="active" ><a href="#step3"  id="step3_lk"aria-controls="step3" role="tab" data-toggle="tab">Resumen</a></li>  
   </ul>
 
   <!-- Tab panes -->
@@ -192,7 +192,7 @@
 
     </div>
     </div>
-    <div role="tabpanel" class="tab-pane active" id="step2">
+    <div role="tabpanel" class="tab-pane " id="step2">
         <div class="form-group">
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 title_section">
                 <h3 class="h3_section">Inversores</h3>
@@ -262,7 +262,143 @@
             </div>
         </div>
     </div>
-    <div role="tabpanel" class="tab-pane" id="step3">Form 3</div>
+    <div role="tabpanel" class="tab-pane active" id="step3">
+        <h2>Liquidacion de Compra de Valores</h2>
+        <h3>Inversor SRL</h3>
+        <h4>CLIENTE:       <span> LOREM ITSU</span> </h4>
+        <h4>DOMICILIO:     <span>MENDOZA 0</span> </h4>
+        <h4>CUI:           <span>00-000000-0</span> </h4>
+        <h4>OPERACION NRO: <span> 00000000</span> </h4>
+        <table class="table table-bordered table-responsive table-striped">
+            <thead>
+                <tr>
+                    <th>BANCO</th>
+                    <th>Nro</th>
+                    <th>Librador</th>
+                    <th>Fecha Pago</th>
+                    <th>Tasa</th>
+                    <th>Dias</th>
+                    <th>Importe $</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Banco Nacion</td>
+                    <td>1234567890</td>                    
+                    <td>Compañia de Librador</td>
+                    <td>12-12-2017</td>
+                    <td>7.0</td>
+                    <td>15</td>
+                    <td>150000.00</td>
+                </tr>
+                <tr>
+                    <td>Banco Nacion</td>
+                    <td>1234567890</td>                    
+                    <td>Compañia de Librador</td>
+                    <td>12-12-2017</td>
+                    <td>7.0</td>
+                    <td>15</td>
+                    <td>150000.00</td>
+                </tr>
+                <tr>
+                    <td>Banco Nacion</td>
+                    <td>1234567890</td>                    
+                    <td>Compañia de Librador</td>
+                    <td>12-12-2017</td>
+                    <td>7.0</td>
+                    <td>15</td>
+                    <td>150000.00</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-lg-6 col-md-5 col-sm-12 col-xs-10 hidden-xs pull-left">
+
+            </div>
+            <div class="col-lg-6 col-md-7 col-sm-8 col-xs-12 pull-right">
+            <table class="table table-bordered table-responsive table-striped">
+                
+                
+                <tr>
+                    <td>Total Valores $</td>
+                    <td>1505050505</td>
+                </tr>
+                <tr>
+                    <td>Interes $</td>
+                    <td>00000</td>
+                </tr>
+                <tr>
+                    <td>Imp Deb y Cred Bancario $</td>
+                    <td>00000</td>
+                </tr>
+                <tr>
+                    <td>Valores otra Plaza $</td>
+                    <td>000000</td>
+                </tr>
+                <tr>
+                    <td>Comisiones $</td>
+                    <td>000000</td>
+                </tr>
+                <tr>
+                    <td>IVA $</td>
+                    <td>00000</td>
+                </tr>
+                <tr>
+                    <td>SELLADO</td>
+                    <td>00000</td>
+                </tr>
+                <tr>
+                    <td>Neto a Liquidar $</td>
+                    <td>00000</td>
+                </tr>
+            
+            </table>
+        </div>
+        </div>
+        <!--
+        <div class="col-lg-6 pull-left">
+s
+        </div>
+        <div class="col-lg-6 pull-right">
+            <table class="table table-bordered table-responsive table-striped">
+                
+                
+                <tr>
+                    <td>Total Valores $</td>
+                    <td>1505050505</td>
+                </tr>
+                <tr>
+                    <td>Interes $</td>
+                    <td>00000</td>
+                </tr>
+                <tr>
+                    <td>Imp Deb y Cred Bancario $</td>
+                    <td>00000</td>
+                </tr>
+                <tr>
+                    <td>Valores otra Plaza $</td>
+                    <td>000000</td>
+                </tr>
+                <tr>
+                    <td>Comisiones $</td>
+                    <td>000000</td>
+                </tr>
+                <tr>
+                    <td>IVA $</td>
+                    <td>00000</td>
+                </tr>
+                <tr>
+                    <td>SELLADO</td>
+                    <td>00000</td>
+                </tr>
+                <tr>
+                    <td>Neto a Liquidar $</td>
+                    <td>00000</td>
+                </tr>
+            
+            </table>
+        </div>-->
+    </div>
     <div role="tabpanel" class="tab-pane" id="settings">Form 4</div>
   </div>
     
