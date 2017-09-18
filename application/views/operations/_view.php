@@ -30,12 +30,12 @@
             <input type="text" class="form-control" id="operationEmisorApellido" name="emisor_apellido" />
             
         </div> 
-        <div class="col-lg-1 col-md-1 col-sm-12 col-xs-12 pull-right">
+        <!--<div class="col-lg-1 col-md-1 col-sm-12 col-xs-12 pull-right">
             <label class=""> </label>
             <button type="button" class="btn btn-success btn-block">
                 <i class="fa fa-search" aria-hidden="true"></i>
             </button> 
-        </div>
+        </div>-->
     </div>        
     <hr>
     
@@ -55,7 +55,7 @@
         </div> 
         <div class="col-lg-3">
             <label class="">Importe : </label>
-            <input type="numeric" class="form-control" id="operationImporte" name="importe" />
+            <input type="numeric" class="form-control" id="operationImporte" name="importe" style="text-align: right"/>
             
         </div> 
     </div>                
@@ -80,12 +80,12 @@
                 <input type="text" class="form-control" id="operationTomadorApellido" name="tomador_apellido" />
             
         </div> 
-         <div class="col-lg-1 pull-right">
+         <!--<div class="col-lg-1 pull-right">
             <label class=""> </label>
             <button type="button" class="btn btn-success btn-block">
                 <i class="fa fa-search" aria-hidden="true"></i>
             </button> 
-        </div>
+        </div>-->
     </div>
           <hr>
     <div class="form-group">
@@ -100,7 +100,7 @@
             </div>
             <div class="col-lg-2">
                     <label class="">Dias: </label>
-                    <input type="text" class="form-control" id="operationDias" name="nro_dias" />
+                    <input type="text" class="form-control" id="operationDias" name="nro_dias" readonly="readonly" style="text-align: right" />
             </div> 
         
         </div>
@@ -111,11 +111,11 @@
             </div>
             <div class="col-lg-1">
                 <label class="">Mensual : </label>
-                <input type="text" class="form-control" id="opterationTasaMensual" name="tasa_mensual" value="<?php echo number_format($data['valores']['tasa'],2,",",".") ?>" />
+                <input type="text" class="form-control" id="opterationTasaMensual" name="tasa_mensual" value="<?php echo number_format($data['valores']['tasa'],2,".",",") ?>" style="text-align: right"/>
             </div>
             <div class="col-lg-1">
                 <label class="">Anual: </label>
-                <input type="text" class="form-control" id="opterationTasaAnual" name="tasa_anual" value="<?php echo number_format($data['valores']['tasa']*12,2,",",".") ?>" />
+                <input type="text" class="form-control" id="opterationTasaAnual" name="tasa_anual" value="<?php echo number_format($data['valores']['tasa']*12,2,".",",") ?>" readonly="readonly" style="text-align: right" />
             </div> 
         
         </div>
@@ -130,7 +130,7 @@
         </div>
             <div class="col-lg-2">
                 <label class="">Cliente : </label>
-                <input type="text" class="form-control" id="opterationInteres" name="interes" />
+                <input type="text" class="form-control" id="opterationInteres" name="interes" style="text-align: right"/>
             </div>
             
         
@@ -142,11 +142,11 @@
             </div>
             <div class="col-xs-1 text-center">
                 <label class="">% : </label>
-                <input type="text" class="form-control" id="opterationComision" name="comision_valor" value="<?php echo number_format($data['valores']['comision'],2,",",".") ?>"/>
+                <input type="text" class="form-control" id="opterationComision" name="comision_valor" value="<?php echo number_format($data['valores']['comision'],2,".",",") ?>" style="text-align: right" />
             </div>
             <div class="col-lg-1 ">
                 <label class="">$: </label>
-                <input type="text" class="form-control" id="opterationComisionTotal" name="comision_total" />
+                <input type="text" class="form-control" id="opterationComisionTotal" name="comision_total" readonly="readonly" style="text-align: right"  />
             </div> 
         
         </div>
@@ -157,7 +157,7 @@
             </div>
             <div class="col-xs-2">
                 <label class="">$ : </label>
-                <input type="text" class="form-control" id="operationNeto" name="neto" />
+                <input type="text" class="form-control" id="operationNeto" name="neto" readonly="readonly" style="text-align: right"/>
             </div>
             
         
@@ -171,23 +171,23 @@
         </div>
         <div class="col-lg-2">
             <label class="">Impuesto Cheque: </label>
-            <input type="text" class="form-control" id="operationImpuestoCheque" data-valor=" <?php echo number_format($data['valores']['impuestos'],3,",",".") ?>" name="impuesto_cheque" />
+            <input type="text" class="form-control" id="operationImpuestoCheque" data-valor=" <?php echo number_format($data['valores']['impuestos'],3,".",",") ?>" name="impuesto_cheque" style="text-align: right"/>
         </div>
 
         <div class="col-lg-2">
             <label class="">Gastos: </label>
-            <input type="text" class="form-control" id="operationGasto" name="gastos"  value=" <?php echo number_format($data['valores']['gastos'],2,",",".") ?>"/>
+            <input type="text" class="form-control" id="operationGasto" name="gastos"  value=" <?php echo number_format($data['valores']['gastos'],2,".",",") ?>" style="text-align: right"/>
         </div>
         <div class="col-lg-2 text-right">
             <h3 class="h3_section"></h3>
         </div>
         <div class="col-lg-1 ">
-            <label class="">IVA: </label>
-            <input type="text" class="form-control" id="operationIva" name="iva" value="21" />
+            <label class="">IVA (21%): </label>
+            <input type="text" class="form-control" id="operationIva" name="iva" value="0.00" style="text-align: right"/>
         </div>
         <div class="col-lg-1 ">
             <label class="">Sellado: </label>
-            <input type="text" class="form-control" id="operationSellado" name="sellado" value="0.0" />
+            <input type="text" class="form-control" id="operationSellado" name="sellado" value="0.00" style="text-align: right"/>
         </div>        
 
     </div>
@@ -463,7 +463,8 @@ s
            console.debug("==> compra: %o",compra);
            var neto1=compra - comision_total;
            console.debug("==> neto1: %o",neto1);           
-           var iva_total=(interes+comision_total) *(iva/100 );
+           var iva_total=(interes+comision_total) *(21/100 ); //!!!!! (iva/100 )
+           iva_input.val(iva_total.toFixed(2));
            console.debug("==> iva_total: %o",iva_total);
            var sellado_total=(importe*(0.5/100))+(importe*(0.5/100)*(20/100))+(importe*(0.5/100)*(20/100));
            console.debug("==> sellado: %o",sellado);

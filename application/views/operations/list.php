@@ -118,6 +118,17 @@
                 $("#modalBodyInversor").html(result.html);
                 $("#operationFechaVen").inputmask("dd-mm-yyyy",{ "clearIncomplete": true });
                 $("#operationImporte").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+                $("#opterationTasaMensual").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+                $("#opterationTasaAnual").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+                $("#opterationInteres").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+                $("#opterationComision").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+                $("#opterationComisionTotal").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+                $("#operationNeto").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+                $("#operationImpuestoCheque").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+                $("#operationGasto").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+                $("#operationIva").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+                $("#operationSellado").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+                
                 setTimeout("$('#modalInversor').modal('show');",800);
                 setTimeout("$('#razon_social').focus();",1500);
             },
