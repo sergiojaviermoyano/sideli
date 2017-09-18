@@ -58,6 +58,13 @@ class Operations extends CI_Model
 						'comision' => 0
 					);
 				}
+
+				$query_investor=$this->db->get_where('inversor','estado=1');
+				if($query_investor->num_rows()>0){
+					$data['inversores']=$query_investor->result_array();
+				}else{
+					$data['inversores']=null;
+				}
 				
 			}
 
