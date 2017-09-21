@@ -15,7 +15,7 @@ class Operations extends CI_Model
 		
 		$this->db->order_by('created', 'DESC');
 		$query= $this->db->get('operacion');
-		echo $this->db->last_query();
+		//echo $this->db->last_query();
 				//die("fin");
 		
 		if ($query->num_rows()!=0)
@@ -32,9 +32,8 @@ class Operations extends CI_Model
 				$tomador=$this->db->get_where('agente',array('id'=>$item['agente_tenedor_id']));				
 				$result[$key]['tomador']=$tomador->row()->nombre." ".$tomador->row()->apellido;
 			}
-			var_dump($result);
-			die();
-			return $query->result_array();	
+			
+			return $result;	
 		}
 		else
 		{

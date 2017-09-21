@@ -15,7 +15,7 @@ class operation extends CI_Controller {
 		
 		//var_dump($permission);
 		$data['list'] = $this->Operations->List_all();
-		die();
+		
 		$data['permission'] = $permission;
 		
 		echo json_encode($this->load->view('operations/list', $data, true));

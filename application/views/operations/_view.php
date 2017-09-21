@@ -732,7 +732,7 @@ s
             switch(tab_index){
                 case 0:{
                     if(validar_form_1()){
-                        $('.nav-tabs > .active').next('li').find('a').trigger('click');
+                        $('.nav-tabs >   .active').next('li').find('a').trigger('click');
                         back1_tb.removeClass("hidden");
                     }else{
                         return false;

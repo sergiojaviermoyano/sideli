@@ -21,17 +21,19 @@
                                 <th >Fecha Vencimiento</th>
                                 <th >Importe</th>
                                 <th >Neto</th>
-                                <th >Comprador</th>
+                                <!-- <th >Estado</th> -->
                                 <th class="text-center">Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
                                 <?php foreach($list as $key => $item):?>
                                 <tr>
-                                    <td><?php echo $item['razon_social']?></td>
-                                    <td class="cuit"><?php echo $item['cuit']; ?></td>
-                                    <td><?php echo $item['domicilio']; ?></td>
-                                    <td><input type="checkbox" value="1" id="inversorEstado" name="inversorEstado" <?php echo ((int)$item['estado']==1)?'checked':''?> ></td>
+                                    <td><?php echo $item['tomador']?></td>
+                                    <td><?php echo $item['banco']?></td>
+                                    <td class="cuit"><?php echo $item['fecha_venc']; ?></td>
+                                    <td><?php echo "$ ".$item['importe']; ?></td>
+                                    <td><?php echo "$ ".$item['neto']; ?></td>
+                                    <!-- <td><input type="checkbox" value="1" id="inversorEstado" name="inversorEstado" <?php echo ((int)$item['estado']==1)?'checked':''?> ></td> -->
                                     <td>
                                         <?php 
                                         if (strpos($permission,'Edit') !== false) {
