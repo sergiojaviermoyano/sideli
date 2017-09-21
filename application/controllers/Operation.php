@@ -15,6 +15,7 @@ class operation extends CI_Controller {
 		
 		//var_dump($permission);
 		$data['list'] = $this->Operations->List_all();
+		die();
 		$data['permission'] = $permission;
 		
 		echo json_encode($this->load->view('operations/list', $data, true));
@@ -25,6 +26,18 @@ class operation extends CI_Controller {
 		
 		$response['html'] = $this->load->view('operations/_view', $data, true);
 		echo json_encode($response);
+	}
+
+
+	public function addOperation(){
+		
+		if($result=$this->Operations->add($this->input->post())){
+			echo json_encode($this->load->view('operations/list', array('result'=>true), true));
+		}else{
+			echo json_encode($this->load->view('operations/list', array(), true));
+		}
+		
+
 	}
 
 

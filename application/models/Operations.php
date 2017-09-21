@@ -11,12 +11,29 @@ class Operations extends CI_Model
 	function List_all($estado=false){
 		if($estado){
 			$this->db->where("estado",$estado);
-        }
-        $this->db->order_by('created', 'DESC');
+		}
+		
+		$this->db->order_by('created', 'DESC');
 		$query= $this->db->get('operacion');
+		echo $this->db->last_query();
+				//die("fin");
 		
 		if ($query->num_rows()!=0)
 		{
+			$result=$query->result_array();
+
+			foreach($result as $key=>$item){
+				$banco=$this->db->get_where('banco',array('id'=>$item['banco_id']));				
+				$result[$key]['banco']=$banco->row()->razon_social;
+
+				$tomador=$this->db->get_where('agente',array('id'=>$item['agente_tenedor_id']));				
+				$result[$key]['tomador']=$tomador->row()->nombre." ".$tomador->row()->apellido;
+				
+				$tomador=$this->db->get_where('agente',array('id'=>$item['agente_tenedor_id']));				
+				$result[$key]['tomador']=$tomador->row()->nombre." ".$tomador->row()->apellido;
+			}
+			var_dump($result);
+			die();
 			return $query->result_array();	
 		}
 		else
@@ -82,6 +99,67 @@ class Operations extends CI_Model
 
 	}
 
+
+	public function add($data=false){
+		
+		//var_dump($data);
+		$params=array(
+			'agente_emisor_id'=>$data['agente_emisor_id'],
+			'agente_tenedor_id'=>$data['agente_tomador_id'],
+			'banco_id'=>$data['banco_id'],
+			'nro_cheque'=>$data['nro_cheque'],
+			'importe'=>floatval($data['importe']),
+			'fecha_venc'=>date('Y-m-d',strtotime($data['fecha_ven'])),
+			'nro_dias'=>$data['nro_dias'],
+			'tasa_mensual'=>floatval($data['tasa_mensual']),
+			'interes'=>floatval($data['interes']),
+			'impuesto_cheque'=>($data['impuesto_cheque']),
+			'gastos'=>floatval($data['gastos']),
+			'compra'=>floatval($data['compra']),
+			'comision_valor'=>floatval($data['comision_valor']),
+			'comision_total'=>floatval($data['comision_total']),
+			'subtotal'=>floatval($data['subtotal']),
+			'iva'=>floatval($data['iva']),
+			'sellado'=>floatval($data['sellado']),
+			'neto'=>floatval($data['neto']),
+			'inversor_id'=>$data['inversor_id'],
+			'observacion'=>$data['observacion'],	
+			'estado'=>0,
+			'created'=>date('Y-m-d h:m:i'),
+			
+		);
+		
+		$this->db->trans_start();
+			$result= $this->db->insert('operacion', $params);
+			$operacion_id = $this->db->insert_id();
+			$cheque_params=array();
+			$operacion_id=1;
+			foreach($data['cheque_salida'] as $key=>$item){
+				$temp_cheque=array(
+					'fecha'=>date('Y-m-d',strtotime($item['fecha'])),
+					'bancoId'=>$item['banco_id'],
+					'numero'=>$item['nro'],
+					'importe'=>floatval($item['importe']),
+					'estado'=>'AC',
+					'observacion'=>null,
+					'espropio'=>1,
+					'vencimiento'=>null,
+					'agenteId'=>$data['agente_tomador_id']
+				);
+				$this->db->insert('cheques',$temp_cheque);
+				$cheque_id=$this->db->insert_id();
+				
+				$operacion_detalle=array(
+					'operacion_id'=>$operacion_id,
+					'cheque_id'=>$cheque_id,
+				);
+				$this->db->insert('operacion_detalle',$operacion_detalle);
+				$operacion_detalle_id=$this->db->insert_id();
+			}
+		$this->db->trans_complete();
+		return true;
+	}
+
 	public function setInvestor($data=null){
 		if($data == null){
 			return false;
@@ -104,6 +182,7 @@ class Operations extends CI_Model
 					//$this->db->set('created', 'NOW()', FALSE);
 					//$this->db->set('updated', 'NOW()', FALSE);
 					$result= $this->db->insert('inversor', $data_temp);
+					echo $this->db->last_query();
 					$idInvestor = $this->db->insert_id();
 					$this->db->trans_complete();
 					break;

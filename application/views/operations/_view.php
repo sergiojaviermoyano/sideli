@@ -17,7 +17,8 @@
         </div>
         <div class="col-lg-3 col-md-3 col-sm-4  col-xs-12">
             <label class="">CUIT : </label>
-            <input type="text" class="form-control typeahead" data-provide="typeahead"  id="operationEmisorCuit" name="agente_emisor_id" value="" />
+            <input type="text" class="form-control typeahead" data-provide="typeahead"  id="operationEmisorCuit" name="emisor_cuit" value="" />
+            <input type="hidden" id="agente_emisor_id" name="agente_emisor_id" >
             
         </div>
         <div class="col-lg-3 col-md-3 col-sm-4  col-xs-12">
@@ -50,7 +51,9 @@
         </div>
         <div class="col-lg-3">
             <label class="">Banco: </label>
-            <input type="text" class="form-control typeahead" id="operationBanco"  data-provide="typeahead" name="banco_id" />
+            <input type="text" class="form-control typeahead" id="operationBanco"  data-provide="typeahead" name="banco_nombre" />
+            <input type="hidden" id="banco_id" name="banco_id" >
+            
             
         </div> 
         <div class="col-lg-3">
@@ -67,8 +70,8 @@
         </div>
         <div class="col-lg-3">
             <label class="">CUIT : </label>
-                <input type="text" class="form-control typeahead" data-provide="typeahead" id="operationTomadorCuit" name="tomador_cuit" />
-            
+            <input type="text" class="form-control typeahead" data-provide="typeahead" id="operationTomadorCuit" name="tomador_cuit" />
+            <input type="hidden" id="agente_tomador_id" name="agente_tomador_id" >
         </div>
         <div class="col-lg-3">
             <label class="">Nombre : </label>
@@ -192,6 +195,10 @@
 
     </div>
     </div>
+
+    <input type="hidden" name="compra" id="operationCompra" >
+    <input type="hidden" name="subtotal" id="operationSubtotal" >
+
     <div role="tabpanel" class="tab-pane " id="step2">
         <div class="form-group">
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 title_section">
@@ -418,6 +425,8 @@ s
         var gasto_input=$(this).find("input#operationGasto");
         var iva_input=$(this).find("input#operationIva");
         var sellado_input=$(this).find("input#operationSellado");
+        var compra_input=$(this).find("input#operationCompra");
+        var subtotal_input=$(this).find("input#operationSubtotal");
         var neto_input=$(this).find("input#operationNeto");
         var step1_tb= $(this).find("button#btnNext1");
         var back1_tb= $(this).find("button#btnBack1");
@@ -460,9 +469,13 @@ s
            console.debug("==> impuesto_cheque: %o",impuesto_cheque);
            impuesto_cheque_input.val(impuesto_cheque.toFixed(2));
            var compra= importe-interes-impuesto_cheque-gastos;
+
+           compra_input.val(compra.toFixed(2));
            console.debug("==> compra: %o",compra);
            var neto1=compra - comision_total;
-           console.debug("==> neto1: %o",neto1);           
+           console.debug("==> neto1: %o",neto1);    
+           subtotal_input.val(neto1.toFixed(2));
+            
            var iva_total=(interes+comision_total) *(21/100 ); //!!!!! (iva/100 )
            iva_input.val(iva_total.toFixed(2));
            console.debug("==> iva_total: %o",iva_total);
@@ -599,6 +612,11 @@ s
                     dataType: 'json'
                 };
                 $.ajax(data_ajax);
+            }, updater: function(item) {
+                var data = map[item];
+                
+                $("#banco_id").val(data.id);
+                return data.razon_social;
             }
         });
 
@@ -641,6 +659,7 @@ s
                 var data = map[item];
                 $("#operationEmisorNombre").val(data.nombre);
                 $("#operationEmisorApellido").val(data.apellido);
+                $("#agente_emisor_id").val(data.id);
                 return data.cuit;
             }
         });
@@ -681,6 +700,8 @@ s
                 console.debug("ERROR: %o",data);
                 $("#operationTomadorNombre").val(data.nombre);
                 $("#operationTomadorApellido").val(data.apellido);
+                $("#agente_tomador_id").val(data.id);
+                
                 return data.cuit;
             }
         });
@@ -725,12 +746,14 @@ s
                         $('.nav-tabs > .active').next('li').find('a').trigger('click');
                         $(this).addClass("hidden");
                         back1_tb.removeClass("hidden");
+                        save_tb.removeClass("hidden");
                     }else{
                         return false;
                     }
                 }
                 case 2:{
                      //$(this).addClass("hidden");
+                     print_liquidacion();
                      back1_tb.removeClass("hidden");
                 }
                 default:{
@@ -759,10 +782,11 @@ s
             var total_rows= $("#salid_tb").find("tbody tr").length;
             var last= $("#salid_tb").find("tbody tr:last").data();
             var new_row='<tr id="tr_'+(next_row-1)+'" data-next="'+next_row+'" >' ;
-                new_row+='<td><input type="text" class="form-control banco typeahead" name="cheque_salida[\''+next_row+'\'][\'banco_id\']" id="operation_'+next_row+'_CheckOutBanco"  placeholder="Banco"></td>';
-                new_row+='<td><input type="text" class="form-control nro" name="cheque_salida[\''+next_row+'\'][\'nro\']" id="operation_'+next_row+'_CheckOutNro"  placeholder="Nro Cheque"></td>';
-                new_row+='<td><input type="text" class="form-control importe" name="cheque_salida[\''+next_row+'\'][\'importe\']" id="operation_'+next_row+'_CheckOutImporte"  placeholder="Importe"></td>';
-                new_row+='<td><input type="text" class="form-control fecha datepicker" name="cheque_salida[\''+next_row+'\'][\'fecha\']" id="operation_'+next_row+'_CheckOutFecha"  placeholder="Fecha"></td>';
+                new_row+='<td><input type="text" class="form-control banco typeahead"  name="cheque_salida['+next_row+'][banco_nombre]" id="operation_'+next_row+'_CheckOutBanco"  data-id="'+next_row+'" placeholder="Banco">';
+                new_row+='<input type="hidden"   name="cheque_salida['+next_row+'][banco_id]" id="banco_id_'+next_row+'" ></td>';
+                new_row+='<td><input type="text" class="form-control nro" name="cheque_salida['+next_row+'][nro]" id="operation_'+next_row+'_CheckOutNro"  placeholder="Nro Cheque"></td>';
+                new_row+='<td><input type="text" class="form-control importe" name="cheque_salida['+next_row+'][importe]" id="operation_'+next_row+'_CheckOutImporte"  placeholder="Importe"></td>';
+                new_row+='<td><input type="text" class="form-control fecha datepicker" name="cheque_salida['+next_row+'][fecha]" id="operation_'+next_row+'_CheckOutFecha"  placeholder="Fecha"></td>';
                 new_row+='<td><button class="btn btn-danger btn-xs bt_check_delete" data-id="'+(next_row-1)+'">Eliminar</button></td>'
                 new_row+='</tr>';
             $("#salid_tb").find("tbody").append(new_row);
@@ -777,6 +801,7 @@ s
             }).datepicker();
         });
         $(document).on('click','.banco',function(){
+            var id=$(this).data('id');
             $(this).typeahead({
             minLength: 3,
             items: 'all',
@@ -806,6 +831,11 @@ s
                     dataType: 'json'
                 };
                 $.ajax(data_ajax);
+            }, updater: function(item) {
+                var data = map[item];
+                
+                $("#banco_id_"+id+"").val(data.id);
+                return data.razon_social;
             }
         }).typeahead();
         });
@@ -821,13 +851,47 @@ s
         });
 
         var print_liquidacion=function(){
-
-            var cheques_salida=$("#step2").find("input[type=text]");
-
+            console.debug("==> print_liquidacion");
+            var tr_cheques_salida=$("#step2").find('table#salid_tb tbody').find('tr');//.find("input[type=text]");
+            console.debug("===> cheques_salida: %o",tr_cheques_salida.length);
+            var liquidacion_final=[];
+            tr_cheques_salida.each(function(idex,item){
+                var inputs=$(item).find("input[type=text]");
+                console.debug("===> inputs: %o",inputs.length);
+                var temp=[];
+                inputs.each(function(sindex,sitem){
+                    //console.debug("===> inputs: %o",inputs.length);
+                    temp.push($(sitem).val());                    
+                });
+                console.debug("===> temp: %o",temp);
+                liquidacion_final.push(temp);                
+            });
+            console.debug("===> liquidacion_final: %o",liquidacion_final);
             return false;
         }
 
-        
+        save_tb.click(function(){
+            var form_data=$("form").serialize();
+            console.debug("===> SUBMIT FORM: \n ===> form_data: %o",form_data);
+
+            $.ajax({
+                type: 'POST',
+                data: $("form").serialize(),
+                url: 'index.php/operation/addOperation', 
+                success: function(result){
+                    WaitingClose();
+                    $('#modalInversor').modal('hide');
+                    setTimeout("cargarView('operation', 'index', '"+$('#permission').val()+"');",1000);        
+                    
+                },
+                error: function(result){
+                    WaitingClose();
+                   // alert("error");
+                },
+                dataType: 'json'
+            });
+            return false;
+        }); 
 
         
     });

@@ -15,12 +15,13 @@
                     <div class="box-body">
                         <table id="inversores" class="table table-bordered table-hover datatable">
                             <thead>
-                            <tr>
-                               
-                                <th >Razon Social</th>
-                                <th >CUIT</th>
-                                <th >Domicilio</th>
-                                <th >Habilitado</th>
+                            <tr>                               
+                                <th >Tomador</th>
+                                <th >Banco</th>
+                                <th >Fecha Vencimiento</th>
+                                <th >Importe</th>
+                                <th >Neto</th>
+                                <th >Comprador</th>
                                 <th class="text-center">Acciones</th>
                             </tr>
                             </thead>
@@ -139,6 +140,7 @@
             dataType: 'json'
         });
     };
+    /*
     $('#btnSave').on('click',function(){
   	console.debug("===> TES");
     if(action == 'View'){
@@ -191,7 +193,7 @@
       },
       dataType: 'json'
       });
-  });
+  });*/
 
 
 </script>
