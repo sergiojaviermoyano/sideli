@@ -408,23 +408,27 @@ s
 
 
 <script>
+
+//definicion de una variable para una operación 
+var operation = operationClass;
+
     $(function(){
 
         var emisor_cuit_input=$(this).find("input#operationEmisorCuit");
         var tenedor_cuit_input=$(this).find("input#operationTomadorCuit");
         var banco_input=$(this).find("input#operationBanco");
-        var importe_input=$(this).find("input#operationImporte");
-        var fecha_vencimiento=$(this).find("input#operationFechaVen");
-        var dias_input=$(this).find("input#operationDias");
-        var tasa_mensual_input=$(this).find("input#opterationTasaMensual");
-        var tasa_anual_input=$(this).find("input#opterationTasaAnual");
-        var interes_input=$(this).find("input#opterationInteres");
-        var comision_input=$(this).find("input#opterationComision");
-        var comision_total_input=$(this).find("input#opterationComisionTotal");
-        var impuesto_cheque_input=$(this).find("input#operationImpuestoCheque");
-        var gasto_input=$(this).find("input#operationGasto");
-        var iva_input=$(this).find("input#operationIva");
-        var sellado_input=$(this).find("input#operationSellado");
+        /**/var importe_input=$(this).find("input#operationImporte");
+        /**/var fecha_vencimiento=$(this).find("input#operationFechaVen");
+        /**/var dias_input=$(this).find("input#operationDias");
+        /**/var tasa_mensual_input=$(this).find("input#opterationTasaMensual");
+        /**/var tasa_anual_input=$(this).find("input#opterationTasaAnual");
+        /**/var interes_input=$(this).find("input#opterationInteres");
+        /**/var comision_input=$(this).find("input#opterationComision");
+        /**/var comision_total_input=$(this).find("input#opterationComisionTotal");
+        /**/var impuesto_cheque_input=$(this).find("input#operationImpuestoCheque");
+        /**/var gasto_input=$(this).find("input#operationGasto");
+        /**/var iva_input=$(this).find("input#operationIva");
+        /**/var sellado_input=$(this).find("input#operationSellado");
         var compra_input=$(this).find("input#operationCompra");
         var subtotal_input=$(this).find("input#operationSubtotal");
         var neto_input=$(this).find("input#operationNeto");
@@ -441,48 +445,56 @@ s
             //Esta funcion calcula todos los valores del formulario principal
             console.debug("====>> calcular_valores ");
            console.debug("\n==> Importe: %o",importe_input.val());
-           var cantDias=dias_input.val();            
-           var importe=parseFloat(importe_input.val());
-           var tAnual=parseFloat(tasa_anual_input.val());
-           var comision=parseFloat(comision_input.val().replace(',','.'));
-           var impuesto=parseFloat(impuesto_cheque_input.data('valor').replace(',','.'));
-           var gastos=parseFloat(gasto_input.val().replace(',','.'));
-           var iva=parseFloat(iva_input.val().replace(',','.'));
-           var sellado=parseFloat(sellado_input.val().replace(',','.'));
+           operation.cheque.dias = dias_input.val();
+           operation.cheque.vencimiento = fecha_vencimiento.val();
+           operation.cheque.importe = parseFloat(importe_input.val());
+           //var cantDias=dias_input.val();            
+           //var importe=parseFloat(importe_input.val());
+           operation.tasaA = parseFloat(tasa_anual_input.val());
+           operation.tasaM = parseFloat(tasa_mensual_input.val());
+           //var tAnual=parseFloat(tasa_anual_input.val());
+           operation.interesCliente = parseFloat(interes_input.val());
+           operation.comisionPor = parseFloat(comision_input.val().replace(',','.'));
+           operation.comisionImp = parseFloat(comision_total_input.val().replace(',','.'));
+           //var comision=parseFloat(comision_input.val().replace(',','.'));
+           operation.impuestoCheque = parseFloat(impuesto_cheque_input.data('valor').replace(',','.'));
+           //var impuesto=parseFloat(impuesto_cheque_input.data('valor').replace(',','.'));
+           operation.gastos = parseFloat(gasto_input.val().replace(',','.'));
+           //var gastos=parseFloat(gasto_input.val().replace(',','.'));
+           operation.importeIVA = parseFloat(iva_input.val().replace(',','.'));
+           //var iva=parseFloat(iva_input.val().replace(',','.'));
+           operation.importeSellado = parseFloat(sellado_input.val().replace(',','.'));
+           //var sellado=parseFloat(sellado_input.val().replace(',','.'));
            
            
-           console.debug("\n==> Importe: %o",importe);
-           console.debug("==> TasaAnual: %o",tAnual);
-           console.debug("==> cantDias: %o",cantDias);
-           console.debug("==> comision: %o",comision);
-           console.debug("==> impuesto: %o",impuesto );
-           console.debug("==> iva: %o",iva );
-           console.debug("==> sellado: %o",sellado );
+           console.debug("\n==> Importe: %o",operation.cheque.importe);
+           console.debug("==> TasaAnual: %o",operation.tasaA);
+           console.debug("==> cantDias: %o",operation.cheque.dias);
+           console.debug("==> comision: %o",operation.comisionPor);
+           console.debug("==> impuesto: %o",operation.impuestoCheque );
+           console.debug("==> iva: %o",operation.importeIVA );
+           console.debug("==> sellado: %o",operation.importeSellado );
            
-           var interes= importe * (tAnual/365) * (cantDias/100);
+           var interes= operation.cheque.importe * (operation.tasaA/365) * (operation.cheque.dias/100);
            console.debug("\n==> Interes: %o",interes);
            interes_input.val(interes.toFixed(2));
-           var comision_total= importe.toFixed(2)*comision / 100;
-           console.debug("==> comision_total: %o",comision_total);
-           comision_total_input.val(comision_total.toFixed(2));
-           impuesto_cheque=(importe * impuesto)/100;
-           console.debug("==> impuesto_cheque: %o",impuesto_cheque);
-           impuesto_cheque_input.val(impuesto_cheque.toFixed(2));
-           var compra= importe-interes-impuesto_cheque-gastos;
-
-           compra_input.val(compra.toFixed(2));
+           operation.comisionImp = operation.cheque.importe.toFixed(2)*operation.comisionPor / 100;
+           console.debug("==> comision_total: %o",operation.comisionImp);
+           comision_total_input.val(operation.comisionImp.toFixed(2));
+           operation.impuestoCheque=(operation.cheque.importe * operation.impuestoCheque)/100;
+           console.debug("==> impuesto_cheque: %o",operation.impuestoCheque);
+           impuesto_cheque_input.val(operation.impuestoCheque.toFixed(2));
+           var compra= operation.cheque.importe-interes-operation.impuestoCheque-operation.gastos;
            console.debug("==> compra: %o",compra);
-           var neto1=compra - comision_total;
-           console.debug("==> neto1: %o",neto1);    
-           subtotal_input.val(neto1.toFixed(2));
-            
-           var iva_total=(interes+comision_total) *(21/100 ); //!!!!! (iva/100 )
-           iva_input.val(iva_total.toFixed(2));
-           console.debug("==> iva_total: %o",iva_total);
-           var sellado_total=(importe*(0.5/100))+(importe*(0.5/100)*(20/100))+(importe*(0.5/100)*(20/100));
-           console.debug("==> sellado: %o",sellado);
-           sellado_input.val(sellado_total.toFixed(2));           
-           var neto_final=neto1-iva_total-sellado_total;
+           var neto1=compra - operation.comisionImp;
+           console.debug("==> neto1: %o",neto1);           
+           operation.importeIVA=(interes+operation.comisionImp) *(21/100 ); //!!!!! (iva/100 )
+           iva_input.val(operation.importeIVA.toFixed(2));
+           console.debug("==> iva_total: %o",operation.importeIVA);
+           operation.importeSellado=(operation.cheque.importe*(0.5/100))+(operation.cheque.importe*(0.5/100)*(20/100))+(operation.cheque.importe*(0.5/100)*(20/100));
+           console.debug("==> sellado: %o",operation.importeSellado);
+           sellado_input.val(operation.importeSellado.toFixed(2));           
+           var neto_final=neto1-operation.importeIVA-operation.importeSellado;
            console.debug("==> neto_final: %o",neto_final.toFixed(2));
            neto_input.val(neto_final.toFixed(2) );
             return false;
