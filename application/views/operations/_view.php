@@ -1,4 +1,4 @@
-<form class="form-horizontal ope_form" action="">
+    <form class="form-horizontal ope_form" action="">
 
 
    <!-- Nav tabs -->
@@ -239,6 +239,7 @@
                         <button class="btn btn-succcess btn-lg add_check_out">Agregar Cheque</button>
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-12  col-xs-12">
+                        <h3>Neto: <span class="neto_total">00000.00</span></h3>                        
                         <button class="btn btn-succcess btn-lg add_check_out hidden" disabled>Agregar Tranferencia</button>
                     </div>
                     
@@ -440,6 +441,7 @@ var operation = operationClass;
         var cheque_salida_fecha= $(this).find("button#operationCheckOutFecha");
         var add_cheque_salida_bt= $(this).find("button.add_check_out");
 
+        var neto_total=0;
 
         var calcular_valores=function(){
             //Esta funcion calcula todos los valores del formulario principal
@@ -497,6 +499,9 @@ var operation = operationClass;
            var neto_final=neto1-operation.importeIVA-operation.importeSellado;
            console.debug("==> neto_final: %o",neto_final.toFixed(2));
            neto_input.val(neto_final.toFixed(2) );
+           neto_total=neto_final.toFixed(2);
+
+           $("span.neto_total").html(" $ "+neto_total);
             return false;
         }
 
@@ -796,22 +801,50 @@ var operation = operationClass;
             var new_row='<tr id="tr_'+(next_row-1)+'" data-next="'+next_row+'" >' ;
                 new_row+='<td><input type="text" class="form-control banco typeahead"  name="cheque_salida['+next_row+'][banco_nombre]" id="operation_'+next_row+'_CheckOutBanco"  data-id="'+next_row+'" placeholder="Banco">';
                 new_row+='<input type="hidden"   name="cheque_salida['+next_row+'][banco_id]" id="banco_id_'+next_row+'" ></td>';
-                new_row+='<td><input type="text" class="form-control nro" name="cheque_salida['+next_row+'][nro]" id="operation_'+next_row+'_CheckOutNro"  placeholder="Nro Cheque"></td>';
-                new_row+='<td><input type="text" class="form-control importe" name="cheque_salida['+next_row+'][importe]" id="operation_'+next_row+'_CheckOutImporte"  placeholder="Importe"></td>';
+                new_row+='<td><input type="text" class="form-control nro" name="cheque_salida['+next_row+'][nro]" id="operation_'+next_row+'_CheckOutNro"  placeholder="Nro Cheque" style="text-align: right"></td>';
+                new_row+='<td><input type="text" class="form-control importe" name="cheque_salida['+next_row+'][importe]" id="operation_'+next_row+'_CheckOutImporte"  placeholder="Importe" style="text-align: right"></td>';
                 new_row+='<td><input type="text" class="form-control fecha datepicker" name="cheque_salida['+next_row+'][fecha]" id="operation_'+next_row+'_CheckOutFecha"  placeholder="Fecha"></td>';
                 new_row+='<td><button class="btn btn-danger btn-xs bt_check_delete" data-id="'+(next_row-1)+'">Eliminar</button></td>'
                 new_row+='</tr>';
             $("#salid_tb").find("tbody").append(new_row);
+            $('input.form-control.importe').maskMoney({allowNegative: false, thousands:'', decimal:'.'});//.trigger('mask.maskMoney');
+            $('input.form-control.fecha').datepicker({
+                minDate: today,
+                dateFormat: 'dd-mm-yy',
+                setDate: today,
+            });
             return false;
         });
 
-        $(document).on('click','.fecha',function(){
+        /*$(document).on('click','.fecha',function(){
             $(this).datepicker({
                 minDate: today,
                 dateFormat: 'dd-mm-yy',
                 setDate: today,
             }).datepicker();
+        }).on('focus','.fecha',function(){
+            $(this).datepicker({
+                minDate: today,
+                dateFormat: 'dd-mm-yy',
+                setDate: today,
+            }).datepicker();
+        });*/
+        
+
+        $(document).on('keyup','.importe',function(){
+            var input_importes=$("#salid_tb").find("input.form-control.importe");
+            var total=0;
+            input_importes.each(function(index,item){
+            console.debug("====> $(item).val(): %o",$(item).val());                
+                total+=parseFloat($(item).val());
+            });
+            console.debug("====> _importe: %o",total);
+            if(total>=neto_total){
+                alert(" Los importes de los cheques Agregados no pueden superar al Neto a pagar: ");
+                return false;
+            }
         });
+
         $(document).on('click','.banco',function(){
             var id=$(this).data('id');
             $(this).typeahead({
