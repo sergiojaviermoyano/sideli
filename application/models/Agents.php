@@ -185,7 +185,7 @@ class Agents extends CI_Model
 
 		$agents = array();
 
-		$this->db->select('id, nombre, apellido, razon_social, cuit');
+		$this->db->select('id, nombre, apellido, razon_social, cuit,domicilio');
 		$this->db->from('agente');
 		$this->db->where(array('estado'=>'AC', 'tipo' => $type));
 		if($str != ''){

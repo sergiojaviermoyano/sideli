@@ -266,11 +266,11 @@
     <div role="tabpanel" class="tab-pane" id="step3">
         <h2>Liquidacion de Compra de Valores</h2>
         <h3>Inversor SRL</h3>
-        <h4>CLIENTE:       <span> LOREM ITSU</span> </h4>
-        <h4>DOMICILIO:     <span>MENDOZA 0</span> </h4>
-        <h4>CUI:           <span>00-000000-0</span> </h4>
-        <h4>OPERACION NRO: <span> 00000000</span> </h4>
-        <table class="table table-bordered table-responsive table-striped">
+        <h4>CLIENTE:       &nbsp;<span class="cliente_nombre"> LOREM ITSU</span> </h4>
+        <h4>DOMICILIO:     &nbsp;<span class="cliente_domicilio">MENDOZA 0</span> </h4>
+        <h4>CUI:           &nbsp;<span class="cliente_cuit">00-000000-0</span> </h4>
+        <!-- <h4>OPERACION NRO: <span > 00000000</span> </h4> -->
+        <table id="resumen_cheque" class="table table-bordered table-responsive table-striped">
             <thead>
                 <tr>
                     <th>BANCO</th>
@@ -283,33 +283,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Banco Nacion</td>
-                    <td>1234567890</td>                    
-                    <td>Compañia de Librador</td>
-                    <td>12-12-2017</td>
-                    <td>7.0</td>
-                    <td>15</td>
-                    <td>150000.00</td>
-                </tr>
-                <tr>
-                    <td>Banco Nacion</td>
-                    <td>1234567890</td>                    
-                    <td>Compañia de Librador</td>
-                    <td>12-12-2017</td>
-                    <td>7.0</td>
-                    <td>15</td>
-                    <td>150000.00</td>
-                </tr>
-                <tr>
-                    <td>Banco Nacion</td>
-                    <td>1234567890</td>                    
-                    <td>Compañia de Librador</td>
-                    <td>12-12-2017</td>
-                    <td>7.0</td>
-                    <td>15</td>
-                    <td>150000.00</td>
-                </tr>
+                
             </tbody>
         </table>
         <div class="row">
@@ -317,88 +291,53 @@
 
             </div>
             <div class="col-lg-6 col-md-7 col-sm-8 col-xs-12 pull-right">
-            <table class="table table-bordered table-responsive table-striped">
+            <table class="resumen_liquidacion" class="table table-bordered table-responsive table-striped">
                 
                 
                 <tr>
                     <td>Total Valores $</td>
-                    <td>1505050505</td>
+                    <td style="width: 33%;"><p>&nbsp;</p></td>
+                    <td class="total_de_valores text-right">1505050505</td>
                 </tr>
                 <tr>
                     <td>Interes $</td>
-                    <td>00000</td>
+                    <td style="width: 33%;"><p>&nbsp;</p></td>
+                    <td class="interes text-right">00000</td>
                 </tr>
                 <tr>
                     <td>Imp Deb y Cred Bancario $</td>
-                    <td>00000</td>
+                    <td style="width: 33%;"><p>&nbsp;</p></td>
+                    <td class="impuesto text-right">00000</td>
                 </tr>
                 <tr>
                     <td>Valores otra Plaza $</td>
-                    <td>000000</td>
+                    <td style="width: 33%;"><p>&nbsp;</p></td>
+                    <td class="otros text-right">000000</td>
                 </tr>
                 <tr>
                     <td>Comisiones $</td>
-                    <td>000000</td>
+                    <td style="width: 33%;"><p>&nbsp;</p></td>
+                    <td class="comision text-right" >000000</td>
                 </tr>
                 <tr>
                     <td>IVA $</td>
-                    <td>00000</td>
+                    <td style="width: 33%;"><p>&nbsp;</p></td>
+                    <td class="iva text-right">00000</td>
                 </tr>
                 <tr>
                     <td>SELLADO</td>
-                    <td>00000</td>
+                    <td style="width: 33%;"><p>&nbsp;</p></td>
+                    <td class="sellado text-right">00000</td>
                 </tr>
                 <tr>
                     <td>Neto a Liquidar $</td>
-                    <td>00000</td>
+                    <td style="width: 33%;"><p>&nbsp;</p></td>
+                    <td class="netos text-right">00000</td>
                 </tr>
             
             </table>
         </div>
         </div>
-        <!--
-        <div class="col-lg-6 pull-left">
-s
-        </div>
-        <div class="col-lg-6 pull-right">
-            <table class="table table-bordered table-responsive table-striped">
-                
-                
-                <tr>
-                    <td>Total Valores $</td>
-                    <td>1505050505</td>
-                </tr>
-                <tr>
-                    <td>Interes $</td>
-                    <td>00000</td>
-                </tr>
-                <tr>
-                    <td>Imp Deb y Cred Bancario $</td>
-                    <td>00000</td>
-                </tr>
-                <tr>
-                    <td>Valores otra Plaza $</td>
-                    <td>000000</td>
-                </tr>
-                <tr>
-                    <td>Comisiones $</td>
-                    <td>000000</td>
-                </tr>
-                <tr>
-                    <td>IVA $</td>
-                    <td>00000</td>
-                </tr>
-                <tr>
-                    <td>SELLADO</td>
-                    <td>00000</td>
-                </tr>
-                <tr>
-                    <td>Neto a Liquidar $</td>
-                    <td>00000</td>
-                </tr>
-            
-            </table>
-        </div>-->
     </div>
     <div role="tabpanel" class="tab-pane" id="settings">Form 4</div>
   </div>
@@ -442,6 +381,8 @@ var operation = operationClass;
         var add_cheque_salida_bt= $(this).find("button.add_check_out");
 
         var neto_total=0;
+        var total_valores_pagar=0;
+        var cliente_data=null;
 
         var calcular_valores=function(){
             //Esta funcion calcula todos los valores del formulario principal
@@ -478,6 +419,8 @@ var operation = operationClass;
            console.debug("==> sellado: %o",operation.importeSellado );
            
            var interes= operation.cheque.importe * (operation.tasaA/365) * (operation.cheque.dias/100);
+           operation.interes=interes;
+           
            console.debug("\n==> Interes: %o",interes);
            interes_input.val(interes.toFixed(2));
            operation.comisionImp = operation.cheque.importe.toFixed(2)*operation.comisionPor / 100;
@@ -677,6 +620,7 @@ var operation = operationClass;
                 $("#operationEmisorNombre").val(data.nombre);
                 $("#operationEmisorApellido").val(data.apellido);
                 $("#agente_emisor_id").val(data.id);
+                cliente=data;
                 return data.cuit;
             }
         });
@@ -839,10 +783,12 @@ var operation = operationClass;
                 total+=parseFloat($(item).val());
             });
             console.debug("====> _importe: %o",total);
+            console.debug("====> input_importes: %o",neto_total);
             if(total>=neto_total){
                 alert(" Los importes de los cheques Agregados no pueden superar al Neto a pagar: ");
                 return false;
             }
+            total_valores_pagar=total;
         });
 
         $(document).on('click','.banco',function(){
@@ -896,22 +842,45 @@ var operation = operationClass;
         });
 
         var print_liquidacion=function(){
-            console.debug("==> print_liquidacion");
             var tr_cheques_salida=$("#step2").find('table#salid_tb tbody').find('tr');//.find("input[type=text]");
-            console.debug("===> cheques_salida: %o",tr_cheques_salida.length);
             var liquidacion_final=[];
+            
             tr_cheques_salida.each(function(idex,item){
                 var inputs=$(item).find("input[type=text]");
-                console.debug("===> inputs: %o",inputs.length);
                 var temp=[];
                 inputs.each(function(sindex,sitem){
-                    //console.debug("===> inputs: %o",inputs.length);
-                    temp.push($(sitem).val());                    
+                    temp.push($(sitem).val());                                                           
                 });
-                console.debug("===> temp: %o",temp);
+                temp.splice(2, 0, cliente.apellido+", "+cliente.nombre);
+                temp.splice(3, 0, '0.00');
+                temp.splice(4, 0, '0');                
                 liquidacion_final.push(temp);                
             });
-            console.debug("===> liquidacion_final: %o",liquidacion_final);
+
+            var tabla_cheque_salida="";
+            $.each(liquidacion_final,function(index,item){                
+                tabla_cheque_salida+="<tr>";
+                tabla_cheque_salida+="<td>"+item[0]+"</td>";
+                tabla_cheque_salida+="<td>"+item[1]+"</td>";
+                tabla_cheque_salida+="<td>"+item[2]+"</td>";
+                tabla_cheque_salida+="<td>"+item[6]+"</td>";
+                tabla_cheque_salida+="<td>"+item[3]+"</td>";
+                tabla_cheque_salida+="<td>"+item[4]+"</td>";
+                tabla_cheque_salida+="<td>"+item[5].toFixed(2)+"</td>";
+                tabla_cheque_salida+="</tr>";
+            });          
+            $("#resumen_cheque").find("tbody").empty().append(tabla_cheque_salida);
+            $("span.cliente_nombre").html(cliente.razon_social);
+            $("span.cliente_domicilio").html(cliente.domicilio);
+            $("span.cliente_cuit").html(cliente.cuit);
+            $("td.total_de_valores").html(neto_total.toFixed(2));
+            $("td.interes").html(operation.interesCliente.toFixed(2));
+            $("td.impuesto").html(operation.interes.toFixed(2));
+            $("td.otros").html(operation.gastos.toFixed(2));
+            $("td.comision").html(operation.comisionImp.toFixed(2));
+            $("td.iva").html(operation.importeIVA.toFixed(2));
+            $("td.sellado").html(operation.importeSellado.toFixed(2));
+            $("td.netos").html(neto_total.toFixed(2));
             return false;
         }
 
