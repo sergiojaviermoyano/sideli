@@ -293,48 +293,56 @@
             <div class="col-lg-6 col-md-7 col-sm-8 col-xs-12 pull-right">
             <table class="resumen_liquidacion" class="table table-bordered table-responsive table-striped">
                 
-                
+                <tbody>
                 <tr>
                     <td>Total Valores $</td>
-                    <td style="width: 33%;"><p>&nbsp;</p></td>
+                    <td style="width: 25%;"><p>&nbsp;</p></td>
+                    <td style="width: 25%;"><p>&nbsp;</p></td>
                     <td class="total_de_valores text-right">1505050505</td>
                 </tr>
                 <tr>
                     <td>Interes $</td>
-                    <td style="width: 33%;"><p>&nbsp;</p></td>
+                    <td style="width: 25%;"><p>&nbsp;</p></td>
+                    <td style="width: 25%;"><p>&nbsp;</p></td>
                     <td class="interes text-right">00000</td>
                 </tr>
                 <tr>
                     <td>Imp Deb y Cred Bancario $</td>
-                    <td style="width: 33%;"><p>&nbsp;</p></td>
+                    <td style="width: 25%;"><p>&nbsp;</p></td>
+                    <td style="width: 25%;"><p>&nbsp;</p></td>
                     <td class="impuesto text-right">00000</td>
                 </tr>
                 <tr>
                     <td>Valores otra Plaza $</td>
-                    <td style="width: 33%;"><p>&nbsp;</p></td>
+                    <td style="width: 25%;"><p>&nbsp;</p></td>
+                    <td style="width: 25%;"><p>&nbsp;</p></td>
                     <td class="otros text-right">000000</td>
                 </tr>
                 <tr>
                     <td>Comisiones $</td>
-                    <td style="width: 33%;"><p>&nbsp;</p></td>
+                    <td style="width: 25%;"><p>&nbsp;</p></td>
+                    <td style="width: 25%;"><p>&nbsp;</p></td>
                     <td class="comision text-right" >000000</td>
                 </tr>
                 <tr>
                     <td>IVA $</td>
-                    <td style="width: 33%;"><p>&nbsp;</p></td>
+                    <td style="width: 25%;"><p>&nbsp;</p></td>
+                    <td style="width: 25%;"><p>&nbsp;</p></td>
                     <td class="iva text-right">00000</td>
                 </tr>
                 <tr>
                     <td>SELLADO</td>
-                    <td style="width: 33%;"><p>&nbsp;</p></td>
+                    <td style="width: 25%;"><p>&nbsp;</p></td>
+                    <td style="width: 25%;"><p>&nbsp;</p></td>
                     <td class="sellado text-right">00000</td>
                 </tr>
                 <tr>
                     <td>Neto a Liquidar $</td>
-                    <td style="width: 33%;"><p>&nbsp;</p></td>
+                    <td style="width: 25%;"><p>&nbsp;</p></td>
+                    <td style="width: 25%;"><p>&nbsp;</p></td>
                     <td class="netos text-right">00000</td>
                 </tr>
-            
+                </tbody>
             </table>
         </div>
         </div>
@@ -351,6 +359,22 @@
 
 //definicion de una variable para una operación 
 var operation = operationClass;
+var emisor_data={
+    id:             -1,
+    cuit:           '',
+    nombre:         '',
+    apellido:       '', 
+    razon_social:   '',
+    domicilio: ''
+};
+var tomador_data={
+    id:             -1,
+    cuit:           '',
+    nombre:         '',
+    apellido:       '', 
+    razon_social:   '',
+    domicilio: ''
+};
 
     $(function(){
 
@@ -617,12 +641,64 @@ var operation = operationClass;
                 
             }, updater: function(item) {
                 var data = map[item];
-                $("#operationEmisorNombre").val(data.nombre);
-                $("#operationEmisorApellido").val(data.apellido);
-                $("#agente_emisor_id").val(data.id);
-                cliente=data;
-                return data.cuit;
+                console.debug("==> updater emisor: %o",emisor_cuit_input.val());
+                console.debug("==> updater data.cuit: %o",data.cuit);
+                if(emisor_cuit_input.val().length==data.cuit.length && emisor_cuit_input.val()!=data.cuit){
+                    $("#operationEmisorNombre").val(null);
+                    $("#operationEmisorApellido").val(null);
+                    $("#agente_emisor_id").val(0);
+                    emisor_data={
+                        id:             -1,
+                        cuit:           '',
+                        nombre:         '',
+                        apellido:       '', 
+                        razon_social:   '',
+                        domicilio: ''
+                    };
+                    console.debug("===> operationEmisorApellido - emisor_data: %o",emisor_data);
+                    
+                    return emisor_cuit_input.val();
+                }else{
+                    $("#operationEmisorNombre").val(data.nombre);
+                    $("#operationEmisorApellido").val(data.apellido);
+                    $("#agente_emisor_id").val(data.id);
+                    emisor_data=data;
+            console.debug("===> operationEmisorApellido - emisor_data: %o",emisor_data);
+                     
+                    return data.cuit;
+                }
+                
+                
+                
             }
+        });
+        
+        
+
+        $(document).on('change',"#operationEmisorApellido",function(){
+            console.debug("===> operationEmisorApellido - emisor_data: %o",emisor_data);
+            emisor_data.id=0;
+            emisor_data.cuit=$('#operationEmisorCuit').val();
+            emisor_data.nombre=$('#operationEmisorNombre').val();
+            emisor_data.apellido=$('#operationEmisorApellido').val();
+            emisor_data.razon_social=$('#operationEmisorNombre').val()+" "+$('#operationEmisorApellido').val();
+            emisor_data.domicilio=" ";
+            console.debug("===> nuevo emisor");
+            return false;
+        });
+
+        $(document).on('change',"#operationTomadorApellido",function(){
+            console.debug("===> operationTomadorApellido - emisor_data: %o",tomador_data);
+            tomador_data.id=0;
+            tomador_data.cuit=$('#operationTomadorCuit').val();
+            tomador_data.nombre=$('#operationTomadorNombre').val();
+            tomador_data.apellido=$('#operationTomadorApellido').val();
+            tomador_data.razon_social=$('#operationTomadorNombre').val()+" "+$('#operationTomadorApellido').val();
+            tomador_data.domicilio=" ";
+            console.debug("===> operationTomadorApellido - emisor_data: %o",tomador_data);
+            
+            console.debug("===> nuevo Tomador");
+            return false;
         });
 
         tenedor_cuit_input.typeahead({
@@ -658,12 +734,37 @@ var operation = operationClass;
                 
             }, updater: function(item) {
                 var data = map[item];
+                /*
                 console.debug("ERROR: %o",data);
                 $("#operationTomadorNombre").val(data.nombre);
                 $("#operationTomadorApellido").val(data.apellido);
                 $("#agente_tomador_id").val(data.id);
                 
-                return data.cuit;
+                return data.cuit;*/
+                console.debug("==> updater emisor: %o",emisor_cuit_input.val());
+                console.debug("==> updater data.cuit: %o",data.cuit);
+                if(tenedor_cuit_input.val().length==data.cuit.length && tenedor_cuit_input.val()!=data.cuit){
+                    $("#operationTomadorNombre").val(null);
+                    $("#operationTomadorApellido").val(null);
+                    $("#agente_tomador_id").val(0);
+                    tomador_data={
+                        id:             -1,
+                        cuit:           '',
+                        nombre:         '',
+                        apellido:       '', 
+                        razon_social:   '',
+                        domicilio: ''
+                    };
+                    console.debug("===> operationEmisorApellido - emisor_data: %o",tomador_data);                        
+                    return tenedor_cuit_input.val();
+                }else{
+                    $("#operationTomadorNombre").val(data.nombre);
+                    $("#operationTomadorApellido").val(data.apellido);
+                    $("#agente_tomador_id").val(data.id);
+                    tomador_data=data;
+                    console.debug("===> operationEmisorApellido - emisor_data: %o",tomador_data);                     
+                    return data.cuit;
+                }
             }
         });
 
@@ -760,19 +861,7 @@ var operation = operationClass;
             return false;
         });
 
-        /*$(document).on('click','.fecha',function(){
-            $(this).datepicker({
-                minDate: today,
-                dateFormat: 'dd-mm-yy',
-                setDate: today,
-            }).datepicker();
-        }).on('focus','.fecha',function(){
-            $(this).datepicker({
-                minDate: today,
-                dateFormat: 'dd-mm-yy',
-                setDate: today,
-            }).datepicker();
-        });*/
+        
         
 
         $(document).on('keyup','.importe',function(){
@@ -851,14 +940,15 @@ var operation = operationClass;
                 inputs.each(function(sindex,sitem){
                     temp.push($(sitem).val());                                                           
                 });
-                temp.splice(2, 0, cliente.apellido+", "+cliente.nombre);
+                temp.splice(2, 0, emisor_data.apellido+", "+emisor_data.nombre);
                 temp.splice(3, 0, '0.00');
                 temp.splice(4, 0, '0');                
                 liquidacion_final.push(temp);                
             });
 
             var tabla_cheque_salida="";
-            $.each(liquidacion_final,function(index,item){                
+            $.each(liquidacion_final,function(index,item){      
+                console.debug("==> Item: %o",item);          
                 tabla_cheque_salida+="<tr>";
                 tabla_cheque_salida+="<td>"+item[0]+"</td>";
                 tabla_cheque_salida+="<td>"+item[1]+"</td>";
@@ -866,21 +956,24 @@ var operation = operationClass;
                 tabla_cheque_salida+="<td>"+item[6]+"</td>";
                 tabla_cheque_salida+="<td>"+item[3]+"</td>";
                 tabla_cheque_salida+="<td>"+item[4]+"</td>";
-                tabla_cheque_salida+="<td>"+item[5].toFixed(2)+"</td>";
+                tabla_cheque_salida+="<td>"+parseFloat(item[5]).toFixed(2)+"</td>";
                 tabla_cheque_salida+="</tr>";
             });          
+
+            console.debug("===> operation: %o",operation);
+            console.debug("===> emisor_data: %o",emisor_data);
             $("#resumen_cheque").find("tbody").empty().append(tabla_cheque_salida);
-            $("span.cliente_nombre").html(cliente.razon_social);
-            $("span.cliente_domicilio").html(cliente.domicilio);
-            $("span.cliente_cuit").html(cliente.cuit);
-            $("td.total_de_valores").html(neto_total.toFixed(2));
+            $("span.cliente_nombre").html(emisor_data.razon_social);
+            $("span.cliente_domicilio").html(emisor_data.domicilio);
+            $("span.cliente_cuit").html(emisor_data.cuit);
+            $("td.total_de_valores").html(parseFloat(neto_total).toFixed());
             $("td.interes").html(operation.interesCliente.toFixed(2));
             $("td.impuesto").html(operation.interes.toFixed(2));
             $("td.otros").html(operation.gastos.toFixed(2));
             $("td.comision").html(operation.comisionImp.toFixed(2));
             $("td.iva").html(operation.importeIVA.toFixed(2));
             $("td.sellado").html(operation.importeSellado.toFixed(2));
-            $("td.netos").html(neto_total.toFixed(2));
+            $("td.netos").html(parseFloat(neto_total).toFixed());
             return false;
         }
 

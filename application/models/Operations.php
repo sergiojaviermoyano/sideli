@@ -101,7 +101,45 @@ class Operations extends CI_Model
 
 	public function add($data=false){
 		
-		//var_dump($data);
+		if($data['agente_emisor_id']=='0'){
+			$agente_emisor= array(
+				'nombre'=>$data['emisor_nombre'],
+				'apellido'=>$data['emisor_apellido'],
+				'cuit'=>$data['emisor_cuit'],
+				'razon_social'=>$data['emisor_nombre']." ".$data['emisor_apellido'],
+				'domicilio'=>'',
+				'tipo'=>1,
+				'estado'=>'ac',
+			);
+			//var_dump($agente_emisor);
+			
+			$this->db->trans_start();
+			$this->db->set('created', 'NOW()', FALSE);
+			$this->db->set('updated', 'NOW()', FALSE);
+			$result= $this->db->insert('agente', $agente_emisor);
+			$data['agente_emisor_id'] = $this->db->insert_id();
+			$this->db->trans_complete();
+		}
+		
+		if($data['agente_tomador_id']=='0'){
+			$agente_tomador= array(
+				'nombre'=>$data['tomador_nombre'],
+				'apellido'=>$data['tomador_apellido'],
+				'cuit'=>$data['tomador_cuit'],
+				'razon_social'=>$data['tomador_nombre']." ".$data['tomador_apellido'],
+				'domicilio'=>'',
+				'tipo'=>2,
+				'estado'=>'ac',
+			);
+
+			$this->db->trans_start();
+			$this->db->set('created', 'NOW()', FALSE);
+			$this->db->set('updated', 'NOW()', FALSE);
+			$result= $this->db->insert('agente', $agente_tomador);
+			$data['agente_tomador_id'] = $this->db->insert_id();
+			$this->db->trans_complete();
+		}
+		
 		$params=array(
 			'agente_emisor_id'=>$data['agente_emisor_id'],
 			'agente_tenedor_id'=>$data['agente_tomador_id'],
@@ -124,8 +162,7 @@ class Operations extends CI_Model
 			'inversor_id'=>$data['inversor_id'],
 			'observacion'=>$data['observacion'],	
 			'estado'=>0,
-			'created'=>date('Y-m-d h:m:i'),
-			
+			'created'=>date('Y-m-d h:m:i'),			
 		);
 		
 		$this->db->trans_start();
