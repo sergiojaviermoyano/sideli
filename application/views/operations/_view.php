@@ -871,9 +871,9 @@ var tomador_data={
             console.debug("====> $(item).val(): %o",$(item).val());                
                 total+=parseFloat($(item).val());
             });
-            console.debug("====> _importe: %o",total);
-            console.debug("====> input_importes: %o",neto_total);
-            if(total>=neto_total){
+            console.debug("====> _importe: %o",total.toFixed(2));
+            console.debug("====> input_importes: %o",parseFloat(neto_total).toFixed(2));
+            if(total>parseFloat(neto_total).toFixed(2)){
                 alert(" Los importes de los cheques Agregados no pueden superar al Neto a pagar: ");
                 return false;
             }
