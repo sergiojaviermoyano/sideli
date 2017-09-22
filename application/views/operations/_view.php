@@ -18,7 +18,7 @@
         <div class="col-lg-3 col-md-3 col-sm-4  col-xs-12">
             <label class="">CUIT : </label>
             <input type="text" class="form-control typeahead" data-provide="typeahead"  id="operationEmisorCuit" name="emisor_cuit" value="" />
-            <input type="hidden" id="agente_emisor_id" name="agente_emisor_id" >
+            <input type="hidden" id="agente_emisor_id" name="agente_emisor_id" value="0" >
             
         </div>
         <div class="col-lg-3 col-md-3 col-sm-4  col-xs-12">
@@ -71,7 +71,7 @@
         <div class="col-lg-3">
             <label class="">CUIT : </label>
             <input type="text" class="form-control typeahead" data-provide="typeahead" id="operationTomadorCuit" name="tomador_cuit" />
-            <input type="hidden" id="agente_tomador_id" name="agente_tomador_id" >
+            <input type="hidden" id="agente_tomador_id" name="agente_tomador_id" value="0">
         </div>
         <div class="col-lg-3">
             <label class="">Nombre : </label>
@@ -643,10 +643,11 @@ var tomador_data={
                 var data = map[item];
                 console.debug("==> updater emisor: %o",emisor_cuit_input.val());
                 console.debug("==> updater data.cuit: %o",data.cuit);
+                $("#agente_emisor_id").val(0);
                 if(emisor_cuit_input.val().length==data.cuit.length && emisor_cuit_input.val()!=data.cuit){
                     $("#operationEmisorNombre").val(null);
                     $("#operationEmisorApellido").val(null);
-                    $("#agente_emisor_id").val(0);
+                    $("#agente_emisor_id").val('0');
                     emisor_data={
                         id:             -1,
                         cuit:           '',
@@ -677,18 +678,24 @@ var tomador_data={
 
         $(document).on('change',"#operationEmisorApellido",function(){
             console.debug("===> operationEmisorApellido - emisor_data: %o",emisor_data);
-            emisor_data.id=0;
-            emisor_data.cuit=$('#operationEmisorCuit').val();
-            emisor_data.nombre=$('#operationEmisorNombre').val();
-            emisor_data.apellido=$('#operationEmisorApellido').val();
-            emisor_data.razon_social=$('#operationEmisorNombre').val()+" "+$('#operationEmisorApellido').val();
-            emisor_data.domicilio=" ";
-            console.debug("===> nuevo emisor");
+            console.debug("=== agente_emisor_id: %o",$("#agente_emisor_id").val());
+            if($("#agente_emisor_id").val()==0){
+                emisor_data.id=0;
+                emisor_data.cuit=$('#operationEmisorCuit').val();
+                emisor_data.nombre=$('#operationEmisorNombre').val();
+                emisor_data.apellido=$('#operationEmisorApellido').val();
+                emisor_data.razon_social=$('#operationEmisorNombre').val()+" "+$('#operationEmisorApellido').val();
+                emisor_data.domicilio=" ";
+                console.debug("===> nuevo emisor");
+            }
+            
             return false;
         });
 
         $(document).on('change',"#operationTomadorApellido",function(){
-            console.debug("===> operationTomadorApellido - emisor_data: %o",tomador_data);
+            if($("#agente_tomador_id").val()==0){
+                
+            console.debug("===> operationTomadorApellido - tomador_data: %o",tomador_data);
             tomador_data.id=0;
             tomador_data.cuit=$('#operationTomadorCuit').val();
             tomador_data.nombre=$('#operationTomadorNombre').val();
@@ -698,6 +705,7 @@ var tomador_data={
             console.debug("===> operationTomadorApellido - emisor_data: %o",tomador_data);
             
             console.debug("===> nuevo Tomador");
+            }
             return false;
         });
 
@@ -746,7 +754,7 @@ var tomador_data={
                 if(tenedor_cuit_input.val().length==data.cuit.length && tenedor_cuit_input.val()!=data.cuit){
                     $("#operationTomadorNombre").val(null);
                     $("#operationTomadorApellido").val(null);
-                    $("#agente_tomador_id").val(0);
+                    $("#agente_tomador_id").val('0');
                     tomador_data={
                         id:             -1,
                         cuit:           '',

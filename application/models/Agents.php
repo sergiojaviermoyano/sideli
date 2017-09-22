@@ -83,7 +83,7 @@ class Agents extends CI_Model
 			$data = array(
 				'nombre'=>$data['nombre'],
 				'apellido'=>$data['apellido'],
-				'cuit'=>$data['cuit'],
+				'cuit'=>str_replace('-','',$data['cuit']),
 				'razon_social'=>$data['razon_social'],
 				'domicilio'=>$data['domicilio'],
 				'telefono'=>$data['telefono'],
