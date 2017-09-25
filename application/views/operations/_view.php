@@ -210,7 +210,7 @@
                 <div class="col-lg-3 col-md-3 col-sm-4  col-xs-12">
                     <br>                
                     <label class="radio-inline">
-                        <input type="radio" id="OperationInversor1" name="inversor_id"  value="<?php echo $item['id']?>" <?php echo ($item['id']==1)?'checked':''?> ><?php echo $item['razon_social']?>
+                    <input type="radio" id="OperationInversor1" name="inversor_id" data-domicilio="<?php echo $item['domicilio']?>" data-cuit="<?php echo $item['cuit']?>" data-name="<?php echo $item['razon_social']?>"  value="<?php echo $item['id']?>" <?php echo ($item['id']==1)?'checked':''?> ><?php echo $item['razon_social']?>
                     </label>
                 </div>
                 <?php endforeach;?>
@@ -336,7 +336,7 @@
                     <td style="width: 25%;"><p>&nbsp;</p></td>
                     <td class="sellado text-right">00000</td>
                 </tr>
-                <tr>
+                <tr class="tr_neto">
                     <td>Neto a Liquidar $</td>
                     <td style="width: 25%;"><p>&nbsp;</p></td>
                     <td style="width: 25%;"><p>&nbsp;</p></td>
@@ -375,12 +375,17 @@ var tomador_data={
     razon_social:   '',
     domicilio: ''
 };
+var banco_1={
+    banco_id:0,
+    nombre:''
+};
 
     $(function(){
 
         var emisor_cuit_input=$(this).find("input#operationEmisorCuit");
         var tenedor_cuit_input=$(this).find("input#operationTomadorCuit");
         var banco_input=$(this).find("input#operationBanco");
+        /**/var cheque_nro=$(this).find("#operationChequeNro");
         /**/var importe_input=$(this).find("input#operationImporte");
         /**/var fecha_vencimiento=$(this).find("input#operationFechaVen");
         /**/var dias_input=$(this).find("input#operationDias");
@@ -410,8 +415,9 @@ var tomador_data={
 
         var calcular_valores=function(){
             //Esta funcion calcula todos los valores del formulario principal
-            console.debug("====>> calcular_valores ");
-           console.debug("\n==> Importe: %o",importe_input.val());
+           //console.debug("====>> calcular_valores ");
+           //console.debug("\n==> Importe: %o",importe_input.val());
+           operation.cheque.nro = cheque_nro.val();
            operation.cheque.dias = dias_input.val();
            operation.cheque.vencimiento = fecha_vencimiento.val();
            operation.cheque.importe = parseFloat(importe_input.val());
@@ -424,9 +430,11 @@ var tomador_data={
            operation.comisionPor = parseFloat(comision_input.val().replace(',','.'));
            operation.comisionImp = parseFloat(comision_total_input.val().replace(',','.'));
            //var comision=parseFloat(comision_input.val().replace(',','.'));
-           operation.impuestoCheque = parseFloat(impuesto_cheque_input.data('valor').replace(',','.'));
+           operation.impuestoCheque = parseFloat('1.2');//parseFloat(impuesto_cheque_input.data('valor').replace(',','.'));
+           //console.de
            //var impuesto=parseFloat(impuesto_cheque_input.data('valor').replace(',','.'));
-           operation.gastos = parseFloat(gasto_input.val().replace(',','.'));
+           //console.debug("====> aca_: %o",gasto_input.val());
+           operation.gastos = (gasto_input.val()!='')? parseFloat(gasto_input.val().replace(',','.')): 0;
            //var gastos=parseFloat(gasto_input.val().replace(',','.'));
            operation.importeIVA = parseFloat(iva_input.val().replace(',','.'));
            //var iva=parseFloat(iva_input.val().replace(',','.'));
@@ -434,37 +442,37 @@ var tomador_data={
            //var sellado=parseFloat(sellado_input.val().replace(',','.'));
            
            
-           console.debug("\n==> Importe: %o",operation.cheque.importe);
-           console.debug("==> TasaAnual: %o",operation.tasaA);
-           console.debug("==> cantDias: %o",operation.cheque.dias);
-           console.debug("==> comision: %o",operation.comisionPor);
-           console.debug("==> impuesto: %o",operation.impuestoCheque );
-           console.debug("==> iva: %o",operation.importeIVA );
-           console.debug("==> sellado: %o",operation.importeSellado );
+           //console.debug("\n==> Importe: %o",operation.cheque.importe);
+           //console.debug("==> TasaAnual: %o",operation.tasaA);
+           //console.debug("==> cantDias: %o",operation.cheque.dias);
+           //console.debug("==> comision: %o",operation.comisionPor);
+           //console.debug("==> impuesto: %o",operation.impuestoCheque );
+           //console.debug("==> iva: %o",operation.importeIVA );
+           //console.debug("==> sellado: %o",operation.importeSellado );
            
            var interes= operation.cheque.importe * (operation.tasaA/365) * (operation.cheque.dias/100);
            operation.interes=interes;
            
-           console.debug("\n==> Interes: %o",interes);
+           //console.debug("\n==> Interes: %o",interes);
            interes_input.val(interes.toFixed(2));
            operation.comisionImp = operation.cheque.importe.toFixed(2)*operation.comisionPor / 100;
-           console.debug("==> comision_total: %o",operation.comisionImp);
+           //console.debug("==> comision_total: %o",operation.comisionImp);
            comision_total_input.val(operation.comisionImp.toFixed(2));
            operation.impuestoCheque=(operation.cheque.importe * operation.impuestoCheque)/100;
            console.debug("==> impuesto_cheque: %o",operation.impuestoCheque);
            impuesto_cheque_input.val(operation.impuestoCheque.toFixed(2));
            var compra= operation.cheque.importe-interes-operation.impuestoCheque-operation.gastos;
-           console.debug("==> compra: %o",compra);
+           //console.debug("==> compra: %o",compra);
            var neto1=compra - operation.comisionImp;
-           console.debug("==> neto1: %o",neto1);           
+           //console.debug("==> neto1: %o",neto1);           
            operation.importeIVA=(interes+operation.comisionImp) *(21/100 ); //!!!!! (iva/100 )
            iva_input.val(operation.importeIVA.toFixed(2));
-           console.debug("==> iva_total: %o",operation.importeIVA);
+           //console.debug("==> iva_total: %o",operation.importeIVA);
            operation.importeSellado=(operation.cheque.importe*(0.5/100))+(operation.cheque.importe*(0.5/100)*(20/100))+(operation.cheque.importe*(0.5/100)*(20/100));
-           console.debug("==> sellado: %o",operation.importeSellado);
+           //console.debug("==> sellado: %o",operation.importeSellado);
            sellado_input.val(operation.importeSellado.toFixed(2));           
            var neto_final=neto1-operation.importeIVA-operation.importeSellado;
-           console.debug("==> neto_final: %o",neto_final.toFixed(2));
+           //console.debug("==> neto_final: %o",neto_final.toFixed(2));
            neto_input.val(neto_final.toFixed(2) );
            neto_total=neto_final.toFixed(2);
 
@@ -474,7 +482,7 @@ var tomador_data={
 
 
         var validar_form_1=function(){
-            console.debug("====> VALIDACION DE FORMULARIO 1:\n");            
+            //console.debug("====> VALIDACION DE FORMULARIO 1:\n");            
             var _step1_inputs=$("#step1").find("input");
             //console.debug("===> INPUTS %o",_step1_inputs.length);
             var result=true;
@@ -491,7 +499,7 @@ var tomador_data={
         };
 
         var validar_form_2=function(){
-            console.debug("====> VALIDACION DE FORMULARIO 2:\n");     
+            //console.debug("====> VALIDACION DE FORMULARIO 2:\n");     
             var radios=$("#step2").find("input[type=radio]");
             var texts=$("#step2").find("input[type=text]");
             var checked_radio=false;
@@ -520,7 +528,7 @@ var tomador_data={
                 });
             }
 
-            console.debug("===> resultado: %o",result);
+            //console.debug("===> resultado: %o",result);
 
             return result;
         }
@@ -532,18 +540,18 @@ var tomador_data={
             calcular_valores();
         });
         comision_input.on('change',function(){
-            console.debug("\====> comision_input\n");
+            //console.debug("\====> comision_input\n");
             calcular_valores();
         });
         tasa_mensual_input.on('change',function(){
-            console.debug("\n====> tasa_mensual_input\n");
+            //console.debug("\n====> tasa_mensual_input\n");
             var tasa_mensual=parseFloat($(this).val().replace(',','.'));
             var new_tasa_anual=(tasa_mensual*12).toFixed(2);
             tasa_anual_input.val(new_tasa_anual);            
             calcular_valores();
         });
         gasto_input.on('change',function(){
-            console.debug("\====> gasto_input\n");
+            //console.debug("\====> gasto_input\n");
             calcular_valores();
         });
 
@@ -600,6 +608,7 @@ var tomador_data={
                 var data = map[item];
                 
                 $("#banco_id").val(data.id);
+                banco_1=data;
                 return data.razon_social;
             }
         });
@@ -641,8 +650,8 @@ var tomador_data={
                 
             }, updater: function(item) {
                 var data = map[item];
-                console.debug("==> updater emisor: %o",emisor_cuit_input.val());
-                console.debug("==> updater data.cuit: %o",data.cuit);
+                //console.debug("==> updater emisor: %o",emisor_cuit_input.val());
+                //console.debug("==> updater data.cuit: %o",data.cuit);
                 $("#agente_emisor_id").val(0);
                 if(emisor_cuit_input.val().length==data.cuit.length && emisor_cuit_input.val()!=data.cuit){
                     $("#operationEmisorNombre").val(null);
@@ -656,7 +665,7 @@ var tomador_data={
                         razon_social:   '',
                         domicilio: ''
                     };
-                    console.debug("===> operationEmisorApellido - emisor_data: %o",emisor_data);
+                    //console.debug("===> operationEmisorApellido - emisor_data: %o",emisor_data);
                     
                     return emisor_cuit_input.val();
                 }else{
@@ -664,7 +673,7 @@ var tomador_data={
                     $("#operationEmisorApellido").val(data.apellido);
                     $("#agente_emisor_id").val(data.id);
                     emisor_data=data;
-            console.debug("===> operationEmisorApellido - emisor_data: %o",emisor_data);
+            //console.debug("===> operationEmisorApellido - emisor_data: %o",emisor_data);
                      
                     return data.cuit;
                 }
@@ -677,8 +686,8 @@ var tomador_data={
         
 
         $(document).on('change',"#operationEmisorApellido",function(){
-            console.debug("===> operationEmisorApellido - emisor_data: %o",emisor_data);
-            console.debug("=== agente_emisor_id: %o",$("#agente_emisor_id").val());
+            //console.debug("===> operationEmisorApellido - emisor_data: %o",emisor_data);
+            //console.debug("=== agente_emisor_id: %o",$("#agente_emisor_id").val());
             if($("#agente_emisor_id").val()==0){
                 emisor_data.id=0;
                 emisor_data.cuit=$('#operationEmisorCuit').val();
@@ -695,16 +704,16 @@ var tomador_data={
         $(document).on('change',"#operationTomadorApellido",function(){
             if($("#agente_tomador_id").val()==0){
                 
-            console.debug("===> operationTomadorApellido - tomador_data: %o",tomador_data);
+            //console.debug("===> operationTomadorApellido - tomador_data: %o",tomador_data);
             tomador_data.id=0;
             tomador_data.cuit=$('#operationTomadorCuit').val();
             tomador_data.nombre=$('#operationTomadorNombre').val();
             tomador_data.apellido=$('#operationTomadorApellido').val();
             tomador_data.razon_social=$('#operationTomadorNombre').val()+" "+$('#operationTomadorApellido').val();
             tomador_data.domicilio=" ";
-            console.debug("===> operationTomadorApellido - emisor_data: %o",tomador_data);
+            //console.debug("===> operationTomadorApellido - emisor_data: %o",tomador_data);
             
-            console.debug("===> nuevo Tomador");
+            //console.debug("===> nuevo Tomador");
             }
             return false;
         });
@@ -733,7 +742,7 @@ var tomador_data={
                         return process(objects);
                     },
                     error: function(error_msg) {
-                        console.debug("ERROR Tenedor: %o",error_msg);
+                        //console.debug("ERROR Tenedor: %o",error_msg);
                         alert("error_msg: " + error_msg);
                     },
                     dataType: 'json'
@@ -749,8 +758,8 @@ var tomador_data={
                 $("#agente_tomador_id").val(data.id);
                 
                 return data.cuit;*/
-                console.debug("==> updater emisor: %o",emisor_cuit_input.val());
-                console.debug("==> updater data.cuit: %o",data.cuit);
+               // console.debug("==> updater emisor: %o",emisor_cuit_input.val());
+                //console.debug("==> updater data.cuit: %o",data.cuit);
                 if(tenedor_cuit_input.val().length==data.cuit.length && tenedor_cuit_input.val()!=data.cuit){
                     $("#operationTomadorNombre").val(null);
                     $("#operationTomadorApellido").val(null);
@@ -778,11 +787,11 @@ var tomador_data={
 
         back1_tb.on('click',function(){
             var step=$(this).data('step');
-            console.debug("===> BUTTON back1_tb clicked: %o",step);
+            //console.debug("===> BUTTON back1_tb clicked: %o",step);
             $('.nav-tabs > .active').prev('li').find('a').trigger('click');
             
             var tab_index=$('.nav-tabs > li.active').index();
-            console.debug("===> BACK tab active: %o",tab_index);
+            //console.debug("===> BACK tab active: %o",tab_index);
             if(tab_index==0){
                 $(this).addClass("hidden");
                 step1_tb.removeClass("hidden");
@@ -796,9 +805,9 @@ var tomador_data={
 
         step1_tb.on('click',function(){
             var step=$(this).data('step');            
-            console.debug("===> BUTTON step1_bt clicked: %o",step);
+            //console.debug("===> BUTTON step1_bt clicked: %o",step);
             var tab_index=$('.nav-tabs > li.active').index();
-            console.debug("===> NEXT tab active: %o",tab_index);
+            //console.debug("===> NEXT tab active: %o",tab_index);
             switch(tab_index){
                 case 0:{
                     if(validar_form_1()){
@@ -839,7 +848,7 @@ var tomador_data={
         
         
         add_cheque_salida_bt.on('click',function(){
-            console.debug("====> Agregar Nuevo Cheque");
+            //console.debug("====> Agregar Nuevo Cheque");
             total_rows=0;
             if($("#salid_tb").find("tbody tr:last").length>0){
                 total_rows= $("#salid_tb").find("tbody tr").length;
@@ -876,11 +885,11 @@ var tomador_data={
             var input_importes=$("#salid_tb").find("input.form-control.importe");
             var total=0;
             input_importes.each(function(index,item){
-            console.debug("====> $(item).val(): %o",$(item).val());                
+            //console.debug("====> $(item).val(): %o",$(item).val());                
                 total+=parseFloat($(item).val());
             });
-            console.debug("====> _importe: %o",total.toFixed(2));
-            console.debug("====> input_importes: %o",parseFloat(neto_total).toFixed(2));
+            //console.debug("====> _importe: %o",total.toFixed(2));
+            //console.debug("====> input_importes: %o",parseFloat(neto_total).toFixed(2));
             if(total>parseFloat(neto_total).toFixed(2)){
                 alert(" Los importes de los cheques Agregados no pueden superar al Neto a pagar: ");
                 return false;
@@ -930,7 +939,7 @@ var tomador_data={
 
         $(document).on('click','.bt_check_delete',function(){
             var id=$(this).data('id');
-            console.debug("===> DELETE CHEQUE: %o",id);
+            //console.debug("===> DELETE CHEQUE: %o",id);
 
             if($("#salid_tb").find("tbody tr#tr_"+id).length>0){
                 $("#salid_tb").find("tbody tr#tr_"+id).remove();
@@ -949,13 +958,13 @@ var tomador_data={
                     temp.push($(sitem).val());                                                           
                 });
                 temp.splice(2, 0, emisor_data.apellido+", "+emisor_data.nombre);
-                temp.splice(3, 0, '0.00');
-                temp.splice(4, 0, '0');                
+                temp.splice(3, 0, operation.tasaM);
+                temp.splice(4, 0, operation.cheque.dias);                
                 liquidacion_final.push(temp);                
             });
 
             var tabla_cheque_salida="";
-            $.each(liquidacion_final,function(index,item){      
+            /*$.each(liquidacion_final,function(index,item){      
                 console.debug("==> Item: %o",item);          
                 tabla_cheque_salida+="<tr>";
                 tabla_cheque_salida+="<td>"+item[0]+"</td>";
@@ -966,28 +975,42 @@ var tomador_data={
                 tabla_cheque_salida+="<td>"+item[4]+"</td>";
                 tabla_cheque_salida+="<td>"+parseFloat(item[5]).toFixed(2)+"</td>";
                 tabla_cheque_salida+="</tr>";
-            });          
+            });   */       
+            //console.debug("=> banco_1: %o",banco_1);
+            tabla_cheque_salida+="<tr>";
+            tabla_cheque_salida+="<td>"+banco_1.razon_social+"</td>";
+            tabla_cheque_salida+="<td>"+operation.cheque.nro+"</td>";
+            tabla_cheque_salida+="<td>"+emisor_data.apellido+", "+emisor_data.nombre+"</td>";
+            tabla_cheque_salida+="<td>"+operation.cheque.vencimiento+"</td>";
+            
+            tabla_cheque_salida+="<td>"+operation.tasaM+"</td>";
+            tabla_cheque_salida+="<td>"+operation.cheque.dias+"</td>";
+            tabla_cheque_salida+="<td class='text-rigth'>"+parseFloat(operation.cheque.importe).toFixed(2)+"</td>";
+            tabla_cheque_salida+="</tr>";
 
-            console.debug("===> operation: %o",operation);
-            console.debug("===> emisor_data: %o",emisor_data);
+            //console.debug("===> operation: %o",operation);
+            //console.debug("===> emisor_data: %o",emisor_data);
+
             $("#resumen_cheque").find("tbody").empty().append(tabla_cheque_salida);
+            var inversor_data=$('input[name=inversor_id]:checked').data();
+            $("#step3").find("h3").html(inversor_data.name);
             $("span.cliente_nombre").html(emisor_data.razon_social);
             $("span.cliente_domicilio").html(emisor_data.domicilio);
             $("span.cliente_cuit").html(emisor_data.cuit);
-            $("td.total_de_valores").html(parseFloat(neto_total).toFixed());
-            $("td.interes").html(operation.interesCliente.toFixed(2));
-            $("td.impuesto").html(operation.interes.toFixed(2));
+            $("td.total_de_valores").html(parseFloat(operation.cheque.importe).toFixed(2));
+            $("td.interes").html(operation.interes.toFixed(2));
+            $("td.impuesto").html(operation.impuestoCheque.toFixed(2));
             $("td.otros").html(operation.gastos.toFixed(2));
             $("td.comision").html(operation.comisionImp.toFixed(2));
             $("td.iva").html(operation.importeIVA.toFixed(2));
             $("td.sellado").html(operation.importeSellado.toFixed(2));
-            $("td.netos").html(parseFloat(neto_total).toFixed());
+            $("td.netos").html(parseFloat(neto_total).toFixed(2));
             return false;
         }
 
         save_tb.click(function(){
             var form_data=$("form").serialize();
-            console.debug("===> SUBMIT FORM: \n ===> form_data: %o",form_data);
+            //console.debug("===> SUBMIT FORM: \n ===> form_data: %o",form_data);
 
             $.ajax({
                 type: 'POST',
