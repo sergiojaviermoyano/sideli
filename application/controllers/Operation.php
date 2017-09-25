@@ -40,5 +40,9 @@ class operation extends CI_Controller {
 
 	}
 
+	public function printOperation(){
+		echo json_encode($this->Operations->printOperation($this->input->post()));
+	}
+
 
 }
