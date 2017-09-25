@@ -128,7 +128,7 @@
                 $("#opterationComisionTotal").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
                 $("#operationNeto").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
                 $("#operationImpuestoCheque").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
-                $("#operationGasto").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+                $("#operationGasto").maskMoney({allowNegative: true, thousands:'', decimal:'.'});
                 $("#operationIva").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
                 $("#operationSellado").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
                 
