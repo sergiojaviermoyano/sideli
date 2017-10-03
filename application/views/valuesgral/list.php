@@ -90,10 +90,10 @@
     		success: function(result){
 			                WaitingClose();
 			                $("#modalBodyValuegral").html(result.html);
-                      $("#tasa").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
-                      $("#impuestos").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
-                      $("#gastos").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
-                      $("#comision").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+                      $("#tasa").maskMoney({allowNegative: false, thousands:'', decimal:'.', allowZero: true});
+                      $("#impuestos").maskMoney({allowNegative: false, thousands:'', decimal:'.', allowZero: true});
+                      $("#gastos").maskMoney({allowNegative: false, thousands:'', decimal:'.', allowZero: true});
+                      $("#comision").maskMoney({allowNegative: false, thousands:'', decimal:'.', allowZero: true});
 			                setTimeout("$('#modalValuegral').modal('show')",800);
     					},
     		error: function(result){

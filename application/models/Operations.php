@@ -278,6 +278,9 @@ class Operations extends CI_Model
 				$emisor = $query->result_array();
 				$data['emisor'] = $emisor[0];
 			}
+			//Detalle
+			
+
 
 			$html= '<table width="100%" style="font-family:Arial; font-size: 13pt;">';
 			//Titulo
