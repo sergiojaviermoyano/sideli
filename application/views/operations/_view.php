@@ -235,10 +235,11 @@
             <div class="col-lg-10 col-md-10 col-sm-12  col-xs-12">
                 <br>
                 <div class="row" id="check_outputs_1">
-                    <div class="col-lg-3 col-md-3 col-sm-12  col-xs-12">
-                        <button class="btn btn-succcess btn-lg add_check_out">Agregar Cheque</button>
+                    <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    <button class="btn btn-info btn-lg add_check_out "> <span class="icon-check-money"></span> Agregar Cheque</button>
+                    <button class="btn btn-success btn-lg add_tranfer_out"><i class="fa fa-exchange" aria-hidden="true"></i>Agregar Tranferencia</button>
                     </div>
-                    <div class="col-lg-3 col-md-3 col-sm-12  col-xs-12">
+                    <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
                         <h3>Neto: <span class="neto_total">00000.00</span></h3>                        
                         <button class="btn btn-succcess btn-lg add_check_out hidden" disabled>Agregar Tranferencia</button>
                     </div>
@@ -246,19 +247,33 @@
                 </div>   
                 <div class="col-lg-9">
                     <table id="salid_tb" class="table table-responsive">
-                    <thead>
-                        <tr >
-                            <th class="text-center">Banco</th>
-                            <th class="text-center">Cheque Nroº</th>
-                            <th class="text-center">Importe</th>
-                            <th class="text-center">Fecha</th>
-                            <th class="text-center"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                        <thead>
+                            <tr >
+                                <th class="text-center">Banco</th>
+                                <th class="text-center">Cheque Nroº</th>
+                                <th class="text-center">Importe</th>
+                                <th class="text-center">Fecha</th>
+                                <th class="text-center"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-                    </tbody>
-                </table>     
+                        </tbody>
+                    </table>
+                    <table id="salid_tb_tranferencia" class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Banco</th>
+                                <th class="text-center">CBU Nro / Alias</th>
+                                <th class="text-center">Importe</th>
+                                <th class="text-center">Fecha</th>
+                                <th class="text-center"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>     
                 </div>            
             </div>
         </div>
@@ -286,6 +301,7 @@
                 
             </tbody>
         </table>
+        
         <div class="row">
             <div class="col-lg-6 col-md-5 col-sm-12 col-xs-10 hidden-xs pull-left">
 
@@ -408,6 +424,7 @@ var banco_1={
         var cheque_salida_importe= $(this).find("button#operationCheckOutImporte");
         var cheque_salida_fecha= $(this).find("button#operationCheckOutFecha");
         var add_cheque_salida_bt= $(this).find("button.add_check_out");
+        var add_tranfer_salida_tb= $(this).find("button.add_tranfer_out");
 
         var neto_total=0;
         var total_valores_pagar=0;
@@ -878,6 +895,37 @@ var banco_1={
             return false;
         });
 
+
+        add_tranfer_salida_tb.on('click',function(){
+            total_rows=0;
+            var table=$('#salid_tb_tranferencia');
+            if(table.find("tbody tr:last").length>0){
+                total_rows= table.find("tbody tr").length;
+                next_row=table.find("tbody tr:last").data('next')+1;
+            }else{
+                total_rows=0;
+                next_row=1;
+            }
+
+            var total_rows= $("#salid_tb").find("tbody tr").length;
+            var last= table.find("tbody tr:last").data();
+            var new_row='<tr id="tr_'+(next_row-1)+'" data-next="'+next_row+'" >' ;
+                new_row+='<td><input type="text" class="form-control transfe_banco typeahead"  name="tranferencia_salida['+next_row+'][banco_nombre]" id="operation_'+next_row+'_TransfeOutBanco"  data-id="'+next_row+'" placeholder="Banco">';
+                new_row+='<input type="hidden"   name="tranferencia_salida['+next_row+'][banco_id]" id="transfe_banco_id_'+next_row+'" ></td>';
+                new_row+='<td><input type="text" class="form-control nro" name="tranferencia_salida['+next_row+'][cbu]" id="operation_'+next_row+'_TransfeOutCbu"  placeholder="Nro / Alias CBU" style="text-align: right"></td>';
+                new_row+='<td><input type="text" class="form-control importe" name="tranferencia_salida['+next_row+'][importe]" id="operation_'+next_row+'_TransfeOutImporte"  placeholder="Importe" style="text-align: right"></td>';
+                new_row+='<td><input type="text" class="form-control fecha datepicker" name="tranferencia_salida['+next_row+'][fecha]" id="operation_'+next_row+'_TransfeOutFecha"  placeholder="Fecha"></td>';
+                new_row+='<td><button class="btn btn-danger btn-xs bt_check_delete" data-id="'+(next_row-1)+'">Eliminar</button></td>'
+                new_row+='</tr>';
+            $("#salid_tb_tranferencia").find("tbody").append(new_row);
+            $('input.form-control.importe').maskMoney({allowNegative: false, thousands:'', decimal:'.'});//.trigger('mask.maskMoney');
+            $('input.form-control.fecha').datepicker({
+                minDate: today,
+                dateFormat: 'dd-mm-yy',
+                setDate: today,
+            });
+            return false;
+        });
         
         
 
@@ -932,6 +980,46 @@ var banco_1={
                 var data = map[item];
                 
                 $("#banco_id_"+id+"").val(data.id);
+                return data.razon_social;
+            }
+        }).typeahead();
+        });
+
+        $(document).on('click','.transfe_banco',function(){
+            var id=$(this).data('id');
+            $(this).typeahead({
+            minLength: 3,
+            items: 'all',
+            showHintOnFocus: false,
+            scrollHeight: 0,
+            source: function(query, process) {
+                var data_ajax={
+                    type: "POST",
+                    url: 'bank/buscadorDeBancos',                     
+                    data: { action: 'search', code: query, type: 'E' },
+                    success: function(data) {
+                        if(data==false){
+                            return false;
+                        }
+                        objects = [];
+                        map = {};                        
+                        $.each(data, function(i, object) {
+                            var key = object.razon_social
+                            map[key] = object;
+                            objects.push(key);
+                        });
+                        return process(objects);
+                    },
+                    error: function(error_msg) {
+                        alert("error_msg: " + error_msg);
+                    },
+                    dataType: 'json'
+                };
+                $.ajax(data_ajax);
+            }, updater: function(item) {
+                var data = map[item];
+                
+                $("#transfe_banco_id_"+id+"").val(data.id);
                 return data.razon_social;
             }
         }).typeahead();

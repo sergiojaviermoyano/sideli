@@ -5560,3 +5560,11 @@ hr {
     -moz-border-radius: 0px;
     background-image: none;
 }
+
+.icon-check-money {
+    background-image: url(images/check_money.png);
+    background-position: left center;
+    background-size: contain;
+    padding-left: 30px;
+    background-repeat: no-repeat;
+}
