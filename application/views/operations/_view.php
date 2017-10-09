@@ -235,18 +235,17 @@
             <div class="col-lg-10 col-md-10 col-sm-12  col-xs-12">
                 <br>
                 <div class="row" id="check_outputs_1">
-                    <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    <div class="col-lg-8 col-md-8 col-sm-12  col-xs-12">
                     <button class="btn btn-info btn-lg add_check_out "> <span class="icon-check-money"></span> Agregar Cheque</button>
                     <button class="btn btn-success btn-lg add_tranfer_out"><i class="fa fa-exchange" aria-hidden="true"></i>Agregar Tranferencia</button>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
-                        <h3>Neto: <span class="neto_total">00000.00</span></h3>                        
-                        <button class="btn btn-succcess btn-lg add_check_out hidden" disabled>Agregar Tranferencia</button>
+                    <div class="col-lg-4 col-md-4 col-sm-12  col-xs-12 text-right">
+                        <h3>Neto: <span class="neto_total"></span></h3>                        
                     </div>
                     
                 </div>   
                 <div class="col-lg-9">
-                    <table id="salid_tb" class="table table-responsive">
+                    <table id="salid_tb" class="table table-responsive hidden">
                         <thead>
                             <tr >
                                 <th class="text-center">Banco</th>
@@ -260,7 +259,7 @@
 
                         </tbody>
                     </table>
-                    <table id="salid_tb_tranferencia" class="table table-responsive">
+                    <table id="salid_tb_tranferencia" class="table table-responsive hidden">
                         <thead>
                             <tr>
                                 <th class="text-center">Banco</th>
@@ -865,7 +864,12 @@ var banco_1={
         
         
         add_cheque_salida_bt.on('click',function(){
-            //console.debug("====> Agregar Nuevo Cheque");
+            
+            if($("#salid_tb").is( ":hidden" ))
+                console.debug("====> Agregar Nuevo Cheque");{
+                $("#salid_tb").removeClass("hidden");
+            }
+
             total_rows=0;
             if($("#salid_tb").find("tbody tr:last").length>0){
                 total_rows= $("#salid_tb").find("tbody tr").length;
@@ -897,8 +901,15 @@ var banco_1={
 
 
         add_tranfer_salida_tb.on('click',function(){
+            
             total_rows=0;
             var table=$('#salid_tb_tranferencia');
+
+            if(table.is( ":hidden" ))
+                console.debug("====> Agregar Nuevo Cheque");{
+                table.removeClass("hidden");
+            }
+
             if(table.find("tbody tr:last").length>0){
                 total_rows= table.find("tbody tr").length;
                 next_row=table.find("tbody tr:last").data('next')+1;
