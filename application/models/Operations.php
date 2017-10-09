@@ -101,7 +101,10 @@ class Operations extends CI_Model
 
 	public function add($data=false){
 		
-		if($data['agente_emisor_id']=='0'){
+		// Consulta si existe Agente Emisor por nro cuit, si no existe lo agrega
+		$get_agente=$this->db->get_where('agente',array('cuit'=>$data['emisor_cuit']));
+		if($get_agente->num_rows()==0){		
+		
 			$agente_emisor= array(
 				'nombre'=>$data['emisor_nombre'],
 				'apellido'=>$data['emisor_apellido'],
@@ -110,9 +113,7 @@ class Operations extends CI_Model
 				'domicilio'=>'',
 				'tipo'=>1,
 				'estado'=>'ac',
-			);
-			//var_dump($agente_emisor);
-			
+			);					
 			$this->db->trans_start();
 			$this->db->set('created', 'NOW()', FALSE);
 			$this->db->set('updated', 'NOW()', FALSE);
@@ -121,7 +122,8 @@ class Operations extends CI_Model
 			$this->db->trans_complete();
 		}
 		
-		if($data['agente_tomador_id']=='0'){
+		$get_agente=$this->db->get_where('agente',array('cuit'=>$data['tomador_cuit']));
+		if($get_agente->num_rows()==0){		
 			$agente_tomador= array(
 				'nombre'=>$data['tomador_nombre'],
 				'apellido'=>$data['tomador_apellido'],
@@ -139,7 +141,9 @@ class Operations extends CI_Model
 			$data['agente_tomador_id'] = $this->db->insert_id();
 			$this->db->trans_complete();
 		}
+
 		
+		// Inserta Operacion en Operacion
 		$params=array(
 			'agente_emisor_id'=>$data['agente_emisor_id'],
 			'agente_tenedor_id'=>$data['agente_tomador_id'],
@@ -166,11 +170,36 @@ class Operations extends CI_Model
 		);
 		
 		$this->db->trans_start();
-			$result= $this->db->insert('operacion', $params);
-			$operacion_id = $this->db->insert_id();
-			$cheque_params=array();
-			$operacion_id=1;
+		$result= $this->db->insert('operacion', $params);
+		$operacion_id = $this->db->insert_id();
+		
+		// Inserta Cheque Recibido en CHeque
+		$cheque_in=array(
+			'fecha'=>date('Y-m-d',strtotime($data['fecha_ven'])),
+			'bancoId'=>$data['banco_id'],
+			'numero'=>$data['nro_cheque'],
+			'importe'=>floatval($data['importe']),
+			'estado'=>'AC',
+			'observacion'=>null,
+			'espropio'=>1,
+			'tipo'=>1,
+			'vencimiento'=>null,
+			'agenteId'=>$data['agente_tomador_id']
+		);
+		$this->db->insert('cheques',$cheque_in);
+		$cheque_id=$this->db->insert_id();
+		$operacion_detalle=array(
+			'operacion_id'=>$operacion_id,
+			'cheque_id'=>$cheque_id,
+		);
+		$this->db->insert('operacion_detalle',$operacion_detalle);
+		$operacion_detalle_id=$this->db->insert_id();
+
+		// Inserta Cheques de Entregados en Cheques
+
+		if(isset($data['cheque_salida'])){	
 			foreach($data['cheque_salida'] as $key=>$item){
+				
 				$temp_cheque=array(
 					'fecha'=>date('Y-m-d',strtotime($item['fecha'])),
 					'bancoId'=>$item['banco_id'],
@@ -179,6 +208,7 @@ class Operations extends CI_Model
 					'estado'=>'AC',
 					'observacion'=>null,
 					'espropio'=>1,
+					'tipo'=>2,
 					'vencimiento'=>null,
 					'agenteId'=>$data['agente_tomador_id']
 				);
@@ -192,6 +222,37 @@ class Operations extends CI_Model
 				$this->db->insert('operacion_detalle',$operacion_detalle);
 				$operacion_detalle_id=$this->db->insert_id();
 			}
+		}
+
+		// Inserta Tranferencias de Salida
+		if(isset($data['tranferencia_salida'])){			
+			foreach($data['tranferencia_salida'] as $key=>$item){			
+				
+				$temp_transf= array(
+					'banco_id' => $item['banco_id'],
+					'cbu_nro' => (is_numeric($item['cbu']))?$item['cbu']:0,
+					'cbu_alias' => (!is_numeric($item['cbu']))?$item['cbu']:'',
+					'importe'=>floatval($item['importe']),
+					'fecha'=>date('Y-m-d',strtotime($item['fecha'])),
+					'estado' =>'AC'
+				);
+
+				$this->db->insert('transferencias',$temp_transf);
+				$transferencia_id=$this->db->insert_id();
+				
+				$operacion_detalle=array(
+					'operacion_id'=>$operacion_id,
+					'transferencia_id'=>$transferencia_id,
+				);
+				$this->db->insert('operacion_detalle_transferencia',$operacion_detalle);
+				$operacion_detalle_tranferencia_id=$this->db->insert_id();
+				
+			}
+		}
+
+
+
+
 		$this->db->trans_complete();
 		return true;
 	}
