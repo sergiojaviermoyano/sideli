@@ -44,5 +44,8 @@ class operation extends CI_Controller {
 		echo json_encode($this->Operations->printOperation($this->input->post()));
 	}
 
-
+	public function printLiquidacion(){
+		echo json_encode($this->Operations->printLiquidacion($this->input->post()));
+	}
+	
 }

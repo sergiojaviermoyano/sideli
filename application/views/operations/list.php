@@ -43,7 +43,10 @@
                                             echo '<i class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadOperation('.$item['id'].',\'Del\')"></i>';
                                         }
                                         if (strpos($permission,'View') !== false) {
-                                            echo '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="Print('.$item['id'].',\'View\')"></i> ';
+                                            echo '<i class="fa fa-fw fa-file-text-o" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="Print('.$item['id'].',\'View\')"></i> ';
+                                        }
+                                        if (strpos($permission,'View') !== false) {
+                                            echo '<i class="fa fa-fw fa-dollar" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="PrintLiq('.$item['id'].',\'View\')"></i> ';
                                         }
                                         ?>
                                     </td>
@@ -152,6 +155,29 @@
                     id : id__
                   },
         url: 'index.php/operation/printOperation',
+        success: function(result){
+                      WaitingClose();
+                      var url = "./assets/reports/" + result;
+                      $('#printDoc').attr('src', url);
+                      setTimeout("$('#modalPrint').modal('show')",800);
+              },
+        error: function(result){
+              WaitingClose();
+              ProcesarError(result.responseText, 'modalPrint');
+            },
+            dataType: 'json'
+        });
+  }
+
+  function PrintLiq(id__){
+    WaitingOpen('Generando reporte...');
+    LoadIconAction('modalAction__','Print');
+    $.ajax({
+            type: 'POST',
+            data: {
+                    id : id__
+                  },
+        url: 'index.php/operation/printLiquidacion',
         success: function(result){
                       WaitingClose();
                       var url = "./assets/reports/" + result;
