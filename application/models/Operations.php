@@ -365,15 +365,15 @@ class Operations extends CI_Model
 				//Cheques de pago 
 				$html.= '<tr><td><br>';
 				$html.= '<table width="100%" style="border: 1px solid #000;">';
-				$html.= '<tr style="text-align: center"><th>Banco</th><th>Número</th><th>Importe</th><th>Fecha</th></tr>';	
 				//Get Cheques 
 				$this->db->select('cheques.*');
 				$this->db->from('cheques');
 				$this->db->join('operacion_detalle', 'operacion_detalle.cheque_id = cheques.id');;
-				$this->db->where(array('operacion_detalle.operacion_id' => 1));
+				$this->db->where(array('operacion_detalle.operacion_id' => $result['operation']['id'], 'cheques.tipo' => 2));
 				$query = $this->db->get();
-				if ($query->num_rows() != 0)
+				if ($query->num_rows() != 0 && $query->num_rows() > 1)
 				{
+					$html.= '<tr style="text-align: center"><th>Banco</th><th>Número</th><th>Importe</th><th>Fecha</th></tr>';	
 					foreach($query->result() as $che)
 					{
 						$html.= '<tr>';
@@ -385,7 +385,27 @@ class Operations extends CI_Model
 					}
 					
 				}
-				$html.= '</td></tr></table>';
+				//Get Transferencias
+				$this->db->select('transferencias.*');
+				$this->db->from('transferencias');
+				$this->db->join('operacion_detalle_transferencia', 'operacion_detalle_transferencia.transferencia_id = transferencias.id');;
+				$this->db->where(array('operacion_detalle_transferencia.operacion_id' => $result['operation']['id']));
+				$query = $this->db->get();
+				if ($query->num_rows() != 0)
+				{
+					$html.= '<tr style="text-align: center"><th>Banco</th><th>CBU/Alias</th><th>Importe</th><th>Fecha</th></tr>';	
+					foreach($query->result() as $che)
+					{
+						$html.= '<tr>';
+						$html.= 	'<td>'.$this->getBankName($che->banco_id).'</td>';
+						$html.= 	'<td style="text-align: right">'.$che->cbu_alias.'</td>';
+						$html.= 	'<td style="text-align: right">'.number_format($che->importe, 2, ',', '.').'</td>';
+						$html.= 	'<td style="text-align: center">'.date("d-m-Y", strtotime($che->fecha)).'</td>';
+						$html.= '</tr>';
+					}
+					
+				}
+				$html.= '</table></td></tr>';
 				//-----------------------------------------------------
 				$html.= '<tr><td><br></td></tr>';
 				//Segunda
@@ -737,141 +757,163 @@ class Operations extends CI_Model
 		}
 		else
 		{
-			$data['act'] = 'Print';
-			$result = $this->getOperation($data);
-			//Inversor
-			$query= $this->db->get_where('inversor',array('id' => $result['operation']['inversor_id']));
-			if ($query->num_rows() != 0)
-			{
-				$inversor = $query->result_array();
-				$data['inversor'] = $inversor[0];
-			}
-			//Tenedor
-			$query= $this->db->get_where('agente',array('id' => $result['operation']['agente_tenedor_id']));
-			if ($query->num_rows() != 0)
-			{
-				$tenedor = $query->result_array();
-				$data['tenedor'] = $tenedor[0];
-			}
-			//Banco
-			$query= $this->db->get_where('banco',array('id' => $result['operation']['banco_id']));
-			if ($query->num_rows() != 0)
-			{
-				$banco = $query->result_array();
-				$data['banco'] = $banco[0];
-			}
-			//Emisor
-			$query= $this->db->get_where('agente',array('id' => $result['operation']['agente_emisor_id']));
-			if ($query->num_rows() != 0)
-			{
-				$emisor = $query->result_array();
-				$data['emisor'] = $emisor[0];
-			}
-			//Detalle
-			
-
-
-			$html= '<table width="100%" style="font-family:Arial; font-size: 13pt;">';
-			//Titulo
-			$html.= '<tr><td style="text-align: right"><strong>'.$data['inversor']['razon_social'].'</td></tr>';
-			//Header
-			$html.= '<tr><td style="text-align:left;"><strong>LIQUIDACIÓN DE VALORES</strong></td></tr>';
-			$html.= '<tr><td style="text-align:right;"><strong>FECHA: '.date("d-m-Y", strtotime($result['operation']['created'])).'</strong></td></tr>';
-			$html.= '<tr><td style="text-align:left;">CLIENTE: <strong>'.$data['tenedor']['apellido'].', '.$data['tenedor']['nombre'].'</strong></td></tr>';
-			$html.= '<tr><td style="text-align:left;">DOMICILIO: <strong>'.$data['tenedor']['domicilio'].'</strong></td></tr>';
-			$html.= '<tr><td style="text-align:left;">CUIT: <strong>'.$data['tenedor']['cuit'].'</strong></td></tr>';
-			$html.= '<tr><td style="text-align:left;">FACTURA NÚMERO: <strong>'.str_pad($data['id'], 10, "0", STR_PAD_LEFT).'</strong></td></tr>';
-			$html.= '<tr><td style="text-align:center; text-decoration: underline;">DETALLE DE VALORES COMPRADOS</td></tr>';
-			//Cheque recibido
-			$html.= '<tr><td><br>';
-			$html.= '<table width="100%" style="border: 1px solid #000;">';
-			$html.= '<tr style="text-align: center"><th>BANCO</th><th>NUMERO</th><th>LIBRADOR</th><th>F.PAGO</th><th>TASA</th><th>DIAS</th><th>IMPORTE $</th></tr>';
-			$html.= '<tr>';
-			$html.= '<td>'.$data['banco']['razon_social'].'</td>';
-			$html.= '<td style="text-align: right">'.$result['operation']['nro_cheque'].'</td>';
-			$html.= '<td>'.$data['emisor']['apellido'] . ' ' . $data['emisor']['nombre'].'</td>';
-			$html.= '<td style="text-align: center">'.date("d-m-Y", strtotime($result['operation']['fecha_venc'])).'</td>';
-			$html.= '<td style="text-align: right">'.number_format($result['operation']['tasa_mensual'], 2, ',', '.').'</td>';
-			$html.= '<td style="text-align: right">'.number_format($result['operation']['nro_dias'], 0, ',', '.').'</td>';
-			$html.= '<td style="text-align: right">'.number_format($result['operation']['importe'], 2, ',', '.').'</td>';
-			$html.= '</td></tr></table></td></tr>';
-			//Detalle
-			$html.= '<tr><td><br>';
-			$html.= '<table width="100%" style="border: 1px solid #000;">';
-			$html.= '<tr><td style="width:25%"></td><td style="text-align:left">TOTAL DE VALORES $</td><td style="text-align:right">'.number_format($result['operation']['importe'], 2, ',', '.').'</td></tr>';
-			$html.= '<tr><td style="width:25%"></td><td style="text-align:left">INTERESES $</td><td style="text-align:right">'.number_format($result['operation']['interes'], 2, ',', '.').'</td></tr>';
-			$html.= '<tr><td style="width:25%"></td><td style="text-align:left">IMP DEB Y CRED BANCARIOS $</td><td style="text-align:right">'.number_format($result['operation']['impuesto_cheque'], 2, ',', '.').'</td></tr>';
-			$html.= '<tr><td style="width:25%"></td><td style="text-align:left">VALORES OTRA PLAZA $</td><td style="text-align:right">'.number_format($result['operation']['gastos'], 2, ',', '.').'</td></tr>';
-			$html.= '<tr><td style="width:25%"></td><td style="text-align:left">COMISIONES $</td><td style="text-align:right">'.number_format($result['operation']['comision_total'], 2, ',', '.').'</td></tr>';
-			$html.= '<tr><td style="width:25%"></td><td style="text-align:left">IVA $</td><td style="text-align:right">'.number_format($result['operation']['iva'], 2, ',', '.').'</td></tr>';
-			$html.= '<tr><td style="width:25%"></td><td style="text-align:left">SELLADO $</td><td style="text-align:right">'.number_format($result['operation']['sellado'], 2, ',', '.').'</td></tr>';
-			$html.= '<tr><td style="width:25%"></td><td style="text-align:left">NETO A LIQUIDAR $</td><td style="text-align:right">'.number_format($result['operation']['neto'], 2, ',', '.').'</td></tr>';
-			$html.= '</table></tr></td>';
-			//Foother
-			$html.= '<tr><td style="text-indent: 40px; text-align:justify;">';
-			$html.= 'El Pago de IVA y sellado, es abonado al momento de liquidación de la operación.-</td></tr> ';
-			$html.= '<tr><td style="text-indent: 40px; text-align:justify;">';
-			$html.= 'RECIBI IMPORTE NETO LIQUIDADO CON CHUEQUES <br> ';
-			//Cheques de pago 
-			$html.= '<table width="100%" style="border: 1px solid #000;">';
-			$html.= '<tr style="text-align: center"><th>Banco</th><th>Número</th><th>Importe</th><th>Fecha</th></tr>';	
-			//Get Cheques 
-			$this->db->select('cheques.*');
-			$this->db->from('cheques');
-			$this->db->join('operacion_detalle', 'operacion_detalle.cheque_id = cheques.id');;
-			$this->db->where(array('operacion_detalle.operacion_id' => 1));
-			$query = $this->db->get();
-			if ($query->num_rows() != 0)
-			{
-				foreach($query->result() as $che)
+			if(!file_exists( 'assets/reports/'.$data['id'].'.pdf' )){
+				$data['act'] = 'Print';
+				$result = $this->getOperation($data);
+				//Inversor
+				$query= $this->db->get_where('inversor',array('id' => $result['operation']['inversor_id']));
+				if ($query->num_rows() != 0)
 				{
-					$html.= '<tr>';
-					$html.= 	'<td>'.$this->getBankName($che->bancoId).'</td>';
-					$html.= 	'<td style="text-align: right">'.$che->numero.'</td>';
-					$html.= 	'<td style="text-align: right">'.number_format($che->importe, 2, ',', '.').'</td>';
-					$html.= 	'<td style="text-align: center">'.date("d-m-Y", strtotime($che->fecha)).'</td>';
-					$html.= '</tr>';
+					$inversor = $query->result_array();
+					$data['inversor'] = $inversor[0];
 				}
+				//Tenedor
+				$query= $this->db->get_where('agente',array('id' => $result['operation']['agente_tenedor_id']));
+				if ($query->num_rows() != 0)
+				{
+					$tenedor = $query->result_array();
+					$data['tenedor'] = $tenedor[0];
+				}
+				//Banco
+				$query= $this->db->get_where('banco',array('id' => $result['operation']['banco_id']));
+				if ($query->num_rows() != 0)
+				{
+					$banco = $query->result_array();
+					$data['banco'] = $banco[0];
+				}
+				//Emisor
+				$query= $this->db->get_where('agente',array('id' => $result['operation']['agente_emisor_id']));
+				if ($query->num_rows() != 0)
+				{
+					$emisor = $query->result_array();
+					$data['emisor'] = $emisor[0];
+				}
+				//Detalle
 				
+
+
+				$html= '<table width="100%" style="font-family:Arial; font-size: 13pt;">';
+				//Titulo
+				$html.= '<tr><td style="text-align: right"><strong>'.$data['inversor']['razon_social'].'</td></tr>';
+				//Header
+				$html.= '<tr><td style="text-align:left;"><strong>LIQUIDACIÓN DE VALORES</strong></td></tr>';
+				$html.= '<tr><td style="text-align:right;"><strong>FECHA: '.date("d-m-Y", strtotime($result['operation']['created'])).'</strong></td></tr>';
+				$html.= '<tr><td style="text-align:left;">CLIENTE: <strong>'.$data['tenedor']['apellido'].', '.$data['tenedor']['nombre'].'</strong></td></tr>';
+				$html.= '<tr><td style="text-align:left;">DOMICILIO: <strong>'.$data['tenedor']['domicilio'].'</strong></td></tr>';
+				$html.= '<tr><td style="text-align:left;">CUIT: <strong>'.$data['tenedor']['cuit'].'</strong></td></tr>';
+				$html.= '<tr><td style="text-align:left;">FACTURA NÚMERO: <strong>'.str_pad($data['id'], 10, "0", STR_PAD_LEFT).'</strong></td></tr>';
+				$html.= '<tr><td style="text-align:center; text-decoration: underline;">DETALLE DE VALORES COMPRADOS</td></tr>';
+				//Cheque recibido
+				$html.= '<tr><td><br>';
+				$html.= '<table width="100%" style="border: 1px solid #000;">';
+				$html.= '<tr style="text-align: center"><th>BANCO</th><th>NUMERO</th><th>LIBRADOR</th><th>F.PAGO</th><th>TASA</th><th>DIAS</th><th>IMPORTE $</th></tr>';
+				$html.= '<tr>';
+				$html.= '<td>'.$data['banco']['razon_social'].'</td>';
+				$html.= '<td style="text-align: right">'.$result['operation']['nro_cheque'].'</td>';
+				$html.= '<td>'.$data['emisor']['apellido'] . ' ' . $data['emisor']['nombre'].'</td>';
+				$html.= '<td style="text-align: center">'.date("d-m-Y", strtotime($result['operation']['fecha_venc'])).'</td>';
+				$html.= '<td style="text-align: right">'.number_format($result['operation']['tasa_mensual'], 2, ',', '.').'</td>';
+				$html.= '<td style="text-align: right">'.number_format($result['operation']['nro_dias'], 0, ',', '.').'</td>';
+				$html.= '<td style="text-align: right">'.number_format($result['operation']['importe'], 2, ',', '.').'</td>';
+				$html.= '</td></tr></table></td></tr>';
+				//Detalle
+				$html.= '<tr><td><br>';
+				$html.= '<table width="100%" style="border: 1px solid #000;">';
+				$html.= '<tr><td style="width:25%"></td><td style="text-align:left">TOTAL DE VALORES $</td><td style="text-align:right">'.number_format($result['operation']['importe'], 2, ',', '.').'</td></tr>';
+				$html.= '<tr><td style="width:25%"></td><td style="text-align:left">INTERESES $</td><td style="text-align:right">'.number_format($result['operation']['interes'], 2, ',', '.').'</td></tr>';
+				$html.= '<tr><td style="width:25%"></td><td style="text-align:left">IMP DEB Y CRED BANCARIOS $</td><td style="text-align:right">'.number_format($result['operation']['impuesto_cheque'], 2, ',', '.').'</td></tr>';
+				$html.= '<tr><td style="width:25%"></td><td style="text-align:left">VALORES OTRA PLAZA $</td><td style="text-align:right">'.number_format($result['operation']['gastos'], 2, ',', '.').'</td></tr>';
+				$html.= '<tr><td style="width:25%"></td><td style="text-align:left">COMISIONES $</td><td style="text-align:right">'.number_format($result['operation']['comision_total'], 2, ',', '.').'</td></tr>';
+				$html.= '<tr><td style="width:25%"></td><td style="text-align:left">IVA $</td><td style="text-align:right">'.number_format($result['operation']['iva'], 2, ',', '.').'</td></tr>';
+				$html.= '<tr><td style="width:25%"></td><td style="text-align:left">SELLADO $</td><td style="text-align:right">'.number_format($result['operation']['sellado'], 2, ',', '.').'</td></tr>';
+				$html.= '<tr><td style="width:25%"></td><td style="text-align:left">NETO A LIQUIDAR $</td><td style="text-align:right">'.number_format($result['operation']['neto'], 2, ',', '.').'</td></tr>';
+				$html.= '</table></tr></td>';
+				//Foother
+				$html.= '<tr><td style="text-indent: 40px; text-align:justify;">';
+				$html.= 'El Pago de IVA y sellado, es abonado al momento de liquidación de la operación.-</td></tr> ';
+				$html.= '<tr><td style="text-indent: 40px; text-align:justify;">';
+				$html.= 'RECIBI IMPORTE NETO LIQUIDADO CON <br> ';
+				//Cheques de pago 
+				$html.= '<table width="100%" style="border: 1px solid #000;">';
+				//Get Cheques 
+				$this->db->select('cheques.*');
+				$this->db->from('cheques');
+				$this->db->join('operacion_detalle', 'operacion_detalle.cheque_id = cheques.id');;
+				$this->db->where(array('operacion_detalle.operacion_id' => $result['operation']['id'], 'cheques.tipo' => 2));
+				$query = $this->db->get();
+				if ($query->num_rows() != 0 && $query->num_rows() > 1)
+				{
+					$html.= '<tr style="text-align: center"><th>Banco</th><th>Número</th><th>Importe</th><th>Fecha</th></tr>';	
+					foreach($query->result() as $che)
+					{
+						$html.= '<tr>';
+						$html.= 	'<td>'.$this->getBankName($che->bancoId).'</td>';
+						$html.= 	'<td style="text-align: right">'.$che->numero.'</td>';
+						$html.= 	'<td style="text-align: right">'.number_format($che->importe, 2, ',', '.').'</td>';
+						$html.= 	'<td style="text-align: center">'.date("d-m-Y", strtotime($che->fecha)).'</td>';
+						$html.= '</tr>';
+					}
+					
+				}
+				//Get Transferencias
+				$this->db->select('transferencias.*');
+				$this->db->from('transferencias');
+				$this->db->join('operacion_detalle_transferencia', 'operacion_detalle_transferencia.transferencia_id = transferencias.id');;
+				$this->db->where(array('operacion_detalle_transferencia.operacion_id' => $result['operation']['id']));
+				$query = $this->db->get();
+				if ($query->num_rows() != 0)
+				{
+					$html.= '<tr style="text-align: center"><th>Banco</th><th>CBU/Alias</th><th>Importe</th><th>Fecha</th></tr>';	
+					foreach($query->result() as $che)
+					{
+						$html.= '<tr>';
+						$html.= 	'<td>'.$this->getBankName($che->banco_id).'</td>';
+						$html.= 	'<td style="text-align: right">'.$che->cbu_alias.'</td>';
+						$html.= 	'<td style="text-align: right">'.number_format($che->importe, 2, ',', '.').'</td>';
+						$html.= 	'<td style="text-align: center">'.date("d-m-Y", strtotime($che->fecha)).'</td>';
+						$html.= '</tr>';
+					}
+					
+				}
+				$html.= '</table></td></tr>';
+				//-----------------------------------------------------
+				//Listado de cheuqes emitidos 
+				$html.= '</td></tr>';
+				$html.= '<tr><td style="text-indent: 40px; text-align:justify;"><strong>';
+				$html.= 'ESTA OPERACION SE CANCELA CON CHUEQUE '.$data['banco']['razon_social'].' N'.$result['operation']['nro_cheque'].'</td></tr>';
+				//Firmas
+				$html.= '<tr><td><br><br><br><br><br><br><br><br>';
+				$html.= '<table width="100%">';
+				$html.= '<tr><td style="width: 50%; text-align:center;">'.$data['inversor']['razon_social'].'</td><td style="width: 50%; text-align:center;">'.$data['tenedor']['apellido'].', '.$data['tenedor']['nombre'].'</td></tr>';
+				$html.= '</table>';
+
+				//se incluye la libreria de dompdf
+				require_once("assets/plugin/HTMLtoPDF/dompdf/dompdf_config.inc.php");
+				//se crea una nueva instancia al DOMPDF
+				$dompdf = new DOMPDF();
+				//se carga el codigo html
+				$dompdf->load_html(utf8_decode($html));
+				//aumentamos memoria del servidor si es necesario
+				ini_set("memory_limit","300M");
+				//Tamaño de la página y orientación
+				$dompdf->set_paper('a4','portrait');
+				//lanzamos a render
+				$dompdf->render();
+				//guardamos a PDF
+				//$dompdf->stream("TrabajosPedndientes.pdf");
+				$output = $dompdf->output();
+				file_put_contents('assets/reports/'.$data['id'].'_l.pdf', $output);
+
+				//Eliminar archivos viejos ---------------
+				//$dir = opendir('assets/reports/');
+				//while($f = readdir($dir))
+				//{
+				//	if((time()-filemtime('assets/reports/'.$f) > 3600*24*1) and !(is_dir('assets/reports/'.$f)))
+				//	unlink('assets/reports/'.$f);
+				//}
+				//closedir($dir);
+				//----------------------------------------
 			}
-			$html.= '</td></tr></table>';
-			//-----------------------------------------------------
-			//Listado de cheuqes emitidos 
-			$html.= '</td></tr>';
-			$html.= '<tr><td style="text-indent: 40px; text-align:justify;"><strong>';
-			$html.= 'ESTA OPERACION SE CANCELA CON CHUEQUE '.$data['banco']['razon_social'].' N'.$result['operation']['nro_cheque'].'</td></tr>';
-			//Firmas
-			$html.= '<tr><td><br><br><br><br><br><br><br><br>';
-			$html.= '<table width="100%">';
-			$html.= '<tr><td style="width: 50%; text-align:center;">'.$data['inversor']['razon_social'].'</td><td style="width: 50%; text-align:center;">'.$data['tenedor']['apellido'].', '.$data['tenedor']['nombre'].'</td></tr>';
-			$html.= '</table>';
-
-			//se incluye la libreria de dompdf
-			require_once("assets/plugin/HTMLtoPDF/dompdf/dompdf_config.inc.php");
-			//se crea una nueva instancia al DOMPDF
-			$dompdf = new DOMPDF();
-			//se carga el codigo html
-			$dompdf->load_html(utf8_decode($html));
-			//aumentamos memoria del servidor si es necesario
-			ini_set("memory_limit","300M");
-			//Tamaño de la página y orientación
-			$dompdf->set_paper('a4','portrait');
-			//lanzamos a render
-			$dompdf->render();
-			//guardamos a PDF
-			//$dompdf->stream("TrabajosPedndientes.pdf");
-			$output = $dompdf->output();
-			file_put_contents('assets/reports/'.$data['id'].'_l.pdf', $output);
-
-			//Eliminar archivos viejos ---------------
-			//$dir = opendir('assets/reports/');
-			//while($f = readdir($dir))
-			//{
-			//	if((time()-filemtime('assets/reports/'.$f) > 3600*24*1) and !(is_dir('assets/reports/'.$f)))
-			//	unlink('assets/reports/'.$f);
-			//}
-			//closedir($dir);
-			//----------------------------------------
 			return $data['id'].'_l.pdf';
 		}
     }
