@@ -20,7 +20,7 @@
       <label> CUIT: <strong style="color: #dd4b39"> <?php echo $data['inversor']['cuit'];?></strong> </label><br>
       <label> Dirección: <strong style="color: #dd4b39"> <?php echo $data['inversor']['domicilio'];?></strong> </label>
     </div>
-</div><br><br>
+</div><br>
 
 <div class="row">
 	<div class="col-xs-12">

@@ -94,9 +94,10 @@ class Operations extends CI_Model
 				$this->db->select('cheques.*');
 				$this->db->from('cheques');
 				$this->db->join('operacion_detalle', 'operacion_detalle.cheque_id = cheques.id');;
-				$this->db->where(array('operacion_detalle.operacion_id' => $id, 'cheques.tipo' => 2));
+				$this->db->where(array('operacion_detalle.operacion_id' => $data['operation']['id'], 'cheques.tipo' => 2));
 				$query = $this->db->get();
-				if ($query->num_rows() != 0 && $query->num_rows() > 1)
+				//echo $this->db->last_query();
+				if ($query->num_rows() != 0)
 				{
 					foreach($query->result() as $che)
 					{
@@ -108,15 +109,16 @@ class Operations extends CI_Model
 										);
 					}
 					
-				}
+				}	
 				$data['cheques'] = $cheques;
 				//Get Transferencias
 				$transferencias = array();
 				$this->db->select('transferencias.*');
 				$this->db->from('transferencias');
 				$this->db->join('operacion_detalle_transferencia', 'operacion_detalle_transferencia.transferencia_id = transferencias.id');;
-				$this->db->where(array('operacion_detalle_transferencia.operacion_id' => $id));
+				$this->db->where(array('operacion_detalle_transferencia.operacion_id' => $data['operation']['id']));
 				$query = $this->db->get();
+				//echo $this->db->last_query();
 				if ($query->num_rows() != 0)
 				{
 					foreach($query->result() as $che)
