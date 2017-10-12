@@ -23,8 +23,11 @@ class operation extends CI_Controller {
 
     public function getOperation(){
 		$data['data'] = $this->Operations->getOperation($this->input->post());
-		
-		$response['html'] = $this->load->view('operations/_view', $data, true);
+		if($data['data']['act'] == 'View'){
+			$response['html'] = $this->load->view('operations/_consult', $data, true);
+		} else {
+			$response['html'] = $this->load->view('operations/_view', $data, true);
+		}
 		echo json_encode($response);
 	}
 

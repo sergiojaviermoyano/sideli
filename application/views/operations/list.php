@@ -16,7 +16,7 @@
                         <table id="inversores" class="table table-bordered table-hover datatable">
                             <thead>
                             <tr>                               
-                                <th >Tomador</th>
+                                <th >Tenedor</th>
                                 <th >Banco</th>
                                 <th >Fecha Vencimiento</th>
                                 <th >Importe</th>
@@ -39,12 +39,12 @@
                                         /*
                                         if (strpos($permission,'Edit') !== false) {
                                             echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadOperation('.$item['id'].',\'Edit\')"></i>';
-                                        }
-                                        if (strpos($permission,'Del') !== false) {
-                                            echo '<i class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadOperation('.$item['id'].',\'Del\')"></i>';
                                         }*/
                                         if (strpos($permission,'View') !== false) {
-                                            echo '<i class="fa fa-fw fa-file-text-o" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="Print('.$item['id'].',\'View\')"></i> ';
+                                            echo '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadOperation('.$item['id'].',\'View\')"></i>';
+                                        }
+                                        if (strpos($permission,'View') !== false) {
+                                            echo '<i class="fa fa-fw fa-file-text-o" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="Print('.$item['id'].',\'View\')"></i> ';
                                         }
                                         if (strpos($permission,'View') !== false) {
                                             echo '<i class="fa fa-fw fa-dollar" style="color: #00a65a ; cursor: pointer; margin-left: 15px;" onclick="PrintLiq('.$item['id'].',\'View\')"></i> ';

@@ -58,6 +58,80 @@ class Operations extends CI_Model
 			{	
 				$temp=$query->result_array();				
 				$data['operation'] = $temp[0];
+
+				//Inversor
+				$query= $this->db->get_where('inversor',array('id' => $temp[0]['inversor_id']));
+				if ($query->num_rows() != 0)
+				{
+					$inversor = $query->result_array();
+					$data['inversor'] = $inversor[0];
+				}
+				//Tenedor
+				$query= $this->db->get_where('agente',array('id' => $temp[0]['agente_tenedor_id']));
+				if ($query->num_rows() != 0)
+				{
+					$tenedor = $query->result_array();
+					$data['tenedor'] = $tenedor[0];
+				}
+				//Banco
+				$query= $this->db->get_where('banco',array('id' => $temp[0]['banco_id']));
+				if ($query->num_rows() != 0)
+				{
+					$banco = $query->result_array();
+					$data['banco'] = $banco[0];
+				}
+				//Emisor
+				$query= $this->db->get_where('agente',array('id' => $temp[0]['agente_emisor_id']));
+				if ($query->num_rows() != 0)
+				{
+					$emisor = $query->result_array();
+					$data['emisor'] = $emisor[0];
+				}
+
+				//---------------------
+				//Get Cheques 
+				$cheques = array();
+				$this->db->select('cheques.*');
+				$this->db->from('cheques');
+				$this->db->join('operacion_detalle', 'operacion_detalle.cheque_id = cheques.id');;
+				$this->db->where(array('operacion_detalle.operacion_id' => $id, 'cheques.tipo' => 2));
+				$query = $this->db->get();
+				if ($query->num_rows() != 0 && $query->num_rows() > 1)
+				{
+					foreach($query->result() as $che)
+					{
+						$cheques[] = array(
+											$this->getBankName($che->bancoId), 
+											$che->numero,
+											number_format($che->importe, 2, ',', '.'),
+											date("d-m-Y", strtotime($che->fecha))
+										);
+					}
+					
+				}
+				$data['cheques'] = $cheques;
+				//Get Transferencias
+				$transferencias = array();
+				$this->db->select('transferencias.*');
+				$this->db->from('transferencias');
+				$this->db->join('operacion_detalle_transferencia', 'operacion_detalle_transferencia.transferencia_id = transferencias.id');;
+				$this->db->where(array('operacion_detalle_transferencia.operacion_id' => $id));
+				$query = $this->db->get();
+				if ($query->num_rows() != 0)
+				{
+					foreach($query->result() as $che)
+					{
+						$transferencias[] = array(
+											$this->getBankName($che->banco_id), 
+											$che->cbu_alias,
+											number_format($che->importe, 2, ',', '.'),
+											date("d-m-Y", strtotime($che->fecha))
+										);
+					}
+					
+				}
+				$data['transferencias'] = $transferencias;
+				//---------------------
 			} else {
 				$temp = array();
 				$data['operation'] = $temp;
@@ -92,6 +166,7 @@ class Operations extends CI_Model
 				$readonly = true;
 			}
 			$data['read'] = $readonly;
+			$data['act'] = $action;
            
 			return $data;
 		}
