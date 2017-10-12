@@ -18,7 +18,7 @@
                             <tr>                               
                                 <th >Tenedor</th>
                                 <th >Banco</th>
-                                <th >Fecha Vencimiento</th>
+                                <th >Fecha</th>
                                 <th >Importe</th>
                                 <th >Neto</th>
                                 <!-- <th >Estado</th> -->
@@ -30,11 +30,11 @@
                                 <tr>
                                     <td><?php echo $item['tomador']?></td>
                                     <td><?php echo $item['banco']?></td>
-                                    <td class="cuit"><?php echo $item['fecha_venc']; ?></td>
-                                    <td><?php echo "$ ".$item['importe']; ?></td>
-                                    <td><?php echo "$ ".$item['neto']; ?></td>
+                                    <td style="text-align: center"><?php echo date("d-m-Y", strtotime($item['fecha_venc'])); ?></td>
+                                    <td style="text-align: right"><?php echo "$ ".number_format($item['importe'], 2, ',', '.'); ?></td>
+                                    <td style="text-align: right"><?php echo "$ ".number_format($item['neto'], 2, ',', '.'); ?></td>
                                     <!-- <td><input type="checkbox" value="1" id="inversorEstado" name="inversorEstado" <?php echo ((int)$item['estado']==1)?'checked':''?> ></td> -->
-                                    <td>
+                                    <td style="text-align: center">
                                         <?php 
                                         /*
                                         if (strpos($permission,'Edit') !== false) {
