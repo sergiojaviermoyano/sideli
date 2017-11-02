@@ -194,5 +194,25 @@ class Checks extends CI_Model
 
 		}
 	}
+
+	function validate($data = null){
+		if($data == null)
+		{
+			return 0;
+		}
+		else
+		{
+			$nro = $data['nro'];
+			$id = $data['id'];
+
+			$query= $this->db->get_where('cheques',array('bancoId'=>$id, 'numero'=>$nro));
+			if ($query->num_rows() != 0)
+			{
+				return 0;
+			} else {
+				return 1;
+			}
+		}
+	}
 }
 ?>

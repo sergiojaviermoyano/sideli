@@ -47,4 +47,8 @@ class check extends CI_Controller {
 			echo json_encode(true);	
 		}
 	}
+
+	public function validate(){
+		echo json_encode($this->Checks->validate($this->input->post()));
+	}
 }

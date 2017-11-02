@@ -61,6 +61,10 @@
             <input type="numeric" class="form-control" id="operationImporte" name="importe" style="text-align: right"/>
             
         </div> 
+        <div class="col-lg-9 offset-3" style="display: none" id="errorDuplicado">
+            <span class="text-red ">¡El cheque ingresado ya fue registrado!</span>
+            <input type="hidden" id="chequeValido" value="0">
+        </div>
     </div>                
     <hr>
     
@@ -504,7 +508,7 @@ var banco_1={
             var result=true;
             _step1_inputs.each(function(index, item){
                // console.debug("====> input[%o]: %o",index,item);
-                if($(item).val().length<1){
+                if($(item).val().length<1 || $('#chequeValido').val() == '0'){
                     alert("Todos los campos deben ser completados, vuelva a intentarlo.");
                     item.focus();
                     result=false;
@@ -548,6 +552,9 @@ var banco_1={
 
             return result;
         }
+        cheque_nro.on('change',function(){
+            validarCheque($("#banco_id").val(), cheque_nro.val());
+        });
         
         importe_input.on('change',function(){
             calcular_valores();
@@ -625,9 +632,43 @@ var banco_1={
                 
                 $("#banco_id").val(data.id);
                 banco_1=data;
+                validarCheque($("#banco_id").val(), cheque_nro.val());
                 return data.razon_social;
             }
         });
+
+        //validador de cheques duplicados
+        var validarCheque=function(banco, numero){
+            if( banco != "" &&  numero != ""){
+                WaitingOpen('Validando Cheque...');
+                $.ajax({
+                type: 'POST',
+                data: {id: banco, nro: numero },
+                url: 'index.php/check/validate', 
+                success: function(result){
+                    if(result == 0){
+                        //cheque ya registrado
+                        $('#chequeValido').val('0');
+                        $('#errorDuplicado').show();
+                    } else {
+                        //cheque sin registrar 
+                        $('#chequeValido').val('1');
+                        $('#errorDuplicado').hide();
+                    }
+                    WaitingClose();
+                },
+                error: function(result){
+                    WaitingClose();
+                    alert("Error al validar el cheque ingresado. Intente nuevamente la operación.");
+                    $('#chequeValido').val('0');
+                },
+                dataType: 'json'
+            });
+            }else {
+                //nothing
+            }
+            return;
+        }
 
 
         // Campo Emisor Cuit autocomplete 
@@ -923,7 +964,7 @@ var banco_1={
             var new_row='<tr id="tr_'+(next_row-1)+'" data-next="'+next_row+'" >' ;
                 new_row+='<td><input type="text" class="form-control transfe_banco typeahead"  name="tranferencia_salida['+next_row+'][banco_nombre]" id="operation_'+next_row+'_TransfeOutBanco"  data-id="'+next_row+'" placeholder="Banco">';
                 new_row+='<input type="hidden"   name="tranferencia_salida['+next_row+'][banco_id]" id="transfe_banco_id_'+next_row+'" ></td>';
-                new_row+='<td><input type="text" class="form-control nro" name="tranferencia_salida['+next_row+'][cbu]" id="operation_'+next_row+'_TransfeOutCbu"  placeholder="Nro / Alias CBU" style="text-align: right"></td>';
+                new_row+='<td><input type="text" class="form-control nro" name="tranferencia_salida['+next_row+'][cbu]" id="operation_'+next_row+'_TransfeOutCbu"  placeholder="Nro / Alias CBU" maxlength="22" style="text-align: right"></td>';
                 new_row+='<td><input type="text" class="form-control importe" name="tranferencia_salida['+next_row+'][importe]" id="operation_'+next_row+'_TransfeOutImporte"  placeholder="Importe" style="text-align: right"></td>';
                 new_row+='<td><input type="text" class="form-control fecha datepicker" name="tranferencia_salida['+next_row+'][fecha]" id="operation_'+next_row+'_TransfeOutFecha"  placeholder="Fecha"></td>';
                 new_row+='<td><button class="btn btn-danger btn-xs bt_check_delete" data-id="'+(next_row-1)+'">Eliminar</button></td>'
