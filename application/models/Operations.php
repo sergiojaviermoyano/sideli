@@ -547,7 +547,9 @@ class Operations extends CI_Model
 				$html.= '<tr><td><br></td></tr>';
 				//Pie
 				$html.= '<tr><td style="text-align:justify;"> En prueba de conformidad, se firman dos ejemplares ';
-				$html.= 'de un mismo tenor y a un solo efecto, en San Juan a los xx días del mes de xxxxx de xxxx.-';
+				$dateTime = explode(' ', $result['operation']['created']);
+				$date = explode('-', $dateTime[0]);
+				$html.= 'de un mismo tenor y a un solo efecto, en San Juan a los '.str_pad($date[2], 2, "0", STR_PAD_LEFT).' días del mes de '.$this->getMonth($date[1]).' de '.$date[0].'.-';
 				$html.= '</td></tr>';
 				$html.= '</table>';
 
@@ -580,6 +582,51 @@ class Operations extends CI_Model
 			}
 			return $data['id'].'.pdf';
 		}
+    }
+
+    function getMonth($monthNumber){
+    	switch ($monthNumber) {
+    		case '01':
+    			return 'Enero';
+    			break;
+    		case '02':
+    			return 'Febrero';
+    			break;
+    		case '03':
+    			return 'Marzo';
+    			break;
+    		case '04':
+    			return 'Abril';
+    			break;
+    		case '05':
+    			return 'Mayo';
+    			break;
+    		case '06':
+    			return 'Junio';
+    			break;
+    		case '07':
+    			return 'Julio';
+    			break;
+    		case '08':
+    			return 'Agosto';
+    			break;
+    		case '09':
+    			return 'Septiembre';
+    			break;
+    		case '10':
+    			return 'Octubre';
+    			break;
+    		case '11':
+    			return 'Noviembre';
+    			break;
+    		case '12':
+    			return 'Diciembre';
+    			break;
+    		
+    		default:	
+    			return '-';
+    			break;
+    	}
     }
 
     function getBankName($id){

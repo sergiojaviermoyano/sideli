@@ -107,7 +107,7 @@
             </div>
             <div class="col-lg-2">
                     <label class="">Dias: </label>
-                    <input type="text" class="form-control" id="operationDias" name="nro_dias" readonly="readonly" style="text-align: right" />
+                    <input type="text" class="form-control" id="operationDias" name="nro_dias" style="text-align: right" />
             </div> 
         
         </div>
@@ -560,6 +560,17 @@ var banco_1={
             calcular_valores();
         });
         dias_input.on('change',function(){
+            var today =new Date();
+            if(dias_input.val() != ""){
+                today.setDate(today.getDate()+ parseInt(dias_input.val()) - 2);
+            } 
+            debugger
+            var mes = today.getMonth() + 1;
+            //if(today.getMonth() > 1)
+            //{ mes = today.getMonth() + 1;}
+            fecha_vencimiento.val(today.getDate()+'-'+mes+'-'+today.getFullYear()); 
+            
+
             calcular_valores();
         });
         comision_input.on('change',function(){
@@ -590,7 +601,8 @@ var banco_1={
                 var days_to=new Date(int.currentYear,int.currentMonth,int.currentDay);                
                 var total_days = (days_to - from_date) / (1000 * 60 * 60 * 24);
                 dias_input.val(Math.round(total_days)+2);
-                dias_input.trigger('change');
+                //dias_input.trigger('change');
+                calcular_valores();
             }
         });
 
