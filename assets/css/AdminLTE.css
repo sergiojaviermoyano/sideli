@@ -1,4 +1,5 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic);
+@import url(https://fonts.googleapis.com/css?family=Archivo+Black);
 
 /*!
  *   AdminLTE v2.1.2
@@ -348,7 +349,7 @@ a:focus {
     line-height: 50px;
     text-align: center;
     width: 230px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: 'Archivo Black', sans-serif;
     padding: 0 15px;
     font-weight: 300;
     overflow: hidden;
