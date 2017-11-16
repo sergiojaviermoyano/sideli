@@ -1,7 +1,12 @@
 <body class="login-page">
     <div class="login-box">
       <div class="login-logo">
-        <a href="../../index2.html"><?php echo Globals::getTitle();?><b><?php echo Globals::getTitle2();?></b></a>
+        <h1><?php echo Globals::getTitle();?></h1>
+        <h2><?php echo Globals::getTitle2();?></h2>
+        <!-- <a href="../../index2.html">
+        <?php echo Globals::getTitle();?>
+        <br><b><?php echo Globals::getTitle2();?></b>
+        </a> -->
       </div><!-- /.login-logo -->
       <div class="login-box-body">
         <p class="login-box-msg">Ingreso</p>

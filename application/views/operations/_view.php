@@ -548,8 +548,6 @@ var banco_1={
                 });
             }
 
-            //console.debug("===> resultado: %o",result);
-
             return result;
         }
         cheque_nro.on('change',function(){
@@ -564,13 +562,8 @@ var banco_1={
             if(dias_input.val() != ""){
                 today.setDate(today.getDate()+ parseInt(dias_input.val()) - 2);
             } 
-            debugger
             var mes = today.getMonth() + 1;
-            //if(today.getMonth() > 1)
-            //{ mes = today.getMonth() + 1;}
             fecha_vencimiento.val(today.getDate()+'-'+mes+'-'+today.getFullYear()); 
-            
-
             calcular_valores();
         });
         comision_input.on('change',function(){
@@ -763,7 +756,7 @@ var banco_1={
                 emisor_data.nombre=$('#operationEmisorNombre').val();
                 emisor_data.apellido=$('#operationEmisorApellido').val();
                 emisor_data.razon_social=$('#operationEmisorNombre').val()+" "+$('#operationEmisorApellido').val();
-                emisor_data.domicilio=" ";
+                emisor_data.domicilio="sddsdsd ";
                 console.debug("===> nuevo emisor");
             }
             
@@ -779,7 +772,7 @@ var banco_1={
             tomador_data.nombre=$('#operationTomadorNombre').val();
             tomador_data.apellido=$('#operationTomadorApellido').val();
             tomador_data.razon_social=$('#operationTomadorNombre').val()+" "+$('#operationTomadorApellido').val();
-            tomador_data.domicilio=" ";
+            tomador_data.domicilio=" fgfgfgg";
             //console.debug("===> operationTomadorApellido - emisor_data: %o",tomador_data);
             
             //console.debug("===> nuevo Tomador");

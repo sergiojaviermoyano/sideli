@@ -338,6 +338,16 @@ a:focus {
     line-height: .9;
 }
 
+.login-page h1 {
+    font-family: 'Archivo Black', sans-serif;
+    text-transform: uppercase;
+    font-size: 1.2em;
+}
+
+.login-page h2 {
+    font-family: 'Archivo Black', sans-serif;
+}
+
 .main-header .logo {
     -webkit-transition: width 0.3s ease-in-out;
     -o-transition: width 0.3s ease-in-out;
@@ -2612,13 +2622,13 @@ a:focus {
 
 .btn-primary {
     background-color: #333;
-    border-color: #367fa9;
+    border-color: #e7e7e7;
 }
 
 .btn-primary:hover,
 .btn-primary:active,
 .btn-primary.hover {
-    background-color: #367fa9;
+    background-color: #e7e7e7;
 }
 
 .btn-success {
@@ -3758,7 +3768,7 @@ table.text-center th {
 
 .login-box,
 .register-box {
-    width: 360px;
+    width: 660px;
     margin: 7% auto;
 }
 
