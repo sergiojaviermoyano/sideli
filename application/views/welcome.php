@@ -21,7 +21,7 @@
     margin: 0px;
     min-height: 100%;
     width: 100%;
-    background-color: #fbfaf5 !important;
+    background-color: #fffef9 !important;
     }
 
     .content {
@@ -58,7 +58,7 @@
   <body>
     <div class="content">
         <h1>SE</h1>
-        <h2>Soluciones Empresariales</h2>
+        <h2>Soluciones Empresarias</h2>
         <a href="login" class="btn btn-default btn-flat btns">Ingresar</a>
     </div>
 
