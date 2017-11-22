@@ -45,6 +45,8 @@
 
 
   <script>
+
+  setTimeout("$('#usrName').focus(); $('#usrName').select();",800);
   $('#usrName').keypress(function(e) {
       if (e.which == 13) {
         $('#usrPassword').focus();
