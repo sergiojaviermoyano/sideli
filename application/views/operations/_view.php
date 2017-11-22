@@ -1163,8 +1163,7 @@ var banco_1={
 
         save_tb.click(function(){
             var form_data=$("form").serialize();
-            //console.debug("===> SUBMIT FORM: \n ===> form_data: %o",form_data);
-
+            WaitingOpen();
             $.ajax({
                 type: 'POST',
                 data: $("form").serialize(),
