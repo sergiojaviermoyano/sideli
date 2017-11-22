@@ -45,10 +45,27 @@
 
 
   <script>
+  $('#usrName').keypress(function(e) {
+      if (e.which == 13) {
+        $('#usrPassword').focus();
+        $('#usrPassword').select();
+      }
+      
+  });
+
+  $('#usrPassword').keypress(function() {
+      if($('#usrName').val() == ''){
+        $('#usrName').focus();
+        return;
+      }
+
+      if($('#usrPassword').val() != ''){
+        Login();
+      }
+  });
   
-  //A este script despùes llevarlo a un archivo js
-  $('#login').click(function(){
-      var hayError = false;
+  function Login(){
+    var hayError = false;
       if($('#usrName').val() == '')
       {
         hayError = true;
@@ -65,28 +82,32 @@
 
       $('#errorLgn').fadeOut('hide');
 
-    	WaitingOpen('Validando datos');
+      WaitingOpen('Validando datos');
       $.ajax({
           type: 'POST',
           data: { 
                   usr: $('#usrName').val(),
                   pas: $('#usrPassword').val()
                 },
-    			url: 'index.php/login/sessionStart_', 
-    			success: function(result){
+          url: 'index.php/login/sessionStart_', 
+          success: function(result){
                 WaitingClose();
                 if(result == 0){
                   $('#errorLgn').fadeIn('slow');
                 }else{
                   window.location.href = 'dash';
                 }
-    					},
-    			error: function(result){
-    					WaitingClose();
+              },
+          error: function(result){
+              WaitingClose();
               $('#errorLgn').fadeIn('slow');
-    					},
+              },
           dataType: 'json'
-    		});
+        });
+  }
+  //A este script despùes llevarlo a un archivo js
+  $('#login').click(function(){
+      Login();
   });
 
   </script>
