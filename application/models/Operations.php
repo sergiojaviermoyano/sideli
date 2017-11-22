@@ -183,10 +183,10 @@ class Operations extends CI_Model
 		if($get_agente->num_rows()==0){		
 		
 			$agente_emisor= array(
-				'nombre'=>$data['emisor_nombre'],
-				'apellido'=>$data['emisor_apellido'],
+				'nombre'=>$data['emisor_razon_social'],
+				'apellido'=>'',
 				'cuit'=>$data['emisor_cuit'],
-				'razon_social'=>$data['emisor_nombre']." ".$data['emisor_apellido'],
+				'razon_social'=>$data['emisor_razon_social'],
 				'domicilio'=>'',
 				'tipo'=>1,
 				'estado'=>'ac',

@@ -21,6 +21,12 @@
             <input type="hidden" id="agente_emisor_id" name="agente_emisor_id" value="0" >
             
         </div>
+        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+            <label class="">Razon Social : </label>
+            <input type="text" class="form-control" id="operationEmisorRazonSocial" name="emisor_razon_social" />
+            
+        </div> 
+        <!--
         <div class="col-lg-3 col-md-3 col-sm-4  col-xs-12">
             <label class="">Nombre : </label>
             <input type="text" class="form-control" id="operationEmisorNombre" name="emisor_nombre" />
@@ -30,7 +36,8 @@
             <label class="">Apellido : </label>
             <input type="text" class="form-control" id="operationEmisorApellido" name="emisor_apellido" />
             
-        </div> 
+        </div> -->
+
         <!--<div class="col-lg-1 col-md-1 col-sm-12 col-xs-12 pull-right">
             <label class=""> </label>
             <button type="button" class="btn btn-success btn-block">
@@ -713,11 +720,12 @@ var banco_1={
             }, updater: function(item) {
                 var data = map[item];
                 //console.debug("==> updater emisor: %o",emisor_cuit_input.val());
-                //console.debug("==> updater data.cuit: %o",data.cuit);
+                console.debug("==> updater data.cuit: %o",data);
                 $("#agente_emisor_id").val(0);
                 if(emisor_cuit_input.val().length==data.cuit.length && emisor_cuit_input.val()!=data.cuit){
-                    $("#operationEmisorNombre").val(null);
-                    $("#operationEmisorApellido").val(null);
+                    //$("#operationEmisorNombre").val(null);
+                    //$("#operationEmisorApellido").val(null);
+                    $("#operationEmisorRazonSocial").val(null);
                     $("#agente_emisor_id").val('0');
                     emisor_data={
                         id:             -1,
@@ -727,15 +735,16 @@ var banco_1={
                         razon_social:   '',
                         domicilio: ''
                     };
-                    //console.debug("===> operationEmisorApellido - emisor_data: %o",emisor_data);
+                    console.debug("===> operationEmisorApellido - emisor_data: %o",emisor_data);
                     
                     return emisor_cuit_input.val();
                 }else{
-                    $("#operationEmisorNombre").val(data.nombre);
-                    $("#operationEmisorApellido").val(data.apellido);
+                    //$("#operationEmisorNombre").val(data.nombre);
+                    //$("#operationEmisorApellido").val(data.apellido);
                     $("#agente_emisor_id").val(data.id);
+                    $("#operationEmisorRazonSocial").val(data.razon_social);
                     emisor_data=data;
-            //console.debug("===> operationEmisorApellido - emisor_data: %o",emisor_data);
+                    //console.debug("===> operationEmisorApellido - emisor_data: %o",emisor_data);
                      
                     return data.cuit;
                 }
@@ -747,16 +756,15 @@ var banco_1={
         
         
 
-        $(document).on('change',"#operationEmisorApellido",function(){
-            //console.debug("===> operationEmisorApellido - emisor_data: %o",emisor_data);
-            //console.debug("=== agente_emisor_id: %o",$("#agente_emisor_id").val());
+        //$(document).on('change',"#operationEmisorApellido",function(){
+        $(document).on('change',"#operationEmisorRazonSocial",function(){
             if($("#agente_emisor_id").val()==0){
                 emisor_data.id=0;
-                emisor_data.cuit=$('#operationEmisorCuit').val();
-                emisor_data.nombre=$('#operationEmisorNombre').val();
-                emisor_data.apellido=$('#operationEmisorApellido').val();
-                emisor_data.razon_social=$('#operationEmisorNombre').val()+" "+$('#operationEmisorApellido').val();
-                emisor_data.domicilio="sddsdsd ";
+                emisor_data.cuit=$('#operationEmisorCuit').val();               
+                emisor_data.nombre=$('#operationEmisorRazonSocial').val();
+                emisor_data.apellido="";
+                emisor_data.razon_social=$(this).val();
+                emisor_data.domicilio="";
                 console.debug("===> nuevo emisor");
             }
             
@@ -1125,7 +1133,7 @@ var banco_1={
             tabla_cheque_salida+="<tr>";
             tabla_cheque_salida+="<td>"+banco_1.razon_social+"</td>";
             tabla_cheque_salida+="<td>"+operation.cheque.nro+"</td>";
-            tabla_cheque_salida+="<td>"+emisor_data.apellido+", "+emisor_data.nombre+"</td>";
+            tabla_cheque_salida+="<td>"+emisor_data.razon_social+"</td>";
             tabla_cheque_salida+="<td>"+operation.cheque.vencimiento+"</td>";
             
             tabla_cheque_salida+="<td>"+operation.tasaM+"</td>";
@@ -1139,9 +1147,9 @@ var banco_1={
             $("#resumen_cheque").find("tbody").empty().append(tabla_cheque_salida);
             var inversor_data=$('input[name=inversor_id]:checked').data();
             $("#step3").find("h3").html(inversor_data.name);
-            $("span.cliente_nombre").html(emisor_data.razon_social);
-            $("span.cliente_domicilio").html(emisor_data.domicilio);
-            $("span.cliente_cuit").html(emisor_data.cuit);
+            $("span.cliente_nombre").html(tomador_data.razon_social);
+            $("span.cliente_domicilio").html(tomador_data.domicilio);
+            $("span.cliente_cuit").html(tomador_data.cuit);
             $("td.total_de_valores").html(parseFloat(operation.cheque.importe).toFixed(2));
             $("td.interes").html(operation.interes.toFixed(2));
             $("td.impuesto").html(operation.impuestoCheque.toFixed(2));
