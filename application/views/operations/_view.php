@@ -597,11 +597,23 @@ var banco_1={
             dateFormat: 'dd-mm-yy',
             setDate: today,
             onSelect:function(dateText,int){
-                var from_date=today;
-                var days_to=new Date(int.currentYear,int.currentMonth,int.currentDay);                
-                var total_days = (days_to - from_date) / (1000 * 60 * 60 * 24);
-                dias_input.val(Math.round(total_days)+2);
-                //dias_input.trigger('change');
+
+                var fecha_venc= $(this).datepicker( 'getDate' ); 
+                var total_days = (fecha_venc - today) / (1000 * 60 * 60 * 24);
+                
+                if(fecha_venc.getDay()==5){
+                    total_days+=4; 
+                }else if((fecha_venc.getDay()==6)){
+                    total_days+=4;                  
+                }else if((fecha_venc.getDay()==0)){
+                    total_days+=3                   
+                }else {
+                    total_days+=2;                 
+                }
+
+                var newdate = new Date(today);
+                newdate.setDate(newdate.getDate() + total_days);                
+                dias_input.val(total_days);                
                 calcular_valores();
             }
         });
