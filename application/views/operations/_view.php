@@ -590,7 +590,7 @@ var banco_1={
         });
 
         // CampoFecha de Veciento
-        var d = new Date();
+        var d = new Date(); 
         var today = new Date(d.getFullYear(), d.getMonth(), d.getDate());
         fecha_vencimiento.datepicker({
             minDate: today,
@@ -613,7 +613,7 @@ var banco_1={
 
                 var newdate = new Date(today);
                 newdate.setDate(newdate.getDate() + total_days);                
-                dias_input.val(total_days);                
+                dias_input.val(total_days);                 
                 calcular_valores();
             }
         });
@@ -633,13 +633,14 @@ var banco_1={
                     url: 'bank/buscadorDeBancos',                     
                     data: { action: 'search', code: query, type: 'E' },
                     success: function(data) {
+                        console.debug("===> BANCOS: %o",data);
                         if(data==false){
                             return false;
                         }
                         objects = [];
                         map = {};                        
                         $.each(data, function(i, object) {
-                            var key = object.razon_social
+                            var key = object.razon_social+" - "+object.sucursal
                             map[key] = object;
                             objects.push(key);
                         });
@@ -1041,7 +1042,7 @@ var banco_1={
                         objects = [];
                         map = {};                        
                         $.each(data, function(i, object) {
-                            var key = object.razon_social
+                            var key = object.razon_social+" - "+object.sucursal
                             map[key] = object;
                             objects.push(key);
                         });
