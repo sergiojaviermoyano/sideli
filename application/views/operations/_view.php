@@ -291,10 +291,9 @@
     <div role="tabpanel" class="tab-pane" id="step3">
         <h2>Liquidacion de Compra de Valores</h2>
         <h3>Inversor SRL</h3>
-        <h4>CLIENTE:       &nbsp;<span class="cliente_nombre"> LOREM ITSU</span> </h4>
-        <h4>DOMICILIO:     &nbsp;<span class="cliente_domicilio">MENDOZA 0</span> </h4>
-        <h4>CUI:           &nbsp;<span class="cliente_cuit">00-000000-0</span> </h4>
-        <!-- <h4>OPERACION NRO: <span > 00000000</span> </h4> -->
+        <h4>Cliente:       &nbsp;<span class="cliente_nombre"> </span> </h4>
+        <h4>Domicilio:     &nbsp;<span class="cliente_domicilio"></span> </h4>
+        <h4>Nro de Cuit:   &nbsp;<span class="cliente_cuit"></span> </h4>
         <table id="resumen_cheque" class="table table-bordered table-responsive table-striped">
             <thead>
                 <tr>
@@ -567,8 +566,23 @@ var banco_1={
         dias_input.on('change',function(){
             var today =new Date();
             if(dias_input.val() != ""){
-                today.setDate(today.getDate()+ parseInt(dias_input.val()) - 2);
-            } 
+                //today.setDate(today.getDate()+ parseInt(dias_input.val()) - 2);
+                today.setDate(today.getDate()+ parseInt(dias_input.val()));
+                console.debug("===> DATE RESULTED FROM total NAme: %o",today);
+                console.debug("===> DATE RESULTED FROM total NAme: %o",today.getDay());
+                if(today.getDay()==1){
+                    today.setDate(today.getDate() - 4);
+                }else if(today.getDay()==2){
+                    today.setDate(today.getDate() - 4);
+                }else{
+                    today.setDate(today.getDate() - 2);                    
+                }
+                console.debug("===> DATE RESULTED FROM total NAme: %o",today);
+                
+            }else{
+
+            }
+            
             var mes = today.getMonth() + 1;
             fecha_vencimiento.val(today.getDate()+'-'+mes+'-'+today.getFullYear()); 
             calcular_valores();
@@ -716,7 +730,13 @@ var banco_1={
                         objects = [];
                         map = {};
                         $.each(data, function(i, object) {
-                           var key = object.cuit + " - " + object.razon_social
+
+                            if(object.razon_social!=''){
+                                var key = object.cuit + " - " + object.razon_social;
+                            }else{
+                                var key = object.cuit + " - " + object.nombre+" "+object.apellido;                                
+                            }
+
                             map[key] = object;
                             objects.push(key);
                         });
@@ -732,12 +752,9 @@ var banco_1={
                 
             }, updater: function(item) {
                 var data = map[item];
-                //console.debug("==> updater emisor: %o",emisor_cuit_input.val());
-                console.debug("==> updater data.cuit: %o",data);
+                // console.debug("==> updater data.cuit: %o",data);
                 $("#agente_emisor_id").val(0);
                 if(emisor_cuit_input.val().length==data.cuit.length && emisor_cuit_input.val()!=data.cuit){
-                    //$("#operationEmisorNombre").val(null);
-                    //$("#operationEmisorApellido").val(null);
                     $("#operationEmisorRazonSocial").val(null);
                     $("#agente_emisor_id").val('0');
                     emisor_data={
@@ -748,17 +765,16 @@ var banco_1={
                         razon_social:   '',
                         domicilio: ''
                     };
-                    console.debug("===> operationEmisorApellido - emisor_data: %o",emisor_data);
-                    
                     return emisor_cuit_input.val();
                 }else{
-                    //$("#operationEmisorNombre").val(data.nombre);
-                    //$("#operationEmisorApellido").val(data.apellido);
+                    
                     $("#agente_emisor_id").val(data.id);
-                    $("#operationEmisorRazonSocial").val(data.razon_social);
-                    emisor_data=data;
-                    //console.debug("===> operationEmisorApellido - emisor_data: %o",emisor_data);
-                     
+                    if(data.razon_social!=''){
+                        $("#operationEmisorRazonSocial").val(data.razon_social);                        
+                    }else{
+                        $("#operationEmisorRazonSocial").val(data.nombre+" "+data.apellido);                        
+                    }
+                    emisor_data=data;                     
                     return data.cuit;
                 }
                 
@@ -818,7 +834,11 @@ var banco_1={
                         objects = [];
                         map = {};
                         $.each(data, function(i, object) {
-                            var key = object.cuit + " - " + object.razon_social
+                            if(object.razon_social!=''){
+                                var key = object.cuit + " - " + object.razon_social;
+                            }else{
+                                var key = object.cuit + " - " + object.nombre+" "+object.apellido;                                
+                            }
                             map[key] = object;
                             objects.push(key);
                         });
@@ -1155,12 +1175,13 @@ var banco_1={
             tabla_cheque_salida+="</tr>";
 
             //console.debug("===> operation: %o",operation);
-            //console.debug("===> emisor_data: %o",emisor_data);
+            console.debug("===> emisor_data: %o",emisor_data);
+            console.debug("===> tomador_data: %o",tomador_data);
 
             $("#resumen_cheque").find("tbody").empty().append(tabla_cheque_salida);
             var inversor_data=$('input[name=inversor_id]:checked').data();
             $("#step3").find("h3").html(inversor_data.name);
-            $("span.cliente_nombre").html(tomador_data.razon_social);
+            $("span.cliente_nombre").html((tomador_data.razon_social!='')?tomador_data.razon_social:tomador_data.nombre+' '+tomador_data.apellido);
             $("span.cliente_domicilio").html(tomador_data.domicilio);
             $("span.cliente_cuit").html(tomador_data.cuit);
             $("td.total_de_valores").html(parseFloat(operation.cheque.importe).toFixed(2));

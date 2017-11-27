@@ -5579,3 +5579,9 @@ hr {
     padding-left: 30px;
     background-repeat: no-repeat;
 }
+
+#step3 .cliente_nombre,
+#step3 .cliente_domicilio {
+    text-transform: uppercase;
+    font-weight: 600;
+}
