@@ -27,10 +27,10 @@ class Operations extends CI_Model
 				$result[$key]['banco']=$banco->row()->razon_social;
 
 				$tomador=$this->db->get_where('agente',array('id'=>$item['agente_tenedor_id']));				
-				$result[$key]['tomador']=$tomador->row()->nombre." ".$tomador->row()->apellido;
+				$result[$key]['tomador']=$tomador->row()->razon_social == '' ? $tomador->row()->nombre.", ".$tomador->row()->apellido : $tomador->row()->razon_social;
 				
-				$tomador=$this->db->get_where('agente',array('id'=>$item['agente_tenedor_id']));				
-				$result[$key]['tomador']=$tomador->row()->nombre." ".$tomador->row()->apellido;
+				//$tomador=$this->db->get_where('agente',array('id'=>$item['agente_tenedor_id']));				
+				//$result[$key]['tomador']=$tomador->row()->nombre." ".$tomador->row()->apellido;
 			}
 			
 			return $result;	
@@ -429,7 +429,7 @@ class Operations extends CI_Model
 				$html.= 'Entre <strong>'.$data['inversor']['razon_social'].'</strong>, CUIT: <strong>';
 				$html.= $data['inversor']['cuit'].'</strong> con domicilio legal en <strong>';
 				$html.= $data['inversor']['domicilio'].'</strong>, denominado en adelante <strong> EL MUTUANTE </strong>, ';
-				$html.= 'y <strong>'.$data['tenedor']['apellido'].', '.$data['tenedor']['nombre'].'</strong>, ';
+				$html.= 'y <strong>'.($data['tenedor']['razon_social'] == '' ? $data['tenedor']['apellido'].', '.$data['tenedor']['nombre'] : $data['tenedor']['razon_social']).'</strong>, ';
 				$html.= 'CUIT: <strong>'.$data['tenedor']['cuit'].'</strong>, con domicilio legal en <strong>';
 				$html.= $data['tenedor']['domicilio'].'</strong>, en adelante <strong> EL MUTUARIO</strong>, ';
 				$html.= 'convienen en celebrar el presente CONTRATO DE MUTUO, sujeto a las siguientes cláusulas: <br>';
@@ -498,7 +498,7 @@ class Operations extends CI_Model
 				$html.= '<tr>';
 				$html.= '<td>'.$data['banco']['razon_social'].'</td>';
 				$html.= '<td style="text-align: right">'.$result['operation']['nro_cheque'].'</td>';
-				$html.= '<td>'.$data['emisor']['apellido'] . ' ' . $data['emisor']['nombre'].'</td>';
+				$html.= '<td>'.($data['emisor']['razon_social'] == '' ? $data['emisor']['apellido'] . ' ' . $data['emisor']['nombre'] : $data['emisor']['razon_social']).'</td>';
 				$html.= '<td style="text-align: center">'.date("d-m-Y", strtotime($result['operation']['fecha_venc'])).'</td>';
 				$html.= '<td style="text-align: right">'.number_format($result['operation']['importe'], 2, ',', '.').'</td>';
 				$html.= '</td></tr></table>';
@@ -569,16 +569,6 @@ class Operations extends CI_Model
 				//$dompdf->stream("TrabajosPedndientes.pdf");
 				$output = $dompdf->output();
 				file_put_contents('assets/reports/'.$data['id'].'.pdf', $output);
-
-				//Eliminar archivos viejos ---------------
-				//$dir = opendir('assets/reports/');
-				//while($f = readdir($dir))
-				//{
-				//	if((time()-filemtime('assets/reports/'.$f) > 3600*24*1) and !(is_dir('assets/reports/'.$f)))
-				//	unlink('assets/reports/'.$f);
-				//}
-				//closedir($dir);
-				//----------------------------------------
 			}
 			return $data['id'].'.pdf';
 		}
@@ -881,7 +871,7 @@ class Operations extends CI_Model
 		}
 		else
 		{
-			if(!file_exists( 'assets/reports/'.$data['id'].'.pdf' )){
+			if(!file_exists( 'assets/reports/'.$data['id'].'_l.pdf' )){
 				$data['act'] = 'Print';
 				$result = $this->getOperation($data);
 				//Inversor
@@ -922,7 +912,7 @@ class Operations extends CI_Model
 				//Header
 				$html.= '<tr><td style="text-align:left;"><strong>LIQUIDACIÓN DE VALORES</strong></td></tr>';
 				$html.= '<tr><td style="text-align:right;"><strong>FECHA: '.date("d-m-Y", strtotime($result['operation']['created'])).'</strong></td></tr>';
-				$html.= '<tr><td style="text-align:left;">CLIENTE: <strong>'.$data['tenedor']['apellido'].', '.$data['tenedor']['nombre'].'</strong></td></tr>';
+				$html.= '<tr><td style="text-align:left;">CLIENTE: <strong>'. ($data['tenedor']['razon_social'] == '' ? $data['tenedor']['apellido'].', '.$data['tenedor']['nombre'] : $data['tenedor']['razon_social']).'</strong></td></tr>';
 				$html.= '<tr><td style="text-align:left;">DOMICILIO: <strong>'.$data['tenedor']['domicilio'].'</strong></td></tr>';
 				$html.= '<tr><td style="text-align:left;">CUIT: <strong>'.$data['tenedor']['cuit'].'</strong></td></tr>';
 				$html.= '<tr><td style="text-align:left;">FACTURA NÚMERO: <strong>'.str_pad($data['id'], 10, "0", STR_PAD_LEFT).'</strong></td></tr>';
@@ -1024,19 +1014,8 @@ class Operations extends CI_Model
 				//lanzamos a render
 				$dompdf->render();
 				//guardamos a PDF
-				//$dompdf->stream("TrabajosPedndientes.pdf");
 				$output = $dompdf->output();
 				file_put_contents('assets/reports/'.$data['id'].'_l.pdf', $output);
-
-				//Eliminar archivos viejos ---------------
-				//$dir = opendir('assets/reports/');
-				//while($f = readdir($dir))
-				//{
-				//	if((time()-filemtime('assets/reports/'.$f) > 3600*24*1) and !(is_dir('assets/reports/'.$f)))
-				//	unlink('assets/reports/'.$f);
-				//}
-				//closedir($dir);
-				//----------------------------------------
 			}
 			return $data['id'].'_l.pdf';
 		}
