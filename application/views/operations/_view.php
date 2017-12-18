@@ -1,4 +1,4 @@
-    <form class="form-horizontal ope_form" action="">
+<form class="form-horizontal ope_form" action="">
 
 
    <!-- Nav tabs -->
@@ -17,13 +17,13 @@
         </div>
         <div class="col-lg-3 col-md-3 col-sm-4  col-xs-12">
             <label class="">CUIT : </label>
-            <input type="text" class="form-control typeahead" data-provide="typeahead"  id="operationEmisorCuit" name="emisor_cuit" value="" />
+            <input type="text" class="form-control typeahead" data-provide="typeahead"  id="operationEmisorCuit" name="emisor_cuit" value=""  autocomplete="off"/>
             <input type="hidden" id="agente_emisor_id" name="agente_emisor_id" value="0" >
             
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
             <label class="">Razon Social : </label>
-            <input type="text" class="form-control" id="operationEmisorRazonSocial" name="emisor_razon_social" />
+            <input type="text" class="form-control" id="operationEmisorRazonSocial" name="emisor_razon_social"  autocomplete="off"/>
             
         </div> 
         <!--
@@ -53,12 +53,12 @@
         </div>
         <div class="col-lg-3">
             <label class="">Nro : </label>
-            <input type="text" class="form-control" id="operationChequeNro" name="nro_cheque" />
+            <input type="text" class="form-control" id="operationChequeNro" name="nro_cheque" autocomplete="off"/>
             
         </div>
         <div class="col-lg-3">
             <label class="">Banco: </label>
-            <input type="text" class="form-control typeahead" id="operationBanco"  data-provide="typeahead" name="banco_nombre" />
+            <input type="text" class="form-control typeahead" id="operationBanco"  data-provide="typeahead" name="banco_nombre" autocomplete="off"/>
             <input type="hidden" id="banco_id" name="banco_id" >
             
             
@@ -81,17 +81,17 @@
         </div>
         <div class="col-lg-3">
             <label class="">CUIT : </label>
-            <input type="text" class="form-control typeahead" data-provide="typeahead" id="operationTomadorCuit" name="tomador_cuit" />
+            <input type="text" class="form-control typeahead" data-provide="typeahead" id="operationTomadorCuit" name="tomador_cuit" autocomplete="off" />
             <input type="hidden" id="agente_tomador_id" name="agente_tomador_id" value="0">
         </div>
         <div class="col-lg-3">
             <label class="">Nombre : </label>
-                <input type="text" class="form-control" id="operationTomadorNombre" name="tomador_nombre" />
+                <input type="text" class="form-control" id="operationTomadorNombre" name="tomador_nombre" autocomplete="off"/>
             
         </div> 
         <div class="col-lg-3">
         <label class="">Apellido : </label>
-                <input type="text" class="form-control" id="operationTomadorApellido" name="tomador_apellido" />
+                <input type="text" class="form-control" id="operationTomadorApellido" name="tomador_apellido" autocomplete="off"/>
             
         </div> 
          <!--<div class="col-lg-1 pull-right">
@@ -378,11 +378,10 @@
     
        
 </form>
-
-
 <script>
 
 //definicion de una variable para una operación 
+var feriados=JSON.parse('<?php echo $feriados?>');
 var operation = operationClass;
 var emisor_data={
     id:             -1,
@@ -406,7 +405,7 @@ var banco_1={
 };
 
     $(function(){
-
+        console.debug("====> feriados: %o",feriados);
         var emisor_cuit_input=$(this).find("input#operationEmisorCuit");
         var tenedor_cuit_input=$(this).find("input#operationTomadorCuit");
         var banco_input=$(this).find("input#operationBanco");
@@ -467,15 +466,7 @@ var banco_1={
            operation.importeSellado = parseFloat(sellado_input.val().replace(',','.'));
            //var sellado=parseFloat(sellado_input.val().replace(',','.'));
            
-           
-           //console.debug("\n==> Importe: %o",operation.cheque.importe);
-           //console.debug("==> TasaAnual: %o",operation.tasaA);
-           //console.debug("==> cantDias: %o",operation.cheque.dias);
-           //console.debug("==> comision: %o",operation.comisionPor);
-           //console.debug("==> impuesto: %o",operation.impuestoCheque );
-           //console.debug("==> iva: %o",operation.importeIVA );
-           //console.debug("==> sellado: %o",operation.importeSellado );
-           
+                      
            var interes= operation.cheque.importe * (operation.tasaA/365) * (operation.cheque.dias/100);
            operation.interes=interes;
            
@@ -607,6 +598,10 @@ var banco_1={
         var d = new Date(); 
         var today = new Date(d.getFullYear(), d.getMonth(), d.getDate());
         fecha_vencimiento.datepicker({
+            beforeShowDay: function(date){
+                var datestring = jQuery.datepicker.formatDate('yy-mm-dd', date);
+                return [ feriados.indexOf(datestring) == -1 ]
+            },
             minDate: today,
             dateFormat: 'dd-mm-yy',
             setDate: today,
@@ -615,18 +610,43 @@ var banco_1={
                 var fecha_venc= $(this).datepicker( 'getDate' ); 
                 var total_days = (fecha_venc - today) / (1000 * 60 * 60 * 24);
                 
-                if(fecha_venc.getDay()==5){
-                    total_days+=4; 
-                }else if((fecha_venc.getDay()==6)){
-                    total_days+=4;                  
-                }else if((fecha_venc.getDay()==0)){
-                    total_days+=3                   
-                }else {
-                    total_days+=2;                 
+                switch(fecha_venc.getDay()){
+                    case 4:
+                    case 5:
+                    case 6:{
+                        total_days+=4;
+                        break;
+                    }
+                    case 0:{
+                        total_days+=3;
+                        break;
+                    }
+                    case 4:{
+                        total_days+=2;
+                        break;
+                    }
+                    default:{
+                        total_days+=2;
+                        break;
+                    }
                 }
 
                 var newdate = new Date(today);
-                newdate.setDate(newdate.getDate() + total_days);                
+                newdate.setDate(newdate.getDate() + total_days); 
+                var i=0;
+                var add_day=0;
+                temp_date= new Date(newdate);
+                do{  
+                    if(jQuery.datepicker.formatDate('yy-mm-dd', temp_date)==feriados[i] ){
+                        temp_date.setDate(temp_date.getDate() + 1); 
+                        total_days++;                                                  
+                    }
+                    i++;
+                }while(i<feriados.length);               
+                
+                fechaAcreditacion= jQuery.datepicker.formatDate('yy-mm-dd', newdate);
+                newdate.setDate(newdate.getDate() + total_days);    
+                      
                 dias_input.val(total_days);                 
                 calcular_valores();
             }
@@ -969,7 +989,7 @@ var banco_1={
             var total_rows= $("#salid_tb").find("tbody tr").length;
             var last= $("#salid_tb").find("tbody tr:last").data();
             var new_row='<tr id="tr_'+(next_row-1)+'" data-next="'+next_row+'" >' ;
-                new_row+='<td><input type="text" class="form-control banco typeahead"  name="cheque_salida['+next_row+'][banco_nombre]" id="operation_'+next_row+'_CheckOutBanco"  data-id="'+next_row+'" placeholder="Banco">';
+                new_row+='<td><input type="text" class="form-control banco typeahead"  name="cheque_salida['+next_row+'][banco_nombre]" id="operation_'+next_row+'_CheckOutBanco"  data-id="'+next_row+'" placeholder="Banco" autocomplete="off">';
                 new_row+='<input type="hidden"   name="cheque_salida['+next_row+'][banco_id]" id="banco_id_'+next_row+'" ></td>';
                 new_row+='<td><input type="text" class="form-control nro" name="cheque_salida['+next_row+'][nro]" id="operation_'+next_row+'_CheckOutNro"  placeholder="Nro Cheque" style="text-align: right"></td>';
                 new_row+='<td><input type="text" class="form-control importe" name="cheque_salida['+next_row+'][importe]" id="operation_'+next_row+'_CheckOutImporte"  placeholder="Importe" style="text-align: right"></td>';
@@ -1043,7 +1063,7 @@ var banco_1={
             total_valores_pagar=total;
         });
 
-        $(document).on('click','.banco',function(){
+       $(document).on('click','.banco',function(){
             var id=$(this).data('id');
             $(this).typeahead({
             minLength: 3,
@@ -1082,6 +1102,7 @@ var banco_1={
             }
         }).typeahead();
         });
+        
 
         $(document).on('click','.transfe_banco',function(){
             var id=$(this).data('id');

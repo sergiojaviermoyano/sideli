@@ -7,6 +7,7 @@ class operation extends CI_Controller {
         {
 		parent::__construct();
 		$this->load->model('Operations');
+		$this->load->model('Feriados');
 		//$this->Users->updateSession(true);
 	}
 
@@ -23,9 +24,11 @@ class operation extends CI_Controller {
 
     public function getOperation(){
 		$data['data'] = $this->Operations->getOperation($this->input->post());
+		$data['feriados']=$this->Feriados->getByYear(date('Y',strtotime('+1 year')));
 		if($data['data']['act'] == 'View'){
 			$response['html'] = $this->load->view('operations/_consult', $data, true);
 		} else {
+			$data['js_to_load']="_view.js";	
 			$response['html'] = $this->load->view('operations/_view', $data, true);
 		}
 		echo json_encode($response);

@@ -162,7 +162,8 @@
 }
 
 .skin-blue.layout-top-nav .main-header>.logo:hover {
-    background-color: #3b8ab8
+    background-color: #fff;
+    color: #444;
 }
 
 .skin-blue-light .main-header .navbar {
@@ -219,7 +220,8 @@
 }
 
 .skin-blue-light .main-header .logo:hover {
-    background-color: #3b8ab8
+    background-color: #fff;
+    color: #444;
 }
 
 .skin-blue-light .main-header li.user-header {
@@ -361,7 +363,8 @@
 }
 
 .skin-blue.layout-top-nav .main-header>.logo:hover {
-    background-color: #3b8ab8
+    background-color: #fff;
+    color: #444;
 }
 
 .skin-black .main-header {

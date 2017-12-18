@@ -63,12 +63,28 @@ class Feriados extends CI_Model
     }
 
     public function ListAll(){
-        $this->db->order_by('fecha', 'DESC');
+        $this->db->order_by('fecha', 'ASC');
         $query= $this->db->get('feriados');
         if ($query->num_rows()!=0)
 		{
             $result=$query->result_array();
             return $result;
+            
+        }else{
+            return array();
+        }
+    }
+
+    public function getByYear($year){
+        $this->db->order_by('fecha', 'ASC');
+        $query= $this->db->get_where('feriados',array('YEAR(fecha)'=>$year));
+        if ($query->num_rows()!=0)
+        {   $result=$query->result_array();
+            $dates=array();
+            foreach($result as $key => $item){
+                $dates[]=$item['fecha'];
+            }
+            return json_encode($dates,true);
             
         }else{
             return array();

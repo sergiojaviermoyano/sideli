@@ -29,8 +29,7 @@ class Operations extends CI_Model
 				$tomador=$this->db->get_where('agente',array('id'=>$item['agente_tenedor_id']));				
 				$result[$key]['tomador']=$tomador->row()->razon_social == '' ? $tomador->row()->nombre.", ".$tomador->row()->apellido : $tomador->row()->razon_social;
 				
-				//$tomador=$this->db->get_where('agente',array('id'=>$item['agente_tenedor_id']));				
-				//$result[$key]['tomador']=$tomador->row()->nombre." ".$tomador->row()->apellido;
+				
 			}
 			
 			return $result;	
