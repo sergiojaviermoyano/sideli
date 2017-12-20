@@ -184,8 +184,9 @@ class Agents extends CI_Model
 		}
 
 		$agents = array();
-
-		$this->db->select('id, nombre, apellido, razon_social, cuit,domicilio');
+		//$this->db->select('DISTINCT `cuit`');
+		$this->db->select('cuit, id, nombre, apellido, razon_social,domicilio');
+		$this->db->distinct();
 		$this->db->from('agente');
 		$this->db->where(array('estado'=>'AC', 'tipo' => $type));
 		if($str != ''){
@@ -196,6 +197,7 @@ class Agents extends CI_Model
 		}
 		$this->db->order_by('apellido asc', 'nombre asc');
 		$query = $this->db->get();
+		//echo $this->db->last_query();
 		if ($query->num_rows()!=0)
 		{
 			$agents = $query->result_array();

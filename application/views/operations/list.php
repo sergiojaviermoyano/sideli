@@ -153,15 +153,15 @@
     $.ajax({
             type: 'POST',
             data: {
-                    id : id__
-                  },
+                id : id__
+            },
         url: 'index.php/operation/printOperation',
         success: function(result){
-                      WaitingClose();
-                      var url = "./assets/reports/" + result;
-                      $('#printDoc').attr('src', url);
-                      setTimeout("$('#modalPrint').modal('show')",800);
-              },
+            WaitingClose();
+            var url = "./assets/reports/" + result;
+            $('#printDoc').attr('src', url);
+            setTimeout("$('#modalPrint').modal('show')",800);
+        },
         error: function(result){
               WaitingClose();
               ProcesarError(result.responseText, 'modalPrint');
