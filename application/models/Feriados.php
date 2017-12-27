@@ -103,11 +103,20 @@ class Feriados extends CI_Model
                 'fecha'=>date('Y-m-d',strtotime($data['fecha'])),
                 'fijo' =>1,
             );
-            if($this->db->insert('feriados',$params)){
-                return $this->db->insert_id();
-            }else{
-                return false;
+
+            if(isset($data['id']) && $data['id']!=''){
+                $this->db->set($params);                
+                $this->db->where('id', $data['id']);
+                $this->db->update('feriados');
+                return true;
+            }else{                
+                if($this->db->insert('feriados',$params)){
+                    return $this->db->insert_id();
+                }else{
+                    return false;
+                }
             }
+            
         }
     }
 }

@@ -21,7 +21,9 @@ class feriado extends CI_Controller {
     }
 
     public function addDay(){
+        
         if($result=$this->Feriados->add($this->input->post())){
+           
             echo json_encode(array('result'=>true));
         }else{
             echo json_encode(array('result'=>false));
