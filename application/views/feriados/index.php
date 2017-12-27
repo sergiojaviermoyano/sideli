@@ -23,7 +23,7 @@
                     <table id="users" class="table table-bordered table-hover">
                         <thead>
                         <tr>
-                            <th>Nro</th>
+                            <!-- <th>Nro</th>-->
                             <th>Feriado</th>
                             <th>Fecha</th>
                             <th width="20%">Acciones</th>
@@ -33,7 +33,7 @@
                             <?php if(isset($list)):?>
                                 <?php foreach($list as $item):?>
                                     <tr>
-                                        <td><?php echo $item['id']?></td>
+                                        <!-- <td><?php echo $item['id']?></td> -->
                                         <td><?php echo $item['descripcion']?></td>
                                         <td><?php echo date('d-m-Y',strtotime($item['fecha']))?></td>
                                         <td>
@@ -41,7 +41,7 @@
                                                 echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" data-obj="'.htmlspecialchars(json_encode($item), ENT_QUOTES, 'UTF-8').'"  ></i>';
                                             }
                                             if (strpos($permission,'Del') !== false) {
-                                                echo '<i class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="deleteDate('.$item['id'].',\'Del\')"></i>';
+                                                echo '<i class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" data-id="'.$item['id'].'" ></i>';
                                             }
                                             
                                             ?>
@@ -100,11 +100,34 @@ $(function(){
         var data=$(this).data('obj');
         var from = data.fecha.split("-");
         var f = new Date(from[2], from[1], from[0]);
-
         $("#feriadoId").val(data.id);
         $("#inputDescription").val(data.descripcion);
         $("#inputFecha").val( from[2]+'-'+from[1]+'-'+from[0]);
         return false;
+    });
+
+    $(".fa-times-circle").on('click',function(){
+        var id=$(this).data('id');
+        console.log(id);
+       
+
+        var data_ajax={
+            type: "POST",
+            url: 'feriado/deleteDay',                     
+            data: {id:id},
+            success: function(data) {
+                console.log(data);
+               
+                refresh_view();
+                return false;
+            },
+            error: function(error_msg) {
+                alert("error_msg: " + error_msg);
+            },
+            dataType: 'json'
+        };
+        $.ajax(data_ajax);
+        return true;
     });
 
 

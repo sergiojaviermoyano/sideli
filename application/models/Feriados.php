@@ -119,4 +119,14 @@ class Feriados extends CI_Model
             
         }
     }
+
+    public function delete($data){
+        
+        if(isset($data['id'])){
+            $this->db->delete('feriados', array('id' => $data['id']));
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

@@ -31,4 +31,16 @@ class feriado extends CI_Controller {
 		
         
     }
+
+    public function deleteDay(){
+        
+        if($result=$this->Feriados->delete($this->input->post())){
+           
+            echo json_encode(array('result'=>true));
+        }else{
+            echo json_encode(array('result'=>false));
+        }
+		
+        
+    }
 }
