@@ -101,12 +101,12 @@
                   $('#content').empty();
                   var controller=$(this).data('controller');
                   var method=$(this).data('method');
-                  var actions=$(this).data('actions');
+                  var action=$(this).data('action');
                   $.ajax({
                         type: 'POST',
                         //data: null,
                         //url: '<?php echo base_url(); ?>index.php/'+controller+'/'+metodh+'/'+actions,
-                        url: '<?php echo base_url(); ?>index.php/'+controller+'/'+method+'/'+actions,
+                        url: '<?php echo base_url(); ?>index.php/'+controller+'/'+method+'/'+action,
                         success: function(result){
                                     WaitingClose();
                                     $("#content").html(result);
