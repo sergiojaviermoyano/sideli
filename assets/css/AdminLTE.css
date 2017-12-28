@@ -1270,6 +1270,10 @@ a:focus {
     width: 280px;
 }
 
+span.username {
+    color: #fff !important;
+}
+
 .navbar-nav>.user-menu>.dropdown-menu,
 .navbar-nav>.user-menu>.dropdown-menu>.user-body {
     border-bottom-right-radius: 4px;
@@ -1321,13 +1325,13 @@ a:focus {
 }
 
 .navbar-nav>.user-menu>.dropdown-menu>.user-body a {
-    color: #444 !important;
+    color: #5d5d5d !important;
 }
 
 @media (max-width: 991px) {
     .navbar-nav>.user-menu>.dropdown-menu>.user-body a {
         background: #fff !important;
-        color: #444 !important;
+        color: #5d5d5d !important;
     }
 }
 
