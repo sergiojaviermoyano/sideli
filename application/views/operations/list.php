@@ -36,8 +36,7 @@
                                     <!-- <td><input type="checkbox" value="1" id="inversorEstado" name="inversorEstado" <?php echo ((int)$item['estado']==1)?'checked':''?> ></td> -->
                                     <td style="text-align: center">
                                         <?php 
-                                         echo $item['factura_tipo'];
-                                         echo $item['factura_nro'];
+                                        
                                         /*
                                         if (strpos($permission,'Edit') !== false) {
                                             echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadOperation('.$item['id'].',\'Edit\')"></i>';
