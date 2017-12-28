@@ -939,7 +939,7 @@ class Operations extends CI_Model
 				$html.= '<tr><td style="text-align:left;">CLIENTE: <strong>'. ($data['tenedor']['razon_social'] == '' ? $data['tenedor']['nombre'].' '.$data['tenedor']['apellido'] : $data['tenedor']['razon_social']).'</strong></td></tr>';
 				$html.= '<tr><td style="text-align:left;">DOMICILIO: <strong>'.$data['tenedor']['domicilio'].'</strong></td></tr>';
 				$html.= '<tr><td style="text-align:left;">CUIT: <strong>'.$data['tenedor']['cuit'].'</strong></td></tr>';
-				$html.= '<tr><td style="text-align:left;">FACTURA NÚMERO: <strong>'.str_pad($data['id'], 10, "0", STR_PAD_LEFT).'</strong></td></tr>';
+				$html.= '<tr><td style="text-align:left;">FACTURA TIPO: <strong style="padding-right: 10px">B</strong> FACTURA Nro: <strong>'.str_pad($data['id'], 10, "0", STR_PAD_LEFT).'</strong></td></tr>';
 				$html.= '<tr><td style="text-align:center; text-decoration: underline;">DETALLE DE VALORES COMPRADOS</td></tr>';
 				//Cheque recibido
 				$html.= '<tr><td><br>';
@@ -984,11 +984,11 @@ class Operations extends CI_Model
 					$html.= '<tr style="text-align: center"><th>Banco</th><th>Número</th><th>Importe</th><th>Fecha</th></tr>';	
 					foreach($query->result() as $che)
 					{
-						$html.= '<tr>';
+						$html.= '<tr style="text-align: center">';
 						$html.= 	'<td>'.$this->getBankName($che->bancoId).'</td>';
-						$html.= 	'<td style="text-align: right">'.$che->numero.'</td>';
-						$html.= 	'<td style="text-align: right">'.number_format($che->importe, 2, ',', '.').'</td>';
-						$html.= 	'<td style="text-align: center">'.date("d-m-Y", strtotime($che->fecha)).'</td>';
+						$html.= 	'<td>'.$che->numero.'</td>';
+						$html.= 	'<td>'.number_format($che->importe, 2, ',', '.').'</td>';
+						$html.= 	'<td>'.date("d-m-Y", strtotime($che->fecha)).'</td>';
 						$html.= '</tr>';
 					}
 					
@@ -1004,11 +1004,11 @@ class Operations extends CI_Model
 					$html.= '<tr style="text-align: center"><th>Banco</th><th>CBU/Alias</th><th>Importe</th><th>Fecha</th></tr>';	
 					foreach($query->result() as $che)
 					{
-						$html.= '<tr>';
+						$html.= '<tr style="text-align: center">';
 						$html.= 	'<td>'.$this->getBankName($che->banco_id).'</td>';
-						$html.= 	'<td style="text-align: right">'.$che->cbu_alias.'</td>';
-						$html.= 	'<td style="text-align: right">'.number_format($che->importe, 2, ',', '.').'</td>';
-						$html.= 	'<td style="text-align: center">'.date("d-m-Y", strtotime($che->fecha)).'</td>';
+						$html.= 	'<td>'.$che->cbu_alias.'</td>';
+						$html.= 	'<td>'.number_format($che->importe, 2, ',', '.').'</td>';
+						$html.= 	'<td>'.date("d-m-Y", strtotime($che->fecha)).'</td>';
 						$html.= '</tr>';
 					}
 					
@@ -1017,12 +1017,12 @@ class Operations extends CI_Model
 				//-----------------------------------------------------
 				//Listado de cheuqes emitidos 
 				$html.= '</td></tr>';
-				$html.= '<tr><td style="text-indent: 40px; text-align:justify;"><strong>';
-				$html.= 'ESTA OPERACION SE CANCELA CON CHUEQUE '.$data['banco']['razon_social'].' N'.$result['operation']['nro_cheque'].'</td></tr>';
+				$html.= '<tr><td style="text-indent: 40px; text-align:justify;"><br><strong>';
+				$html.= 'ESTA OPERACION SE CANCELA CON CHUEQUE '.$data['banco']['razon_social'].' N° '.$result['operation']['nro_cheque'].'</td></tr>';
 				//Firmas
 				$html.= '<tr><td><br><br><br><br><br><br><br><br>';
 				$html.= '<table width="100%">';
-				$html.= '<tr><td style="width: 50%; text-align:center;">'.$data['inversor']['razon_social'].'</td><td style="width: 50%; text-align:center;">'.$data['tenedor']['apellido'].', '.$data['tenedor']['nombre'].'</td></tr>';
+				$html.= '<tr><td style="width: 50%; text-align:center;">'.$data['inversor']['razon_social'].'</td><td style="width: 50%; text-align:center;">'.($data['tenedor']['razon_social'] == '' ? $data['tenedor']['nombre'].' '.$data['tenedor']['apellido'] : $data['tenedor']['razon_social']).'</td></tr>';
 				$html.= '</table>';
 
 				//se incluye la libreria de dompdf
