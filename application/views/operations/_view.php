@@ -232,13 +232,14 @@
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 title_section">
                 <h3 class="h3_section">Obvervación: </h3>
             </div>
-            <div class="col-lg-10 col-md-10 col-sm-12  col-xs-12">
+            <div class="col-lg-5 col-md-5 col-sm-12  col-xs-12">
                 <br>
                 <textarea name="observacion" id="operationObservacion" class="form-control" rows="20"></textarea>
             </div>
 
         </div>
 
+        
          <div class="form-group">
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 title_section">
                 <h3 class="h3_section">Cheques Entregados: </h3>

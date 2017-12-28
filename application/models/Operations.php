@@ -6,6 +6,29 @@ class Operations extends CI_Model
 	function __construct()
 	{
 		parent::__construct();
+		$this->add_column();
+	}
+
+	function add_column(){
+		$sql="SELECT * FROM `operacion` LIMIT 1" ;
+		$query=$this->db->query($sql);
+		$check=false;
+		foreach($query->result_array() as $item){
+			if(isset($item['factura_tipo'])){
+				$check=true;
+				break;
+			}
+		}
+		if($check){
+
+			$sql='ALTER TABLE `operacion`
+			ADD COLUMN  `factura_tipo` VARCHAR(2) NULL DEFAULT NULL AFTER `observacion`,
+			ADD COLUMN  `factura_nro` VARCHAR(11) NULL DEFAULT NULL AFTER `factura_tipo`;';
+			
+			$this->db->query($sql);
+		}
+		return true;
+		
 	}
 
 	function List_all($estado=false){
@@ -27,7 +50,7 @@ class Operations extends CI_Model
 				$result[$key]['banco']=$banco->row()->razon_social;
 
 				$tomador=$this->db->get_where('agente',array('id'=>$item['agente_tenedor_id']));				
-				$result[$key]['tomador']=$tomador->row()->razon_social == '' ? $tomador->row()->nombre.", ".$tomador->row()->apellido : $tomador->row()->razon_social;
+				$result[$key]['tomador']=$tomador->row()->razon_social == '' ? $tomador->row()->nombre."  ".$tomador->row()->apellido : $tomador->row()->razon_social;
 				
 				
 			}

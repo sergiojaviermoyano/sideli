@@ -28,7 +28,7 @@
                             <tbody>
                                 <?php foreach($list as $key => $item):?>
                                 <tr>
-                                    <td><?php echo $item['tomador']?></td>
+                                    <td><?php echo ($item['tomador']!='')? strtoupper($item['tomador']):' '?></td>
                                     <td><?php echo $item['banco']?></td>
                                     <td style="text-align: center"><?php echo date("d-m-Y", strtotime($item['fecha_venc'])); ?></td>
                                     <td style="text-align: right"><?php echo "$ ".number_format($item['importe'], 2, ',', '.'); ?></td>
