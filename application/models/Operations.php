@@ -443,7 +443,7 @@ class Operations extends CI_Model
 				
 
 
-				$html= '<table width="100%" style="font-family:Arial; font-size: 13pt;">';
+				$html= '<table width="100%" style="font-family:Arial; font-size: 12pt;">';
 				//Titulo
 				$html.= '<tr><td style="text-align: center"><strong>CONTRATO DE MUTUO</td></tr>';
 				//Header
@@ -762,10 +762,25 @@ class Operations extends CI_Model
 	    if ($digit1 != "0" )
 	    {
 
-	    	if($digit1 != "1")
+	    	if($digit1 != "1" && $digit1 != "5" && $digit1 != "7" && $digit1 != "9")
 	        	$buffer .= $this->convertDigit($digit1) . "cien";
-	        else
-	        	$buffer .= "cien";
+	        else{
+	        		switch($digit1)
+	        		{
+	        			case "1":
+	        				$buffer .= "cien";
+	        				break;
+	        			case "5":
+	        				$buffer .= "quinien";
+	        				break;
+	        			case "7":
+	        				$buffer .= "setecien";
+	        				break;
+	        			case "9":
+	        				$buffer .= "novecien";
+	        				break;
+	        		}
+	        	}
 	        if ($digit2 != "0" || $digit3 != "0")
 	        {
 	        	if($digit1 != "1")
@@ -811,6 +826,8 @@ class Operations extends CI_Model
 	                return "ochenta";
 	            case "9":
 	                return "noventa";
+	            case "0":
+	            	return "cero";
 	        }
 	    } else if ($digit1 == "1")
 	    {
@@ -835,7 +852,31 @@ class Operations extends CI_Model
 	            case "9":
 	                return "diecinueve";
 	        }
-	    } else
+	    } else if($digit1 == "0"){
+	    	switch ($digit2)
+	        {
+	            case "1":
+	                return "un";
+	            case "2":
+	                return "dos";
+	            case "3":
+	                return "tres";
+	            case "4":
+	                return "cuatro";
+	            case "5":
+	                return "cinco";
+	            case "6":
+	                return "seis";
+	            case "7":
+	                return "siete";
+	            case "8":
+	                return "ocho";
+	            case "9":
+	                return "nueve";
+	            case "0":
+	                return "cero";
+	        }
+	    } else 
 	    {
 	        $temp = $this->convertDigit($digit2);
 	        switch ($digit1)
