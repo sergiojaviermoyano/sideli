@@ -14,7 +14,7 @@ class Operations extends CI_Model
 		$query=$this->db->query($sql);
 		$check=false;
 		foreach($query->result_array() as $item){
-			if(isset($item['factura_tipo'])){
+			if(!isset($item['factura_tipo'])){
 				$check=true;
 				break;
 			}
@@ -1043,7 +1043,25 @@ class Operations extends CI_Model
 			}
 			return $data['id'].'_l.pdf';
 		}
-    }
+	}
+	
+
+	public function setFactura($data){
+		
+		if(!isset($data['id'])){
+			return false;
+		}
+
+		$result=$this->db->update(
+			'operacion',array('factura_tipo'=>$data['tipo'],'factura_nro'=>$data['nro']),array('id'=>$data['id'])
+		);
+		if($result){
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
 }
 	
     

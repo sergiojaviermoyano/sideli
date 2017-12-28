@@ -46,6 +46,17 @@ class operation extends CI_Controller {
 
 	}
 
+	public function setFactura(){
+		
+		if($result=$this->Operations->setFactura($this->input->post())){
+			echo json_encode($this->load->view('operations/list', array('result'=>true), true));
+		}else{
+			echo json_encode($this->load->view('operations/list', array(), true));
+		}
+		
+
+	}
+
 	public function printOperation(){
 		echo json_encode($this->Operations->printOperation($this->input->post()));
 	}

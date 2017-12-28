@@ -36,6 +36,8 @@
                                     <!-- <td><input type="checkbox" value="1" id="inversorEstado" name="inversorEstado" <?php echo ((int)$item['estado']==1)?'checked':''?> ></td> -->
                                     <td style="text-align: center">
                                         <?php 
+                                         echo $item['factura_tipo'];
+                                         echo $item['factura_nro'];
                                         /*
                                         if (strpos($permission,'Edit') !== false) {
                                             echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadOperation('.$item['id'].',\'Edit\')"></i>';
@@ -47,9 +49,15 @@
                                             echo '<i class="fa fa-fw fa-file-text-o" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="Print('.$item['id'].',\'View\')"></i> ';
                                         }
                                         if (strpos($permission,'View') !== false) {
-                                            echo '<i class="fa fa-fw fa-dollar" style="color: #00a65a ; cursor: pointer; margin-left: 15px;" onclick="PrintLiq('.$item['id'].',\'View\')"></i> ';
+                                            //echo '<i class="fa fa-fw fa-dollar" style="color: #00a65a ; cursor: pointer; margin-left: 15px;" onclick="PrintLiq('.$item['id'].',\'View\')"></i> ';
+                                            if($item['factura_tipo']=='' && $item['factura_nro']==''){
+                                                echo '<i class="fa fa-fw fa-dollar" style="color: #00a65a ; cursor: pointer; margin-left: 15px;" onclick="addFactura('.$item['id'].')"></i> ';
+                                            }else{
+                                                echo '<i class="fa fa-fw fa-dollar" style="color: #00a65a ; cursor: pointer; margin-left: 15px;" onclick="PrintLiq('.$item['id'].',\'View\')"></i> ';
+                                            }
                                         }
                                         ?>
+                                        <input type="hidden" id="factura_<?php echo $item['id']?>" data-tipo="<?echo $item['factura_tipo']?>" data-nro="<?echo $item['factura_nro']?>">
                                     </td>
                                 </tr>
                                 <?php endforeach;?>
@@ -81,6 +89,52 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="modalFactura" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Datos de Facturación</h4>
+      </div>
+        <div class="modal-body">
+       
+            <input type="hidden" id="o_id" >
+            <div class="form-group">
+                
+                <label for="recipient-name" class="control-label">Tipo de Factura:</label>                
+                <div class="row" >
+                    <div class="col-lg-1 col-md-1 col-sm-1  col-xs-1">
+                        <br>                
+                        <label class="radio-inline">
+                        <input type="radio" id="factura_tipo_a" name="factura_tipo"  value="A" checked> A
+                        </label>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1  col-xs-1">
+                        <br>                
+                        <label class="radio-inline">
+                        <input type="radio" id="factura_tipo_b" name="factura_tipo"  value="B" > B
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="factura_nro" class="control-label">Nro de Factura:</label>
+                <input type="text" class="form-control" id="factura_nro" name="factura_nro" value="">
+            </div>
+
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id="add_factura_btn" class="btn btn-info">Guardar</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <script>
     $(function () {
         $('#inversores').DataTable({
@@ -148,6 +202,9 @@
     };
 
     function Print(id__){
+
+       
+
     WaitingOpen('Generando reporte...');
     LoadIconAction('modalAction__','Print');
     $.ajax({
@@ -170,7 +227,65 @@
         });
   }
 
+  function addFactura(id){
+
+    $("#modalFactura").find("#o_id").val(id);
+    $("#modalFactura").modal('show');
+    return false;
+  }
+
+  function refresh_view(){
+        WaitingOpen();
+        $('#content').empty();
+        
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo base_url(); ?>index.php/operation/index/'+"<?php echo $permission; ?>",
+            success: function(result){
+                        WaitingClose();
+                        $("#content").html(result);
+                    },
+            error: function(result){
+                    WaitingClose();
+                    ProcesarError(result.responseText, 'modalOper');
+            },
+            dataType: 'json'
+        });
+                  
+
+    }
+  $("#add_factura_btn").click(function(){
+        var id=$("#modalFactura").find("#o_id").val();
+        var factur_tipo= $("#modalFactura input[type=radio]:checked").val();
+        if($("#factura_nro").val()==''){
+            alert("Debe Ingresar un nro de Factura");
+            $("#factura_nro").focus();
+            return false;
+        }else{
+            var factura_nro=$("#factura_nro").val();
+        }
+        $.ajax({
+            type: 'POST',
+            data: {id: id, tipo : factur_tipo,nro : factura_nro},
+        url: 'index.php/operation/setFactura',
+        success: function(result){
+            $("#modalFactura").modal('hide');
+           
+        },
+        error: function(result){
+              WaitingClose();
+              ProcesarError(result.responseText, 'modalPrint');
+            },
+            dataType: 'json'
+        });
+
+        refresh_view();    
+      return false;
+  })
+
   function PrintLiq(id__){
+    
+
     WaitingOpen('Generando reporte...');
     LoadIconAction('modalAction__','Print');
     $.ajax({
@@ -191,61 +306,8 @@
             },
             dataType: 'json'
         });
-  }
-    /*
-    $('#btnSave').on('click',function(){
-  	console.debug("===> TES");
-    if(action == 'View'){
-  		$('#modalInversor').modal('hide');
-  		return;
-  	}
-
-  	var hayError = false;
-    if($('#InversorRazonSocial').val() == '')
-    {
-      hayError = true;
     }
-
-    if($('#InversorCuit').val() == '')
-    {
-      hayError = true;
-    }
-    if($('#InversorDomicilio').val() == '')
-    {
-      hayError = true;
-    }
-    console.debug("===> hayError: %o",hayError);
-    if(hayError == true){
-    	$('#error').fadeIn('slow');
-    	return;
-    }
-
-    $('#error').fadeOut('slow');
-    WaitingOpen('Guardando cambios');
-    $.ajax({
-      type: 'POST',
-      data: { 
-        act: action, 
-        id: $('#InversorId').val(),    
-        cuit: $('#InversorCuit').val(),
-        razon_social: $('#InversorRazonSocial').val(),
-        domicilio: $('#InversorDomicilio').val(),
-        estado: $('#InversorEstado').val(),
-      },
-      url: 'index.php/operation/setInvestor', 
-      success: function(result){
-        WaitingClose();
-        $('#modalInversor').modal('hide');
-        setTimeout("cargarView('operation', 'index', '"+$('#permission').val()+"');",1000);        
-        
-      },
-      error: function(result){
-        WaitingClose();
-        alert("error");
-      },
-      dataType: 'json'
-      });
-  });*/
+    
 
 
 </script>

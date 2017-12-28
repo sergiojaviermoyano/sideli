@@ -116,7 +116,6 @@ $(function(){
             url: 'feriado/deleteDay',                     
             data: {id:id},
             success: function(data) {
-                console.log(data);
                
                 refresh_view();
                 return false;
