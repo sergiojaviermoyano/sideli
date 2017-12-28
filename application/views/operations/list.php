@@ -230,7 +230,6 @@
 
     $("#modalFactura").find("#o_id").val(id);
     $("#modalFactura").modal('show');
-    return false;
   }
 
   function refresh_view(){
@@ -263,22 +262,24 @@
         }else{
             var factura_nro=$("#factura_nro").val();
         }
+        WaitingOpen("Cargando Factura");
         $.ajax({
             type: 'POST',
             data: {id: id, tipo : factur_tipo,nro : factura_nro},
-        url: 'index.php/operation/setFactura',
-        success: function(result){
-            $("#modalFactura").modal('hide');
-           
-        },
-        error: function(result){
-              WaitingClose();
-              ProcesarError(result.responseText, 'modalPrint');
+            url: 'index.php/operation/setFactura',
+            success: function(result){
+                WaitingClose();
+                $("#modalFactura").modal('hide');
+                setTimeout("cargarView('operation', 'index', '"+$('#permission').val()+"');",1000);
+            },
+            error: function(result){
+                  
+                  ProcesarError(result.responseText, 'modalFactura');
             },
             dataType: 'json'
         });
 
-        refresh_view();    
+        //refresh_view();    
       return false;
   })
 

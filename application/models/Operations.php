@@ -6,7 +6,7 @@ class Operations extends CI_Model
 	function __construct()
 	{
 		parent::__construct();
-		$this->add_column();
+		//$this->add_column();
 	}
 
 	function add_column(){
@@ -968,8 +968,6 @@ class Operations extends CI_Model
 					$data['emisor'] = $emisor[0];
 				}
 				//Detalle
-				
-
 
 				$html= '<table width="100%" style="font-family:Arial; font-size: 13pt;">';
 				//Titulo
@@ -980,7 +978,7 @@ class Operations extends CI_Model
 				$html.= '<tr><td style="text-align:left;">CLIENTE: <strong>'. ($data['tenedor']['razon_social'] == '' ? $data['tenedor']['nombre'].' '.$data['tenedor']['apellido'] : $data['tenedor']['razon_social']).'</strong></td></tr>';
 				$html.= '<tr><td style="text-align:left;">DOMICILIO: <strong>'.$data['tenedor']['domicilio'].'</strong></td></tr>';
 				$html.= '<tr><td style="text-align:left;">CUIT: <strong>'.$data['tenedor']['cuit'].'</strong></td></tr>';
-				$html.= '<tr><td style="text-align:left;">FACTURA TIPO: <strong style="padding-right: 10px">B</strong> FACTURA Nro: <strong>'.str_pad($data['id'], 10, "0", STR_PAD_LEFT).'</strong></td></tr>';
+				$html.= '<tr><td style="text-align:left;">FACTURA TIPO: <strong style="padding-right: 10px">'.$result['operation']['factura_tipo'].'</strong> FACTURA Nro: <strong>'.$result['operation']['factura_nro'].'</strong></td></tr>';
 				$html.= '<tr><td style="text-align:center; text-decoration: underline;">DETALLE DE VALORES COMPRADOS</td></tr>';
 				//Cheque recibido
 				$html.= '<tr><td><br>';
