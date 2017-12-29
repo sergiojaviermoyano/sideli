@@ -13,14 +13,18 @@
                     </div><!-- /.box-header -->
                    
                     <div class="box-body">
+
+                        <?php /*var_dump($list);*/?>
+
                         <table id="inversores" class="table table-bordered table-hover datatable">
                             <thead>
-                            <tr>                               
+                            <tr >     
+                                <th>Operacion Id</th>                          
                                 <th >Tenedor</th>
                                 <th >Banco</th>
-                                <th >Fecha</th>
-                                <th >Importe</th>
-                                <th >Neto</th>
+                                <th class="text-center">Fecha</th>
+                                <th class="text-right">Importe</th>
+                                <th class="text-right">Neto</th>
                                 <!-- <th >Estado</th> -->
                                 <th class="text-center">Acciones</th>
                             </tr>
@@ -28,10 +32,11 @@
                             <tbody>
                                 <?php foreach($list as $key => $item):?>
                                 <tr>
+                                    <td><?php echo $item['id']?> </td>
                                     <td><?php echo ($item['tomador']!='')? strtoupper($item['tomador']):' '?></td>
                                     <td><?php echo $item['banco']?></td>
-                                    <td style="text-align: center"><?php echo date("d-m-Y", strtotime($item['fecha_venc'])); ?></td>
-                                    <td style="text-align: right"><?php echo "$ ".number_format($item['importe'], 2, ',', '.'); ?></td>
+                                    <td class="text-center"><?php echo date("d-m-Y", strtotime($item['fecha_venc'])); ?></td>
+                                    <td class="text-right"><?php echo "$ ".number_format($item['importe'], 2, ',', '.'); ?></td>
                                     <td style="text-align: right"><?php echo "$ ".number_format($item['neto'], 2, ',', '.'); ?></td>
                                     <!-- <td><input type="checkbox" value="1" id="inversorEstado" name="inversorEstado" <?php echo ((int)$item['estado']==1)?'checked':''?> ></td> -->
                                     <td style="text-align: center">
@@ -141,12 +146,14 @@
             "lengthChange": true,
             "searching": true,
             "ordering": true,
+            "order": [[ 0, "desc" ]],
+            
             "info": true,
             "autoWidth": true,
             "language": {
                 "lengthMenu": "Ver _MENU_ filas por página",
                 "zeroRecords": "No hay registros",
-                "info": "Mostrando página _PAGE_ de _PAGES_",
+                "info": "Pag. _PAGE_ de _PAGES_",
                 "infoEmpty": "No hay registros disponibles",
                 "infoFiltered": "(filtrando de un total de _MAX_ registros)",
                 "sSearch": "Buscar:  ",

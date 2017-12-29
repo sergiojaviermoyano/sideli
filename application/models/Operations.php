@@ -36,7 +36,7 @@ class Operations extends CI_Model
 			$this->db->where("estado",$estado);
 		}
 		
-		$this->db->order_by('created', 'DESC');
+		$this->db->order_by('id', 'DESC');
 		$query= $this->db->get('operacion');
 		//echo $this->db->last_query();
 				//die("fin");
