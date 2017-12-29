@@ -1057,7 +1057,7 @@ class Operations extends CI_Model
 				//Listado de cheuqes emitidos 
 				$html.= '</td></tr>';
 				$html.= '<tr><td style="text-indent: 40px; text-align:justify;"><br><strong>';
-				$html.= 'ESTA OPERACION SE CANCELA CON CHUEQUE '.$data['banco']['razon_social'].' N° '.$result['operation']['nro_cheque'].'</td></tr>';
+				$html.= 'ESTA OPERACION SE CANCELA CON CHEQUE '.$data['banco']['razon_social'].' N° '.$result['operation']['nro_cheque'].'</td></tr>';
 				//Firmas
 				$html.= '<tr><td><br><br><br><br><br><br><br><br>';
 				$html.= '<table width="100%">';

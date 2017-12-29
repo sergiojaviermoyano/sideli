@@ -32,9 +32,9 @@
 			<td style="text-align: center"><?php echo $data['operation']['nro_cheque'];?></td>
 			<td><?php echo $data['emisor']['apellido'] . ' ' . $data['emisor']['nombre'];?></td>
 			<td style="text-align: center"><?php echo date("d-m-Y", strtotime($data['operation']['fecha_venc']));?></td>
-			<td style="text-align: right"><?php echo number_format($data['operation']['tasa_mensual'], 2, ',', '.');?></td>
-			<td style="text-align: right"><?php echo number_format($data['operation']['nro_dias'], 0, ',', '.');?></td>
-			<td style="text-align: right"><?php echo number_format($data['operation']['importe'], 2, ',', '.');?></td>
+			<td style="text-align: center"><?php echo number_format($data['operation']['tasa_mensual'], 2, ',', '.');?></td>
+			<td style="text-align: center"><?php echo number_format($data['operation']['nro_dias'], 0, ',', '.');?></td>
+			<td style="text-align: center"><?php echo number_format($data['operation']['importe'], 2, ',', '.');?></td>
 			</td></tr>
 		</table><br>
 
@@ -69,8 +69,8 @@
   				foreach ($data['cheques'] as $che) {
   					echo '<tr>';
 					echo  	'<td>'.$che[0].'</td>';
-					echo  	'<td style="text-align: right">'.$che[1].'</td>';
-					echo  	'<td style="text-align: right">'.$che[2].'</td>';
+					echo  	'<td style="text-align: center">'.$che[1].'</td>';
+					echo  	'<td style="text-align: center">'.$che[2].'</td>';
 					echo  	'<td style="text-align: center">'.date("d-m-Y", strtotime($che[3])).'</td>';
 					echo '</tr>';
   				}
@@ -89,8 +89,8 @@
   				foreach ($data['transferencias'] as $che) {
   					echo '<tr>';
 					echo  	'<td>'.$che[0].'</td>';
-					echo  	'<td style="text-align: right">'.$che[1].'</td>';
-					echo  	'<td style="text-align: right">'.$che[2].'</td>';
+					echo  	'<td style="text-align: center">'.$che[1].'</td>';
+					echo  	'<td style="text-align: center">'.$che[2].'</td>';
 					echo  	'<td style="text-align: center">'.date("d-m-Y", strtotime($che[3])).'</td>';
 					echo '</tr>';
   				}
