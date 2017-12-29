@@ -1049,16 +1049,23 @@ var banco_1={
         
 
         $(document).on('keyup','.importe',function(){
+            var _neto_total=parseFloat(neto_total).toFixed(2);
             var input_importes=$("#salid_tb").find("input.form-control.importe");
+            
             console.debug("====> input_importes: %o",input_importes.length);
+            console.debug("====> _neto_total: %o",_neto_total);
+            
             var total=0;
             input_importes.each(function(index,item){
             console.debug("====> $(item).val(): %o",$(item).val());                
                 total+=parseFloat($(item).val());
             });
-            console.debug("====> _importe: %o",total.toFixed(2));
-            console.debug("====> input_importes: %o",parseFloat(neto_total).toFixed(2));
-            if(total.toFixed(2)>parseFloat(neto_total).toFixed(2)){
+            console.debug("====> TOtal: %o",total.toFixed(2));
+            console.debug("====> neto_total: %o", parseFloat(neto_total).toFixed(2));
+            console.log(neto_total);
+            console.log(Number(neto_total));
+            console.log((total.toFixed(2)>=Number(neto_total)));
+            if(total.toFixed(2)>Number(neto_total)){
                 console.debug("====> _importe: %o",total);
                 alert(" Los importes de los cheques Agregados no pueden superar al Neto a pagar: ");
                 return false;
