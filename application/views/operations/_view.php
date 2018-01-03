@@ -256,7 +256,7 @@
                     </div>
                     
                 </div>   
-                <div class="col-lg-9">
+                <div class="pago_salida col-lg-9">
                     <table id="salid_tb" class="table table-responsive hidden">
                         <thead>
                             <tr >
@@ -1026,19 +1026,19 @@ var banco_1={
                 next_row=1;
             }
 
-            var total_rows= $("#salid_tb").find("tbody tr").length;
+            var total_rows= $("#salid_tb_tranferencia").find("tbody tr").length;
             var last= table.find("tbody tr:last").data();
             var new_row='<tr id="tr_'+(next_row-1)+'" data-next="'+next_row+'" >' ;
                 new_row+='<td><input type="text" class="form-control transfe_banco typeahead"  name="tranferencia_salida['+next_row+'][banco_nombre]" id="operation_'+next_row+'_TransfeOutBanco"  data-id="'+next_row+'" placeholder="Banco">';
                 new_row+='<input type="hidden"   name="tranferencia_salida['+next_row+'][banco_id]" id="transfe_banco_id_'+next_row+'" ></td>';
                 new_row+='<td><input type="text" class="form-control nro" name="tranferencia_salida['+next_row+'][cbu]" id="operation_'+next_row+'_TransfeOutCbu"  placeholder="Nro / Alias CBU" maxlength="22" style="text-align: right"></td>';
-                new_row+='<td><input type="text" class="form-control importe" name="tranferencia_salida['+next_row+'][importe]" id="operation_'+next_row+'_TransfeOutImporte"  placeholder="Importe" style="text-align: right"></td>';
+                new_row+='<td><input type="text" class="form-control importe" name="tranferencia_salida['+next_row+'][importe]" id="operation_'+next_row+'_TransfeOutImporte"  placeholder="Importe" value="0.00" style="text-align: right"></td>';
                 new_row+='<td><input type="text" class="form-control fecha datepicker" name="tranferencia_salida['+next_row+'][fecha]" id="operation_'+next_row+'_TransfeOutFecha"  placeholder="Fecha"></td>';
-                new_row+='<td><button class="btn btn-danger btn-xs bt_check_delete" data-id="'+(next_row-1)+'">Eliminar</button></td>'
+                new_row+='<td><button class="btn btn-danger btn-xs bt_transferencia_delete" data-id="'+(next_row-1)+'">Eliminar</button></td>'
                 new_row+='</tr>';
             $("#salid_tb_tranferencia").find("tbody").append(new_row);
-            $('input.form-control.importe').maskMoney({allowNegative: false, thousands:'', decimal:'.'});//.trigger('mask.maskMoney');
-            $('input.form-control.fecha').datepicker({
+            $('#salid_tb_tranferencia input.form-control.importe').maskMoney({allowNegative: false, thousands:'', decimal:'.'});//.trigger('mask.maskMoney');
+            $('#salid_tb_tranferencia input.form-control.fecha').datepicker({
                 minDate: today,
                 dateFormat: 'dd-mm-yy',
                 setDate: today,
@@ -1050,14 +1050,14 @@ var banco_1={
 
         $(document).on('keyup','.importe',function(){
             var _neto_total=parseFloat(neto_total).toFixed(2);
-            var input_importes=$("#salid_tb").find("input.form-control.importe");
+            var input_importes=$("#salid_tb,#salid_tb_tranferencia").find("input.form-control.importe");
             
             console.debug("====> input_importes: %o",input_importes.length);
             console.debug("====> _neto_total: %o",_neto_total);
             
             var total=0;
             input_importes.each(function(index,item){
-            console.debug("====> $(item).val(): %o",$(item).val());                
+                console.debug("====> $(item).val(): %o",$(item).val());                
                 total+=parseFloat($(item).val());
             });
             console.debug("====> TOtal: %o",total.toFixed(2));
@@ -1156,10 +1156,18 @@ var banco_1={
 
         $(document).on('click','.bt_check_delete',function(){
             var id=$(this).data('id');
-            //console.debug("===> DELETE CHEQUE: %o",id);
-
             if($("#salid_tb").find("tbody tr#tr_"+id).length>0){
                 $("#salid_tb").find("tbody tr#tr_"+id).remove();
+            }
+            return false;
+        });
+
+        $(document).on('click','.bt_transferencia_delete',function(){
+            var id=$(this).data('id');
+            //console.debug("===> .bt_transferencia_delete: %o",id);
+            if($("#salid_tb_tranferencia").find("tbody tr#tr_"+id).length>0){
+                console.debug("===> .bt_transferencia_delete: %o",id);
+                $("#salid_tb_tranferencia").find("tbody tr#tr_"+id).remove();
             }
             return false;
         });

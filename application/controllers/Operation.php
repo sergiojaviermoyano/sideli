@@ -24,7 +24,7 @@ class operation extends CI_Controller {
 
     public function getOperation(){
 		$data['data'] = $this->Operations->getOperation($this->input->post());
-		$data['feriados']=$this->Feriados->getByYear(date('Y',strtotime('+1 year')));
+		$data['feriados']=$this->Feriados->getByYear(date('Y'));
 		if($data['data']['act'] == 'View'){
 			$response['html'] = $this->load->view('operations/_consult', $data, true);
 		} else {

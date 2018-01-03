@@ -498,7 +498,12 @@ class Operations extends CI_Model
 					{
 						$html.= '<tr>';
 						$html.= 	'<td style="text-align: center">'.$this->getBankName($che->banco_id).'</td>';
-						$html.= 	'<td style="text-align: center">'.$che->cbu_alias.'</td>';
+						if($che->cbu_nro!='' && $che->cbu_nro!=0){
+							$html.= 	'<td style="text-align: center"> '.($che->cbu_nro).' </td>';
+						}else{
+							$html.= 	'<td style="text-align: center"> '.($che->cbu_alias).' </td>';
+						}
+						
 						$html.= 	'<td style="text-align: center">'.number_format($che->importe, 2, ',', '.').'</td>';
 						$html.= 	'<td style="text-align: center">'.date("d-m-Y", strtotime($che->fecha)).'</td>';
 						$html.= '</tr>';
@@ -1045,7 +1050,12 @@ class Operations extends CI_Model
 					{
 						$html.= '<tr style="text-align: center">';
 						$html.= 	'<td>'.$this->getBankName($che->banco_id).'</td>';
-						$html.= 	'<td>'.$che->cbu_alias.'</td>';
+						if($che->cbu_nro!='' && $che->cbu_nro!=0){
+							$html.= 	'<td style="text-align: center"> '.($che->cbu_nro).' </td>';
+						}else{
+							$html.= 	'<td style="text-align: center"> '.($che->cbu_alias).' </td>';
+						}
+						//$html.= 	'<td>'.$che->cbu_alias.'</td>';
 						$html.= 	'<td>'.number_format($che->importe, 2, ',', '.').'</td>';
 						$html.= 	'<td>'.date("d-m-Y", strtotime($che->fecha)).'</td>';
 						$html.= '</tr>';
