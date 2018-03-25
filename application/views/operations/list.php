@@ -75,19 +75,20 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="modalInversor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog  modal-lg modal-dialog_main" role="document" style="">
-    <div class="modal-content">
+<div class="modal fade" id="modalOperacion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog  modal-lg modal-dialog_main op_modal-dialog" role="document" style="">
+    <div class="modal-content op_modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel"><span id="modalAction"> </span> Operación</h4> 
       </div>
-      <div class="modal-body" id="modalBodyInversor">
+      <div class="modal-body " id="modalBodyOperacion">
+          <!-- CARGA FORMULARIO OPERACIONES -->
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary hidden" id="btnBack1" data-step="1">Volver</button>
-        <button type="button" class="btn btn-primary" id="btnNext1"  data-step="2"      >Siguiente</button>
+      <div class="modal-footer">      
+        <button type="button" class="btn btn-default btn-flat margin " data-dismiss="modal" style="margin-bottom:0px;">Cancelar</button>
+        <button type="button" class="btn bg-navy btn-flat margin hidden" id="btnBack1" data-step="1">Volver</button>
+        <button type="button" class="btn bg-navy btn-flat margin" id="btnNext1"  data-step="2"      >Siguiente</button>
         <button type="button" class="btn btn-primary hidden" id="btnSave" >Guardar</button>
       </div>
     </div>
@@ -182,9 +183,10 @@
             },
             success: function(result){
                 //console.debug(result);
-                $("#modalBodyInversor").html(result.html);
+                $("#modalBodyOperacion").html(result.html);
                 $("#operationFechaVen").inputmask("dd-mm-yyyy",{ "clearIncomplete": true });
-                $("#operationImporte").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+                //$("#operationImporte").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
+                $("#operationImporte").maskMoney({allowNegative: false, thousands:'.', decimal:',',allowZero:true,prefix:'$'});//.trigger('mask.maskMoney');
                 $("#opterationTasaMensual").maskMoney({allowNegative: false, thousands:'', decimal:'.', allowZero: true});
                 $("#opterationTasaAnual").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
                 $("#opterationInteres").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
@@ -196,12 +198,12 @@
                 $("#operationIva").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
                 $("#operationSellado").maskMoney({allowNegative: false, thousands:'', decimal:'.'});
                 
-                setTimeout("$('#modalInversor').modal('show');",800);
+                setTimeout("$('#modalOperacion').modal('show');",800);
                 setTimeout("$('#razon_social').focus();",1500);
             },
             error: function(result){
                 WaitingClose();
-                ProcesarError(result.responseText, 'modalInversor');
+                ProcesarError(result.responseText, 'modalOperacion');
             },
             dataType: 'json'
         });

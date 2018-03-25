@@ -29,15 +29,18 @@ class operation extends CI_Controller {
 			$response['html'] = $this->load->view('operations/_consult', $data, true);
 		} else {
 			$data['js_to_load']="_view.js";	
-			$response['html'] = $this->load->view('operations/_view', $data, true);
+			//$response['html'] = $this->load->view('operations/_view', $data, true);
+			$response['html'] = $this->load->view('operations/form', $data, true);
 		}
 		echo json_encode($response);
 	}
 
 
 	public function addOperation(){
-		
+		var_dump($this->input->post());
+		die("sds");
 		if($result=$this->Operations->add($this->input->post())){
+			
 			echo json_encode($this->load->view('operations/list', array('result'=>true), true));
 		}else{
 			echo json_encode($this->load->view('operations/list', array(), true));
@@ -58,7 +61,8 @@ class operation extends CI_Controller {
 	}
 
 	public function printOperation(){
-		echo json_encode($this->Operations->printOperation($this->input->post()));
+		$this->Operations->printOperation($this->input->post());
+		//echo json_encode($this->Operations->printOperation($this->input->post()));
 	}
 
 	public function printLiquidacion(){

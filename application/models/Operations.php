@@ -201,6 +201,9 @@ class Operations extends CI_Model
 	public function add($data=false){
 		
 		// Consulta si existe Agente Emisor por nro cuit, si no existe lo agrega
+
+		
+
 		$get_agente=$this->db->get_where('agente',array('cuit'=>$data['emisor_cuit']));
 		if($get_agente->num_rows()==0){		
 		
@@ -243,12 +246,15 @@ class Operations extends CI_Model
 
 		
 		// Inserta Operacion en Operacion
+		$importe=str_replace('$','',$data['importe']);
+		$importe=str_replace('.','',$importe);
+		$importe=str_replace(',','.',$importe);
 		$params=array(
 			'agente_emisor_id'=>$data['agente_emisor_id'],
 			'agente_tenedor_id'=>$data['agente_tomador_id'],
 			'banco_id'=>$data['banco_id'],
 			'nro_cheque'=>$data['nro_cheque'],
-			'importe'=>floatval($data['importe']),
+			'importe'=>floatval($importe),
 			'fecha_venc'=>date('Y-m-d',strtotime($data['fecha_ven'])),
 			'nro_dias'=>$data['nro_dias'],
 			'tasa_mensual'=>floatval($data['tasa_mensual']),
@@ -277,7 +283,7 @@ class Operations extends CI_Model
 			'fecha'=>date('Y-m-d',strtotime($data['fecha_ven'])),
 			'bancoId'=>$data['banco_id'],
 			'numero'=>$data['nro_cheque'],
-			'importe'=>floatval($data['importe']),
+			'importe'=>floatval($importe),
 			'estado'=>'AC',
 			'observacion'=>null,
 			'espropio'=>1,
@@ -293,6 +299,39 @@ class Operations extends CI_Model
 		);
 		$this->db->insert('operacion_detalle',$operacion_detalle);
 		$operacion_detalle_id=$this->db->insert_id();
+
+		//INSERTA VARIOS CHEQUES
+		if(isset($data['cheche_in'])){
+			foreach($data['cheche_in'] as $key=>$item){
+
+				$importe=str_replace('$','',$item['importe']);
+				$importe=str_replace('.','',$importe);
+				$importe=str_replace(',','.',$importe);
+				
+				$cheque_in=array(
+					'fecha'=>date('Y-m-d'),
+					'bancoId'=>$item['banco_id'],
+					'numero'=>$item['nro'],
+					'importe'=>floatval($importe),
+					'estado'=>'AC',
+					'observacion'=>null,
+					'espropio'=>1,
+					'tipo'=>1,
+					'vencimiento'=>null,
+					'agenteId'=>$data['agente_tomador_id']
+				);
+
+				$this->db->insert('cheques',$cheque_in);
+				$cheque_id=$this->db->insert_id();
+				$operacion_detalle=array(
+					'operacion_id'=>$operacion_id,
+					'cheque_id'=>$cheque_id,
+				);
+				$this->db->insert('operacion_detalle',$operacion_detalle);
+				$operacion_detalle_id=$this->db->insert_id();
+			}	
+		}
+		//FIN INSERTA VARIOS CHEQUES
 
 		// Inserta Cheques de Entregados en Cheques
 
@@ -412,6 +451,7 @@ class Operations extends CI_Model
 				$data['act'] = 'Print';
 				$result = $this->getOperation($data);
 				//Inversor
+				var_dump($result['operation']['inversor_id']);
 				$query= $this->db->get_where('inversor',array('id' => $result['operation']['inversor_id']));
 				if ($query->num_rows() != 0)
 				{
@@ -940,8 +980,11 @@ class Operations extends CI_Model
 			return false;
 		}
 		else
-		{
-			if(!file_exists( 'assets/reports/'.$data['id'].'_l.pdf' )){
+		{	$filename=$data['id']."_".date('d_m_Y_H_i_s').'_l.pdf';
+			/*if(!is_dir(APPPATH.'reports/')){
+				mkdir(APPPATH.'reports/');
+			}*/
+			if(!file_exists( './assets/reports/'.$filename)){
 				$data['act'] = 'Print';
 				$result = $this->getOperation($data);
 				//Inversor
@@ -972,8 +1015,67 @@ class Operations extends CI_Model
 					$emisor = $query->result_array();
 					$data['emisor'] = $emisor[0];
 				}
-				//Detalle
 
+
+				// Obtine Listado de cheques
+				$this->db->select('cheques.*');
+				$this->db->from('cheques');
+				$this->db->join('operacion_detalle', 'operacion_detalle.cheque_id = cheques.id');;
+				$this->db->where(array('operacion_detalle.operacion_id' => $result['operation']['id'], 'cheques.tipo' => 2));
+				$query_cheques = $this->db->get();
+				$html_cheques_listado='';
+				$html_cheques_listado_pie=array();
+
+				if ($query_cheques->num_rows() != 0 && $query_cheques->num_rows() > 1)
+				{	
+					//$html_cheques_listado_pie=($query_cheques->num_rows()==0)?'CON CHEQUE ':'CON CHEQUES ';
+					$html_cheques_listado.= '<tr style="text-align: center"><th>Banco</th><th>Número</th><th>Importe</th><th>Fecha</th></tr>';	
+					foreach($query_cheques->result() as $che)
+					{
+						$html_cheques_listado.= '<tr style="text-align: center">';
+						$html_cheques_listado.= 	'<td>'.$this->getBankName($che->bancoId).'</td>';
+						$html_cheques_listado.= 	'<td>'.$che->numero.'</td>';
+						$html_cheques_listado.= 	'<td>'.number_format($che->importe, 2, ',', '.').'</td>';
+						$html_cheques_listado.= 	'<td>'.date("d-m-Y", strtotime($che->fecha)).'</td>';
+						$html_cheques_listado.= '</tr>';
+
+
+						$html_cheques_listado_pie[]=" Banco ".$this->getBankName($che->bancoId)." Nº ".$che->numero."";
+					}
+					
+				}
+				//Obtiene Detalle Transferencias:
+				
+				$this->db->select('transferencias.*');
+				$this->db->from('transferencias');
+				$this->db->join('operacion_detalle_transferencia', 'operacion_detalle_transferencia.transferencia_id = transferencias.id');;
+				$this->db->where(array('operacion_detalle_transferencia.operacion_id' => $result['operation']['id']));
+				$query = $this->db->get();
+				$html_transferencias_listado='';
+				$html_transferencias_listado_pie=array();
+				if ($query->num_rows() != 0)
+				{
+					$html_transferencias_listado.= '<tr style="text-align: center"><th>Banco</th><th>CBU/Alias</th><th>Importe</th><th>Fecha</th></tr>';	
+					foreach($query->result() as $che)
+					{
+						$html_transferencias_listado.= '<tr style="text-align: center">';
+						$html_transferencias_listado.= 	'<td>'.$this->getBankName($che->banco_id).'</td>';
+						if($che->cbu_nro!='' && $che->cbu_nro!=0){
+							$html_transferencias_listado.= 	'<td style="text-align: center"> '.($che->cbu_nro).' </td>';
+						}else{
+							$html_transferencias_listado.= 	'<td style="text-align: center"> '.($che->cbu_alias).' </td>';
+						}
+						$html_transferencias_listado.= 	'<td>'.number_format($che->importe, 2, ',', '.').'</td>';
+						$html_transferencias_listado.= 	'<td>'.date("d-m-Y", strtotime($che->fecha)).'</td>';
+						$html_transferencias_listado.= '</tr>';
+
+						$cbu_data=($che->cbu_nro!='' && $che->cbu_nro!=0)?$che->cbu_nro:$che->cbu_alias;
+						$html_transferencias_listado_pie[]= "Banco ".$this->getBankName($che->banco_id)." al CBU ".$cbu_data."";
+					}
+					
+				}
+				//Detalle
+				
 				$html= '<table width="100%" style="font-family:Arial; font-size: 13pt;">';
 				//Titulo
 				$html.= '<tr><td style="text-align: right"><strong>'.$data['inversor']['razon_social'].'</td></tr>';
@@ -1018,62 +1120,39 @@ class Operations extends CI_Model
 				//Cheques de pago 
 				$html.= '<table width="100%" style="border: 1px solid #000;">';
 				//Get Cheques 
-				$this->db->select('cheques.*');
-				$this->db->from('cheques');
-				$this->db->join('operacion_detalle', 'operacion_detalle.cheque_id = cheques.id');;
-				$this->db->where(array('operacion_detalle.operacion_id' => $result['operation']['id'], 'cheques.tipo' => 2));
-				$query = $this->db->get();
-				if ($query->num_rows() != 0 && $query->num_rows() > 1)
-				{
-					$html.= '<tr style="text-align: center"><th>Banco</th><th>Número</th><th>Importe</th><th>Fecha</th></tr>';	
-					foreach($query->result() as $che)
-					{
-						$html.= '<tr style="text-align: center">';
-						$html.= 	'<td>'.$this->getBankName($che->bancoId).'</td>';
-						$html.= 	'<td>'.$che->numero.'</td>';
-						$html.= 	'<td>'.number_format($che->importe, 2, ',', '.').'</td>';
-						$html.= 	'<td>'.date("d-m-Y", strtotime($che->fecha)).'</td>';
-						$html.= '</tr>';
-					}
-					
-				}
+				$html.= $html_cheques_listado;				
+				
 				//Get Transferencias
-				$this->db->select('transferencias.*');
-				$this->db->from('transferencias');
-				$this->db->join('operacion_detalle_transferencia', 'operacion_detalle_transferencia.transferencia_id = transferencias.id');;
-				$this->db->where(array('operacion_detalle_transferencia.operacion_id' => $result['operation']['id']));
-				$query = $this->db->get();
-				if ($query->num_rows() != 0)
-				{
-					$html.= '<tr style="text-align: center"><th>Banco</th><th>CBU/Alias</th><th>Importe</th><th>Fecha</th></tr>';	
-					foreach($query->result() as $che)
-					{
-						$html.= '<tr style="text-align: center">';
-						$html.= 	'<td>'.$this->getBankName($che->banco_id).'</td>';
-						if($che->cbu_nro!='' && $che->cbu_nro!=0){
-							$html.= 	'<td style="text-align: center"> '.($che->cbu_nro).' </td>';
-						}else{
-							$html.= 	'<td style="text-align: center"> '.($che->cbu_alias).' </td>';
-						}
-						//$html.= 	'<td>'.$che->cbu_alias.'</td>';
-						$html.= 	'<td>'.number_format($che->importe, 2, ',', '.').'</td>';
-						$html.= 	'<td>'.date("d-m-Y", strtotime($che->fecha)).'</td>';
-						$html.= '</tr>';
-					}
-					
-				}
+				$html.= $html_transferencias_listado;
+				
+				
 				$html.= '</table></td></tr>';
 				//-----------------------------------------------------
 				//Listado de cheuqes emitidos 
 				$html.= '</td></tr>';
 				$html.= '<tr><td style="text-indent: 40px; text-align:justify;"><br><strong>';
-				$html.= 'ESTA OPERACION SE CANCELA CON CHEQUE '.$data['banco']['razon_social'].' N° '.$result['operation']['nro_cheque'].'</td></tr>';
+				//$html.= 'ESTA OPERACION SE CANCELA CON CHEQUE '.$data['banco']['razon_social'].' N° '.$result['operation']['nro_cheque'].'</td></tr>';
+				$html.= 'ESTA OPERACION SE CANCELA  ';
+
+				if(!empty($html_cheques_listado_pie)){
+					$html.= "CON CHEQUE/S ".implode(',',$html_cheques_listado_pie);
+				}
+				if(!empty($html_cheques_listado_pie) &&  !empty($html_transferencias_listado_pie)){
+					$html.=" y ";
+				}
+				if(!empty($html_transferencias_listado_pie)){
+
+					$html.= "CON TRANFERENCIAS/S ".implode(',',$html_transferencias_listado_pie);
+				}
+
+				$html.= '</td></tr>';
 				//Firmas
-				$html.= '<tr><td><br><br><br><br><br><br><br><br>';
+				$html.= '<tr><td style="padding-top:50px;">';
 				$html.= '<table width="100%">';
 				$html.= '<tr><td style="width: 50%; text-align:center;">'.$data['inversor']['razon_social'].'</td><td style="width: 50%; text-align:center;">'.($data['tenedor']['razon_social'] == '' ? $data['tenedor']['nombre'].' '.$data['tenedor']['apellido'] : $data['tenedor']['razon_social']).'</td></tr>';
 				$html.= '</table>';
-
+				//echo $html;
+				//die();
 				//se incluye la libreria de dompdf
 				require_once("assets/plugin/HTMLtoPDF/dompdf/dompdf_config.inc.php");
 				//se crea una nueva instancia al DOMPDF
@@ -1088,9 +1167,9 @@ class Operations extends CI_Model
 				$dompdf->render();
 				//guardamos a PDF
 				$output = $dompdf->output();
-				file_put_contents('assets/reports/'.$data['id'].'_l.pdf', $output);
+				file_put_contents('./assets/reports/'.$filename, $output);
 			}
-			return $data['id'].'_l.pdf';
+			return $filename;
 		}
 	}
 	

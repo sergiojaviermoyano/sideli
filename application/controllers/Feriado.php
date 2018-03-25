@@ -43,4 +43,10 @@ class feriado extends CI_Controller {
 		
         
     }
+
+    public function getAll(){ 
+        $data = $this->Feriados->getByYear(date('Y'));
+       //var_dump($data);
+		echo json_encode($data, true);
+    }
 }

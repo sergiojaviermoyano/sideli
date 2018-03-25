@@ -84,7 +84,8 @@ class Feriados extends CI_Model
             foreach($result as $key => $item){
                 $dates[]=$item['fecha'];
             }
-            return json_encode($dates,true);
+            //return json_encode($dates,true);
+            return $dates;
             
         }else{
             return array();

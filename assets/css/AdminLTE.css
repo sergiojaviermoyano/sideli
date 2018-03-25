@@ -5486,8 +5486,10 @@ table.text-center th {
 }
 
 .ope_form .form-group {
+    padding-top: 20px;
     margin-bottom: 05px;
-    border: 0px solid red !important;
+    margin-left: -8px;
+    margin-right: -8px;
 }
 
 
@@ -5499,12 +5501,27 @@ table.text-center th {
 .ope_form .form-group h3.h3_section {
     padding-left: 05px;
     border-left: 2px solid #333 !important;
+    margin-top: 0px;
 }
 
 .ope_form .form-group label {
     margin-bottom: 02px;
     font-size: 11px;
     font-weight: 700;
+}
+
+.ope_form .form-group label.emisor {
+    font-size: 15px;
+    margin-left: 30px;
+    text-align: right;
+    padding-right: 0px;
+    padding-top: 00px;
+    height: 25px;
+    width: 135px;
+}
+
+.tag1 {
+    background-color: #e1e1f1eb;
 }
 
 .ope_form .form-group .form-control {
@@ -5589,3 +5606,88 @@ hr {
     text-transform: uppercase;
     font-weight: 600;
 }
+
+.control-label.emisor {
+    font-size: 15px;
+}
+
+.op_modal-dialog {
+    width: 100%;
+    height: 100%;
+    margin: 0px auto;
+    padding: 0;
+}
+
+.op_modal-content {
+    height: auto;
+    min-height: 100%;
+    border-radius: 0;
+}
+
+hr.divider_hr {
+    margin: 10px 0px;
+    padding-left: 10px;
+    width: 90%;
+    border-top: 1px solid #eee;
+}
+
+.op_valor_item {
+    background-color: #f9f9f9;
+    padding: 10px 10px !important;
+}
+
+.emisor_section {
+    min-height: 300px;
+    max-height: 600px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.cheques_section {
+    background-color: #f8f8f8b7;
+    margin: 20px 0px;
+    padding-top: 10px;
+}
+
+.cheques_section .row {
+    padding: 3px 0px !important;
+}
+
+.cheques_section .no_padding {
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.op_valor_items {
+    border: 1px solid red;
+}
+
+.op_valor_items .btn.btn-flat {
+    height: 25px;
+    padding: 05px 10px;
+    padding-bottom: 10px;
+}
+
+.cheques_section .cheque_dia {
+    width: 80px !important;
+}
+
+.neto_final_div {
+    background-color: #ddd;
+    padding: 10px !important;
+}
+
+.neto_final_div label {
+    font-size: 22px !important;
+}
+
+.neto_final_div input {
+    margin-top: 10px;
+}
+
+
+/*
+.op_valor_items .form-horizontal.form-group {
+    padding-left: 0px;
+}
+*/

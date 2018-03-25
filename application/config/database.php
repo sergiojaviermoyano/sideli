@@ -61,7 +61,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 $active_group = 'default';
 $query_builder = TRUE;
-if (strpos($_SERVER["SERVER_NAME"], "sideli.dev") !== false) {
+if (strpos($_SERVER["SERVER_NAME"], "sideli.ent") !== false) {
 	$db['default'] = array(
 		'dsn'	=> '',
 		'hostname' => 'localhost',
