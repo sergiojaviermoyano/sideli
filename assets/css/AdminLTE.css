@@ -5685,9 +5685,17 @@ hr.divider_hr {
     margin-top: 10px;
 }
 
-
-/*
-.op_valor_items .form-horizontal.form-group {
-    padding-left: 0px;
+#account_final {
+    font-size: 20px;
 }
-*/
+
+#account_final .neto_total_final {
+    font-weight: 600;
+    border: 1px solid #333;
+    padding: 0px 20px;
+}
+
+.td_detail {
+    text-align: right;
+    padding-right: 15px !important;
+}

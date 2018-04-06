@@ -1,3 +1,4 @@
+<script>
 function getFeriados(callback) {
     var data;
     $.ajax({
@@ -59,10 +60,6 @@ function set_valores(valores) {
             $(item).val(valores[0].gastos);
         }
     });
-
-}
-
-function calcular_valores(item) {
 
 }
 
@@ -402,7 +399,7 @@ var form_operacion = function() {
         output += '         <div class="row">';
         output += '                 <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Cheque :</label>';
         output += '                  <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="cheque_nro' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][nro]"  class="qheque_nro form-control input-lg"  type="text" placeholder="Nro"> ';
+        output += '                         <input id="cheque_nro' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][nro]"  class="cheque_nro form-control input-lg"  type="text" placeholder="Nro"> ';
         output += '                     </div>';
         output += '                     <div class="col-lg-4 col-md-2 col-sm-12">';
         output += '                         <input id="cheque_banco' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][banco]"  class="cheque_banco form-control input-lg typeahead"  type="text" placeholder="Banco"> ';
@@ -521,8 +518,29 @@ var form_operacion = function() {
     })
 
     $(".emisor_section").on('change', '.cheque_dia', function() {
-        $(this).closest('.cheques_section').find('.cheque_importe').trigger('change');
+        var today = new Date();
+        if($(this).val()!=''){
+            var days = $(this).val();
+            today.setDate(today.getDate() + parseInt(days));  
+            if (today.getDay() == 1) {
+                today.setDate(today.getDate() - 4);
+            } else if (today.getDay() == 2) {
+                today.setDate(today.getDate() - 4);
+            } else {
+                today.setDate(today.getDate() - 2);
+            }
+        }
+        var mes = today.getMonth() + 1;
+        var _div_parent = $(this).closest('.cheques_section');
+        _div_parent.find('.cheque_fecha').val(today.getDate() + '-' + mes + '-' + today.getFullYear());
+        _div_parent.find('.cheque_importe').trigger('change');
     });
+
+    $(".emisor_section").on('change', '.cheque_tasa_mensual', function() {
+        console.debug("===> cheque_tasa_mensual: %o ",$(this).val());
+        $(this).closest('.cheques_section').find('.cheque_importe').trigger('change');  
+    });
+
 
     $(".emisor_section").on('change', '.cheque_neto', function() {
         var neto_total = 0;
@@ -777,22 +795,110 @@ var form_operacion = function() {
     $('.cheque_importe').maskMoney({ allowNegative: false, thousands: '', decimal: '.' });
 
 
-
+    
     var validate_step_1 = function() {
-        /*var _inputs = $("#step1").find("input");
+        var _inputs = $("#step1").find("input");
         $.each(_inputs, function(index, item) {
             if ($(item).val().length == 0) {
                 alert("Debe completetar un campo");
                 return false;
             }
-        });*/
+        });
 
+
+        console.log("==== > validate_step_1 < ====");
         var _cheques = new Array();
+        var _totales_importes = 0;
+        var _totales_interes = 0;
+        var _totales_impuestos = 0;
+        var _totales_otros = 0;
+        var _totales_comision = 0;
+        var _totales_iva = 0;
+        var _totales_sellado = 0;
+        var _totales_neto_liquidacion = 0;
 
-        var _op_valor_item = $("#step1").find('.op_valor_item');
-        console.log(_op_valor_item.lenght);
+        var _op_valor_item = $("#step1").find('.op_valor_item');        
+        var _tabla_output='';
 
 
+        console.log(tomador_data);
+
+        $('.cliente_nombre').text( (tomador_data.razon_social!='')? tomador_data.razon_social: tomador_data.nombre+' '+tomador_data.apellido  );
+        $('.cliente_domicilio').text(tomador_data.domicilio);
+        $('.cliente_cuit').text(tomador_data.cuit);
+
+
+        $.each(_op_valor_item,function(index, item){
+
+            var _cheques_section = $(item).find('.cheques_section');           
+
+            $.each(_cheques_section, function(sindex,sitem){          
+
+                // Calcula valores a Liquidar INICIO
+                _totales_importes += parseFloat( $(sitem).find('.cheque_importe').val());
+                _totales_interes += parseFloat( $(sitem).find('.cheque_interes').val());
+                _totales_impuestos += parseFloat( $(sitem).find('.cheque_impuesto').val());
+                _totales_otros += parseFloat( $(sitem).find('.cheque_gasto').val());
+                _totales_comision += parseFloat( $(sitem).find('.cheque_comision_importe').val());
+                _totales_iva += parseFloat( $(sitem).find('.cheque_iva').val());
+                _totales_sellado += parseFloat( $(sitem).find('.cheque_sellado').val());
+                _totales_neto_liquidacion += parseFloat( $(sitem).find('.cheque_neto').val());
+                // Calcula valores a Liquidar FIN
+                
+                _tabla_output += '<tr>'; 
+                _tabla_output += '<td class="text-center"> '+$(sitem).find('.cheque_banco').val()+' </td>';                
+                _tabla_output += '<td class="text-center"> '+$(sitem).find('.cheque_nro').val()  +' </td>';
+                _tabla_output += '<td class="text-center"> '+$(item).find('.emisor_razon').val() +' </td>';
+                _tabla_output += '<td class="text-center"> '+$(sitem).find('.cheque_fecha').val()+' </td>';
+                _tabla_output += '<td class="text-center"> '+$(sitem).find('.cheque_tasa_mensual').val()+' </td>';
+                _tabla_output += '<td class="text-center"> '+$(sitem).find('.cheque_dia').val()+' </td>';
+                _tabla_output += '<td class="td_detail"> '+$(sitem).find('.cheque_importe').val()+' </td>';
+                _tabla_output += '</tr>';            
+
+            }); 
+            
+           
+        });
+
+        _tabla_output += '<tr> <td colspan=7 > </td></tr>';
+
+        $('#table_cheque_final').find('tbody.main').html(_tabla_output);
+
+        var _tabla_output2 ='';
+            _tabla_output2+='<tr>';
+            _tabla_output2+='   <td colspan=6 class="text-right">Total Valores $</td>';
+            _tabla_output2+='   <td class="td_detail">'+_totales_importes.toFixed(2)+'</td>';
+            _tabla_output2+='</tr>';
+            _tabla_output2+='<tr>';
+            _tabla_output2+='   <td colspan=6 class="text-right">Interes $</td>';
+            _tabla_output2+='   <td class="td_detail">'+_totales_interes.toFixed(2)+'</td>';
+            _tabla_output2+='</tr>';
+            _tabla_output2+='<tr>';
+            _tabla_output2+='   <td colspan=6 class="text-right">Imp Deb y Cred Bancario $</td>';
+            _tabla_output2+='   <td class="td_detail">'+_totales_impuestos.toFixed(2)+'</td>';
+            _tabla_output2+='</tr>';
+            _tabla_output2+='<tr>';
+            _tabla_output2+='   <td colspan=6 class="text-right">Valores otra Plaza $</td>';
+            _tabla_output2+='   <td class="td_detail">'+_totales_otros.toFixed(2)+'</td>';
+            _tabla_output2+='</tr>';
+            _tabla_output2+='<tr>';
+            _tabla_output2+='   <td colspan=6 class="text-right">Comisiones $</td>';
+            _tabla_output2+='   <td class="td_detail">'+_totales_comision.toFixed(2)+'</td>';
+            _tabla_output2+='</tr>';
+            _tabla_output2+='<tr>';
+            _tabla_output2+='   <td colspan=6 class="text-right">IVA $</td>';
+            _tabla_output2+='   <td class="td_detail">'+_totales_iva.toFixed(2)+'</td>';
+            _tabla_output2+='</tr>';
+            _tabla_output2+='<tr>';
+            _tabla_output2+='   <td colspan=6 class="text-right">SELLADO $</td>';
+            _tabla_output2+='   <td class="td_detail">'+_totales_sellado.toFixed(2)+'</td>';
+            _tabla_output2+='</tr>';
+            _tabla_output2+='<tr>';
+            _tabla_output2+='   <td colspan=6 class="text-right">Total Valores $</td>';
+            _tabla_output2+='   <td class="td_detail">'+_totales_neto_liquidacion.toFixed(2)+'</td>';
+            _tabla_output2+='</tr>';
+
+        $('#table_cheque_final').find('tbody.secundary').html(_tabla_output2);
 
 
         return false;
@@ -913,3 +1019,4 @@ var form_operacion = function() {
 $(function() {
     form_operacion();
 });
+</script>

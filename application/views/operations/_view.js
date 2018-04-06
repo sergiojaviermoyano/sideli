@@ -717,6 +717,7 @@ $(function() {
                     } else {
                         return false;
                     }
+                    break;
                 }
             case 2:
                 {

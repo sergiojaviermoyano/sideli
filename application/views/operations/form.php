@@ -4,7 +4,7 @@
   <ul class="nav nav-tabs" role="tablist">
     <li role="operacion" class="active"><a href="#step1" aria-controls="step1" role="tab" data-toggle="tab">Valores</a></li>
     <li role="operacion">               <a href="#step2" aria-controls="step2" role="tab" data-toggle="tab">Inversores</a></li>
-    <li role="operacion">               <a href="#step3" aria-controls="step3" role="tab" data-toggle="tab">Resuneb</a></li>
+    <li role="operacion">               <a href="#step3" aria-controls="step3" role="tab" data-toggle="tab">Liquidación</a></li>
   </ul>
 
 
@@ -163,20 +163,21 @@
                 <h3 class="h3_section">Cheques: </h3>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-12  col-xs-12">
-                <table class="table">
+                <table class="table table_cheque">
                     <thead>
-                        <tr>
-                            <th>Banco</th>
-                            <th>Cheque Nro</th>
-                            <th>Importe</th>
-                            <th>Fecha</th>
+                        <tr >
+                            <th class="text-center" >Banco</th>
+                            <th class="text-center">Cheque Nro</th>
+                            <th class="text-center">Importe</th>
+                            <th class="text-center">Fecha</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="4" class="text-center">
-                            <button class="btn btn-info btn-sm add_check_out "> <span class="icon-check-money"></span> Agregar Cheque</button>
+                            <td colspan="4" class="text-right">
+                            <button class="btn bg-orange btn-flat margin add_check_out "> <span class="icon-check-money"></span> Agregar Cheque</button>
                             </td>
                         </tr>
                     </tfoot>
@@ -190,20 +191,87 @@
                 <h3 class="h3_section">Tranferencias: </h3>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-12  col-xs-12">
-            <button class="btn btn-info btn-sm add_tranfe_out "> <span class="icon-check-money"></span> Agregar Cheque</button>
+                <table class="table table_tranfer">
+                    <thead>
+                        <tr >                            
+                            <th class="text-center" >Banco</th>
+                            <th class="text-center">CBU Nro Alias</th>
+                            <th class="text-center">Importe</th>
+                            <th class="text-center">Fecha</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="text-right">
+                            <button class="btn bg-olive btn-flat margin add_tranfe_out "> <i class="fa fa-exchange" aria-hidden="true"></i>Agregar Cheque</button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            
             </div>
         </div>
+        <div class="form-group bg-gray">
+            <div class="col-lg-2 ">
+                <h3 class="h3_section">Neto</h3>                
+            </div>
+            <div id="account_final" class="col-lg-7 col-md-7 col-sm-12  col-xs-12 text-right">
+                <div class="col-lg-6">
+                    <span class="neto_span"> </span>
+                </div>
+                <div class="col-lg-6">
+                    Total: <span class="neto_total_final"> </span>
+                </div>
+               
+            </div>
 
+            <div class="col-lg-3 col-md-3 col-sm-12  col-xs-12 text-right alert_tope hidden">
+                <p class="text-red">El monto No debe ser Mayor a <br> <span class="neto_span"> </span></p>
+            </div>
+
+            
+        </div>
 
     </div>
     <div role="tabpanel" class="tab-pane" id="step3">
         <div class="col-lg-12">
-            <h2>Resumen:</h2>
+            <h2>Liquidación de Compra de Valores:</h2>
+            <h3>Soluciones y Finansas Empresarias S.A</h3>
+            <h4>Cliente:       &nbsp;<span class="cliente_nombre"> </span> </h4>
+            <h4>Domicilio:     &nbsp;<span class="cliente_domicilio"></span> </h4>
+            <h4>Nro de Cuit:   &nbsp;<span class="cliente_cuit"></span> </h4>
         </div>
+        <div class="row">
+            <div class="col-lg-12"> 
+                <table class="table table-bordered" id="table_cheque_final">
+                    <thead>
+                        <tr > 
+                            <th class="text-center">Banco</th>
+                            <th class="text-center">Nro</th>
+                            <th class="text-center">Librador</th>
+                            <th class="text-center">Fecha de Pago</th>
+                            <th class="text-center">Tasa</th>
+                            <th class="text-center">Días</th>
+                            <th class="td_detail">Importe</th>
+                        </tr>
+                    </thead>
+                    <tbody class="main">
+                    </tbody>
+                    <tbody  class="secundary">                    
+                    </tbody>
+                    
+                </table> 
+
+                 
+            </div>
+        </div>
+        
     </div>
   </div>
 
 
 </form>
 
- <script src="<?php echo base_url('application/views/operations/form.js');?>"></script>
+<?php include_once 'form_js.php'; ?>
