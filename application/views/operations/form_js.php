@@ -158,21 +158,27 @@ var form_operacion = function() {
                 url: 'agent/buscadorDeAgentes',
                 data: { action: 'search', code: query, type: 'T' },
                 success: function(data) {
-                    if (data == false) {
-                        return false;
+                    
+                    if (data == false) { 
+                        $("#tomador_razo_social").val("Nuevo");    
+                        $("#tomador_id").val(0);  
+                        return false;                 
+                        return process;
+                    }else{
+                        objects = [];
+                        map = {};
+                        $.each(data, function(i, object) {
+                            if (object.razon_social != '') {
+                                var key = object.cuit + " - " + object.razon_social;
+                            } else {
+                                var key = object.cuit + " - " + object.nombre + " " + object.apellido;
+                            }
+                            map[key] = object;
+                            objects.push(key);
+                        });
+                        return process(objects);
                     }
-                    objects = [];
-                    map = {};
-                    $.each(data, function(i, object) {
-                        if (object.razon_social != '') {
-                            var key = object.cuit + " - " + object.razon_social;
-                        } else {
-                            var key = object.cuit + " - " + object.nombre + " " + object.apellido;
-                        }
-                        map[key] = object;
-                        objects.push(key);
-                    });
-                    return process(objects);
+                    
                 },
                 error: function(error_msg) {
                     alert("error_msg: " + error_msg);
@@ -184,10 +190,12 @@ var form_operacion = function() {
         },
         updater: function(item) {
             var data = map[item];
-
+            console.debug("===>  TOMADOR TYPEAHEAD: %o",data);
+            $("#tomador_razo_social").val(null);
+            $("#tomador_id").val(null);
             if (tomador_cuit.val().length == data.cuit.length && tomador_cuit.val() != data.cuit) {
                 $("#tomador_razo_social").val(null);
-                $("#tomador_id").val(null);
+                $("#tomador_id").val(0);
                 tomador_data = {
                     id: -1,
                     cuit: tomador_cuit.val(),
@@ -257,7 +265,7 @@ var form_operacion = function() {
 
                 if (_this_emisor_.val().length == data.cuit.length && _this_emisor_.val() != data.cuit) {
                     _emisor_id.val(null);
-                    _emisor_razon.val(null);
+                    _emisor_razon.val(0);
                     temp_data = {
                         id: -1,
                         cuit: _this_emisor_.val(),
@@ -460,6 +468,7 @@ var form_operacion = function() {
         output += '                     <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Neto x Cheque :</label>';
         output += '                     <div class="col-lg-3 col-md-2 col-sm-12">';
         output += '                         <input id="neto_cheche' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][neto]"  class="cheque_neto form-control input-lg " type="text" placeholder="Neto x Cheque">';
+        output += '                         <input id="compra_' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][compra]"  class="cheque_compra " type="hidden" >';
         output += '                     </div> ';
         output += '                 </div>';
 
@@ -508,12 +517,16 @@ var form_operacion = function() {
         _div_parent.find('.cheque_sellado').val(_sellado.toFixed(2));
 
         var _compra = _importe - _interes - _impuesto_cheque - _cheque_gasto;
-        var _neto = _compra - _comision_importe;
+        var _neto_parcial = _compra - _comision_importe;
+        console.debug("====> _neto_parcial: %o",_neto_parcial);
+        var _neto = _neto_parcial - _iva - _sellado;
+        console.debug("====> _neto: %o",_neto);
+        
         _div_parent.find('.cheque_compra').val(_compra.toFixed(2));
         _div_parent.find('.cheque_neto').val(_neto.toFixed(2));
         _div_parent.find('.cheque_neto').trigger('change');
-        neto_final = _neto.toFixed(2);
-        $('.neto_span').html("$ " + _neto.toFixed(2));
+       
+        //$('.neto_span').html("$ " + _neto.toFixed(2));
 
     })
 
@@ -543,11 +556,15 @@ var form_operacion = function() {
 
 
     $(".emisor_section").on('change', '.cheque_neto', function() {
+        console.log("Cheque_neto change")
         var neto_total = 0;
         $.each($(".emisor_section").find('.cheque_neto'), function(index, item) {
             neto_total += parseFloat($(item).val());
         });
         $("#neto_final").val(neto_total.toFixed(2));
+        neto_final = neto_total.toFixed(2);
+        console.debug("====> neto_final: %o",neto_final);
+        $('.neto_span').html("$ " + neto_total.toFixed(2));
     });
 
 
@@ -797,14 +814,22 @@ var form_operacion = function() {
 
     
     var validate_step_1 = function() {
+
+        
         var _inputs = $("#step1").find("input");
+        var validate_ok=true;
         $.each(_inputs, function(index, item) {
             if ($(item).val().length == 0) {
                 alert("Debe completetar un campo");
+                $(item).focus();
+                validate_ok=false;
                 return false;
             }
         });
-
+        
+        if( !validate_ok ){
+            return false;
+        }
 
         console.log("==== > validate_step_1 < ====");
         var _cheques = new Array();
@@ -820,9 +845,13 @@ var form_operacion = function() {
         var _op_valor_item = $("#step1").find('.op_valor_item');        
         var _tabla_output='';
 
-
+        if(tomador_data===undefined){
+            alert("No se ha seleccionado correctamente un Tomador. Por Favor, vuelva a intentarlo.");
+            $("#tomador_cuit").focus();
+            return false;
+        }
         console.log(tomador_data);
-
+        
         $('.cliente_nombre').text( (tomador_data.razon_social!='')? tomador_data.razon_social: tomador_data.nombre+' '+tomador_data.apellido  );
         $('.cliente_domicilio').text(tomador_data.domicilio);
         $('.cliente_cuit').text(tomador_data.cuit);
@@ -901,7 +930,7 @@ var form_operacion = function() {
         $('#table_cheque_final').find('tbody.secundary').html(_tabla_output2);
 
 
-        return false;
+        return true;
     }
 
     var validate_step_2 = function() {
@@ -942,18 +971,26 @@ var form_operacion = function() {
         return false;
     };
     $("#btnNext1").click(function() {
-        validate_step_1();
-        return false;
+        //Tabula las pestañas
         var tab_index = $('.nav-tabs > li.active').index();
+        if(tab_index==1){
+            $(this).hide();
+            $("#btnSave").removeClass('hidden');
+            
+        }
+        $("#btnBack1").removeClass('hidden');
+       
+              
+        
 
         switch (tab_index) {
             case 0:
                 {
-                    validate_step_1();
+                    //validate_step_1();
 
                     if (validate_step_1()) {
-                        $('.nav-tabs >   .active').next('li').find('a').trigger('click');
-                        //back1_tb.removeClass("hidden");
+                        $('.nav-tabs > .active').next('li').find('a').trigger('click');
+                        ////back1_tb.removeClass("hidden");
                     } else {
                         return false;
                     }
@@ -976,7 +1013,7 @@ var form_operacion = function() {
             case 2:
                 {
                     //$(this).addClass("hidden");
-                    print_liquidacion();
+                    //print_liquidacion();
                     return false;
                     back1_tb.removeClass("hidden");
                     break;
@@ -986,6 +1023,18 @@ var form_operacion = function() {
                     break;
                 }
         }
+
+    });
+
+    $("#btnBack1").click(function() {
+
+        var tab_index = $('.nav-tabs > li.active').index();
+        $("#btnNext1").show();   
+        $("#btnSave").addClass('hidden');    
+        if(tab_index==1){
+            $("#btnBack1").addClass('hidden');
+        }
+        $('.nav-tabs > .active').prev('li').find('a').trigger('click');
 
     });
     /*
@@ -1010,6 +1059,29 @@ var form_operacion = function() {
     });
      */
 
+
+    $("#btnSave").click(function() {
+        var form_data = $("form").serialize();
+        console.debug("===> Form data: %o", form_data);
+        //return false;
+        //WaitingOpen();
+        $.ajax({
+            type: 'POST',
+            data: $("form").serialize(),
+            url: 'index.php/operation/addOperation/teds',
+            success: function(result) {
+                WaitingClose();
+                $('#modalOperacion').modal('hide');
+                setTimeout("cargarView('operation', 'index', '" + $('#permission').val() + "');", 1000);
+            },
+            error: function(result) {
+                WaitingClose();
+                // alert("error");
+            },
+            dataType: 'json'
+        });
+        return false;
+    });
 
 };
 

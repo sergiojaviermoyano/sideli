@@ -88,7 +88,7 @@
       <div class="modal-footer">      
         <button type="button" class="btn btn-default btn-flat margin " data-dismiss="modal" style="margin-bottom:0px;">Cancelar</button>
         <button type="button" class="btn bg-navy btn-flat margin hidden" id="btnBack1" data-step="1">Volver</button>
-        <button type="button" class="btn bg-navy btn-flat margin" id="btnNext1"  data-step="2"      >Siguiente</button>
+        <button type="button" class="btn bg-navy btn-flat margin" id="btnNext1"  data-step="2">Siguiente</button>
         <button type="button" class="btn btn-primary hidden" id="btnSave" >Guardar</button>
       </div>
     </div>

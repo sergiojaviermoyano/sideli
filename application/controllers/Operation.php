@@ -15,7 +15,7 @@ class operation extends CI_Controller {
 	{
 		
 		//var_dump($permission);
-		$data['list'] = $this->Operations->List_all();
+		$data['list'] = $this->Operations->List_all(false,true);
 		
 		$data['permission'] = $permission;
 		
@@ -37,8 +37,9 @@ class operation extends CI_Controller {
 
 
 	public function addOperation(){
-		var_dump($this->input->post());
-		die("sds");
+		//var_dump($this->input->post());
+		//$result=$this->Operations->add($this->input->post());
+		//die("FIN CONTROLLER");
 		if($result=$this->Operations->add($this->input->post())){
 			
 			echo json_encode($this->load->view('operations/list', array('result'=>true), true));

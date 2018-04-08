@@ -2,14 +2,14 @@
 
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
-    <li role="operacion" class="active"><a href="#step1" aria-controls="step1" role="tab" data-toggle="tab">Valores</a></li>
-    <li role="operacion">               <a href="#step2" aria-controls="step2" role="tab" data-toggle="tab">Inversores</a></li>
-    <li role="operacion">               <a href="#step3" aria-controls="step3" role="tab" data-toggle="tab">Liquidación</a></li>
+    <li class="active"><a href="#step1" data-toggle="tab">Valores</a></li>
+    <li><a href="#step2" data-toggle="tab">Inversores</a></li>
+    <li><a href="#step3" data-toggle="tab">Liquidación</a></li>
   </ul>
 
 
 <div class="tab-content">   
-    <div role="tabpanel" class="tab-pane active" id="step1">
+    <div  class="tab-pane active" id="step1">
         
         <div class="form-group" >            
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 title_section">
@@ -134,7 +134,7 @@
             </div> 
         </div>
     </div>
-    <div role="tabpanel" class="tab-pane" id="step2">
+    <div  class="tab-pane" id="step2">
         <div class="form-group">
             <div class="col-lg-2 ">
                 <h3 class="h3_section">Inversores: </h3>
@@ -235,7 +235,7 @@
         </div>
 
     </div>
-    <div role="tabpanel" class="tab-pane" id="step3">
+    <div  class="tab-pane" id="step3">
         <div class="col-lg-12">
             <h2>Liquidación de Compra de Valores:</h2>
             <h3>Soluciones y Finansas Empresarias S.A</h3>
