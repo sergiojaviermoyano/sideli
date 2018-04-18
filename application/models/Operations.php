@@ -80,7 +80,7 @@ class Operations extends CI_Model
 			$query= $this->db->get_where('operacion',array('id'=>$id));
 			if ($query->num_rows() != 0)
 			{	
-				$temp=$query->result_array();				
+				$temp=$query->row();				
 				$data['operation'] = $temp[0];
 
 				//Inversor
@@ -120,7 +120,7 @@ class Operations extends CI_Model
 				$this->db->join('operacion_detalle', 'operacion_detalle.cheque_id = cheques.id');;
 				$this->db->where(array('operacion_detalle.operacion_id' => $data['operation']['id'], 'cheques.tipo' => 2));
 				$query = $this->db->get();
-				//echo $this->db->last_query();
+				echo $this->db->last_query();
 				if ($query->num_rows() != 0)
 				{
 					foreach($query->result() as $che)
@@ -142,7 +142,7 @@ class Operations extends CI_Model
 				$this->db->join('operacion_detalle_transferencia', 'operacion_detalle_transferencia.transferencia_id = transferencias.id');;
 				$this->db->where(array('operacion_detalle_transferencia.operacion_id' => $data['operation']['id']));
 				$query = $this->db->get();
-				//echo $this->db->last_query();
+				echo $this->db->last_query();
 				if ($query->num_rows() != 0)
 				{
 					foreach($query->result() as $che)

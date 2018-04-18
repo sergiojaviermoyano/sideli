@@ -20,7 +20,7 @@
                             <thead>
                             <tr >     
                                 <th>Operacion Id</th>                          
-                                <th >Tenedor</th>
+                                <th >Tomador</th>
                                 <!-- <th >Banco</th> -->
                                 <th class="text-center">Fecha</th>
                                 <th class="text-right">Importe</th>
