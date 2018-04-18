@@ -160,7 +160,7 @@ var form_operacion = function() {
                 success: function(data) {
                     
                     if (data == false) { 
-                        $("#tomador_razo_social").val("Nuevo");    
+                        $("#tomador_razo_social").val(null);    
                         $("#tomador_id").val(0);  
                         return false;                 
                         return process;
@@ -234,6 +234,8 @@ var form_operacion = function() {
                     data: { action: 'search', code: query, type: 'T' },
                     success: function(data) {
                         if (data == false) {
+                            _emisor_id.val(null);
+                            _emisor_razon.val(0);
                             return false;
                         }
                         objects = [];
@@ -299,7 +301,7 @@ var form_operacion = function() {
         output += '         <input id="emisor_cuit_' + num_item + '" name="emisor[' + num_item + '][cuit]"  class="emisor_cuit form-control input-lg typeahead"  type="text" placeholder="CUIT">';
         output += '     </div>';
         output += '     <div class="col-lg-5 col-md-6 col-sm-12 clearfix">';
-        output += '         <input id="emisor_razo_social_' + num_item + '" name="emisor[' + num_item + '][razon_social]"  class="emisor_razon form-control input-lg" type="text" placeholder="Razón Social">';
+        output += '         <input id="emisor_razo_social_' + num_item + '" name="emisor[' + num_item + '][razon_social]"  class="emisor_razon form-control input-lg" autocomplete="off" type="text" placeholder="Razón Social">';
         output += '     </div>';
         output += '     <input type="hidden" id="emisor_id_' + num_item + '" name="emisor[' + num_item + '][id]"   class="emisor_id" > ';
         output += '     <div class="col-lg-3 text-left" style="">';
@@ -311,7 +313,7 @@ var form_operacion = function() {
         output += '         <div class="row">';
         output += '                 <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Cheque :</label>';
         output += '                  <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="cheque_nro_' + num_item + '" name="emisor[' + num_item + '][cheque][0][nro]"  class="cheque_nro form-control input-lg typeahead" data-provide="typeahead" type="text" placeholder="Nro"> ';
+        output += '                         <input id="cheque_nro_' + num_item + '" name="emisor[' + num_item + '][cheque][0][nro]"  class="cheque_nro form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Nro"> ';
         output += '                     </div>';
         output += '                     <div class="col-lg-4 col-md-2 col-sm-12">';
         output += '                         <input id="cheque_banco_' + num_item + '" name="emisor[' + num_item + '][cheque][0][banco]"  class="cheque_banco   form-control input-lg"  type="text" placeholder="Banco"> ';
@@ -327,48 +329,48 @@ var form_operacion = function() {
         output += '                         <input id="cheque_fecha_' + num_item + '" data-provide="datepicker" name="emisor[' + num_item + '][cheque][0][fecha]"  class="cheque_fecha form-control input-lg "  type="text" placeholder="Vencimiento">';
         output += '                     </div>  ';
         output += '                     <div class="col-lg-1 col-md-2 col-sm-12">';
-        output += '                         <input id="cheque_dias_' + num_item + '" name="emisor[' + num_item + '][cheque][0][dias]"  class="cheque_dia form-control input-lg " type="text" placeholder="Días">  ';
+        output += '                         <input id="cheque_dias_' + num_item + '" name="emisor[' + num_item + '][cheque][0][dias]"  class="cheque_dia form-control input-lg " autocomplete="off" type="text" placeholder="Días">  ';
         output += '                     </div> ';
         output += '                     <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Plazo :</label>';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
         output += '                         <input id="tasa_mensual_' + num_item + '" name="emisor[' + num_item + '][cheque][0][tasa_mensual]"  class="cheque_tasa_mensual form-control input-lg "  type="text" placeholder="Mensual">  ';
         output += '                     </div> ';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="tasa_anual_' + num_item + '" name="emisor[' + num_item + '][cheque][0][tasa_anual]"  class="cheque_tasa_anual form-control input-lg " type="text" placeholder="Anual">  ';
+        output += '                         <input id="tasa_anual_' + num_item + '" name="emisor[' + num_item + '][cheque][0][tasa_anual]"  class="cheque_tasa_anual form-control input-lg " autocomplete="off" type="text" placeholder="Anual">  ';
         output += '                     </div> ';
         output += '                 </div>';
         output += '                 <div class="row">';
         output += '                     <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Interes :</label>';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="interes_' + num_item + '" name="emisor[' + num_item + '][cheque][0][interes]"  class="cheque_interes form-control input-lg " data-provide="" type="text" placeholder="Cliente $">  ';
+        output += '                         <input id="interes_' + num_item + '" name="emisor[' + num_item + '][cheque][0][interes]"  class="cheque_interes form-control input-lg " data-provide="" autocomplete="off" type="text" placeholder="Cliente $">  ';
         output += '                     </div> ';
         output += '                     <label for="emisor_cuit" class="col-lg-2 col-md-1 col-sm-12 control-label emisor ">Interes :</label>';
         output += '                     <div class="col-lg-1 col-md-2 col-sm-12">';
         output += '                         <input id="comision_porcentaje_' + num_item + '" name="emisor[' + num_item + '][cheque][0][comision_porcentaje]"  class="cheque_comision_porcentaje cheque_comision_porcentaje form-control input-lg "  type="text" placeholder="%"> ';
         output += '                     </div> ';
         output += '                     <div class="col-lg-1 col-md-2 col-sm-12">';
-        output += '                         <input id="comision_importe_' + num_item + '" name="emisor[' + num_item + '][cheque][0][comision_importe]"  class="cheque_comision_importe form-control input-lg typeahead" data-provide="typeahead" type="text" placeholder="$">  ';
+        output += '                         <input id="comision_importe_' + num_item + '" name="emisor[' + num_item + '][cheque][0][comision_importe]"  class="cheque_comision_importe form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="$">  ';
         output += '                     </div> ';
         output += '                 </div>';
         output += '                 <div class="row">';
         output += '                     <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Cobro Varios :</label>';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="impuesto_' + num_item + '" name="emisor[' + num_item + '][cheque][0][impuesto]"  class="cheque_impuesto form-control input-lg typeahead" data-provide="typeahead" type="text" placeholder="Impuesto Cheque"> ';
+        output += '                         <input id="impuesto_' + num_item + '" name="emisor[' + num_item + '][cheque][0][impuesto]"  class="cheque_impuesto form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Impuesto Cheque"> ';
         output += '                     </div> ';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="gasto_' + num_item + '" name="emisor[' + num_item + '][cheque][0][gasto]"  class="cheque_gasto form-control input-lg typeahead" data-provide="typeahead" type="text" placeholder="Gastos $"> ';
+        output += '                         <input id="gasto_' + num_item + '" name="emisor[' + num_item + '][cheque][0][gasto]"  class="cheque_gasto form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Gastos $"> ';
         output += '                     </div>';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="iva_' + num_item + '" name="emisor[' + num_item + '][cheque][0][iva]"  class="cheque_iva form-control input-lg typeahead" data-provide="typeahead" type="text" placeholder="IVA(21%)"> ';
+        output += '                         <input id="iva_' + num_item + '" name="emisor[' + num_item + '][cheque][0][iva]"  class="cheque_iva form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="IVA(21%)"> ';
         output += '                     </div> ';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="sellado_' + num_item + '" name="emisor[' + num_item + '][cheque][0][sellado]"  class="cheque_sellado form-control input-lg typeahead" data-provide="typeahead" type="text" placeholder="Sellado">   ';
+        output += '                         <input id="sellado_' + num_item + '" name="emisor[' + num_item + '][cheque][0][sellado]"  class="cheque_sellado form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Sellado">   ';
         output += '                     </div>';
         output += '                 </div>';
         output += '                 <div class="row">';
         output += '                     <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Neto x Cheque :</label>';
         output += '                     <div class="col-lg-3 col-md-2 col-sm-12">';
-        output += '                         <input id="neto_cheche_' + num_item + '" name="emisor[' + num_item + '][cheque][0][neto]"  class="cheque_neto form-control input-lg typeahead" data-provide="typeahead" type="text" placeholder="Neto x Cheque">';
+        output += '                         <input id="neto_cheche_' + num_item + '" name="emisor[' + num_item + '][cheque][0][neto]"  class="cheque_neto form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Neto x Cheque">';
         output += '                         <input id="compra_' + num_item + '" name="emisor[' + num_item + '][cheque][0][compra]"  class="cheque_compra " type="hidden" >';
         output += '                     </div> ';
         output += '                 </div>';
@@ -458,16 +460,16 @@ var form_operacion = function() {
         output += '                         <input id="gasto' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][gasto]"  class="cheque_gasto form-control input-lg "  type="text" placeholder="Gastos $"> ';
         output += '                     </div>';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="iva' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][iva]"  class="cheque_iva form-control input-lg " type="text" placeholder="IVA(21%)"> ';
+        output += '                         <input id="iva' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][iva]"  class="cheque_iva form-control input-lg " autocomplete="off" type="text" placeholder="IVA(21%)"> ';
         output += '                     </div> ';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="sellado' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][sellado]"  class="cheque_sellado form-control input-lg " type="text" placeholder="Sellado">   ';
+        output += '                         <input id="sellado' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][sellado]"  class="cheque_sellado form-control input-lg " autocomplete="off" type="text" placeholder="Sellado">   ';
         output += '                     </div>';
         output += '                 </div>';
         output += '                 <div class="row">';
         output += '                     <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Neto x Cheque :</label>';
         output += '                     <div class="col-lg-3 col-md-2 col-sm-12">';
-        output += '                         <input id="neto_cheche' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][neto]"  class="cheque_neto form-control input-lg " type="text" placeholder="Neto x Cheque">';
+        output += '                         <input id="neto_cheche' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][neto]"  class="cheque_neto form-control input-lg " autocomplete="off" type="text" placeholder="Neto x Cheque">';
         output += '                         <input id="compra_' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][compra]"  class="cheque_compra " type="hidden" >';
         output += '                     </div> ';
         output += '                 </div>';
@@ -620,11 +622,11 @@ var form_operacion = function() {
 
         var out_put = "";
         out_put += '<tr>';
-        out_put += '<td><input id="cheque_salida_banco' + num_items + '" name="cheque_salida[' + num_items + '][banco]"  class="cheque_salida_banco form-control input-lg typeahead" type="text" placeholder="Banco">';
+        out_put += '<td><input id="cheque_salida_banco' + num_items + '" name="cheque_salida[' + num_items + '][banco]"  class="cheque_salida_banco form-control input-lg typeahead" autocomplete="off" type="text" placeholder="Banco">';
         out_put += '<input id="cheque_salida_banco' + num_items + '" name="cheque_salida[' + num_items + '][banco_id]"  class="cheque_salida_banco_id" type="hidden"></td>';
-        out_put += '<td><input id="cheque_salida_nro_' + num_items + '" name="cheque_salida[' + num_items + '][nro]"  class="cheque_salida_nro form-control input-lg " type="text" placeholder="Nro"></td>';
-        out_put += '<td><input id="cheque_salida_importe_' + num_items + '" name="cheque_salida[' + num_items + '][importe]"  class="cheque_salida_importe form-control input-lg " type="text" placeholder="Importe"></td>';
-        out_put += '<td><input id="cheque_salida_fecha_' + num_items + '" name="cheque_salida[' + num_items + '][fecha]"  class="cheque_salida_fecha form-control input-lg " type="text" placeholder="Fecha"></td>';
+        out_put += '<td><input id="cheque_salida_nro_' + num_items + '" name="cheque_salida[' + num_items + '][nro]"  class="cheque_salida_nro form-control input-lg " autocomplete="off" type="text" placeholder="Nro"></td>';
+        out_put += '<td><input id="cheque_salida_importe_' + num_items + '" name="cheque_salida[' + num_items + '][importe]"  class="cheque_salida_importe form-control input-lg " autocomplete="off" type="text" placeholder="Importe"></td>';
+        out_put += '<td><input id="cheque_salida_fecha_' + num_items + '" name="cheque_salida[' + num_items + '][fecha]"  class="cheque_salida_fecha form-control input-lg " autocomplete="off" type="text" placeholder="Fecha"></td>';
 
         out_put += '<td><button type="button" class="bt_cheque_out_delete btn btn-flat btn-danger"> <i class="fa fa-times"></i></button></td>';
         out_put += '</tr>';
@@ -703,11 +705,11 @@ var form_operacion = function() {
         var out_put = "";
         out_put += '<tr>';
 
-        out_put += '<td><input id="transferencia_salida_banco' + num_items + '" name="transferencia_salida[' + num_items + '][banco]"  class="transferencia_salida_banco form-control input-lg typeahead" type="text" placeholder="Banco">';
+        out_put += '<td><input id="transferencia_salida_banco' + num_items + '" name="transferencia_salida[' + num_items + '][banco]"  class="transferencia_salida_banco form-control input-lg typeahead" autocomplete="off" autocomplete="off" type="text" placeholder="Banco">';
         out_put += '<input id="transferencia_salida_banco' + num_items + '" name="transferencia_salida[' + num_items + '][banco_id]"  class="transferencia_salida_banco_id" type="hidden"></td>';
-        out_put += '<td><input id="transferencia_salida_cbu_' + num_items + '" name="transferencia_salida[' + num_items + '][cbu]"  class="transferencia_salida_cbu form-control input-lg " type="text" placeholder="Nro"></td>';
-        out_put += '<td><input id="transferencia_salida_importe_' + num_items + '" name="transferencia_salida[' + num_items + '][importe]"  class="transferencia_salida_import form-control input-lg " type="text" placeholder="Importe"></td>';
-        out_put += '<td><input id="transferenciae_salida_fecha_' + num_items + '" name="transferencia_salida[' + num_items + '][fecha]"  class="transferencia_salida_fecha form-control input-lg " type="text" placeholder="Fecha"></td>';
+        out_put += '<td><input id="transferencia_salida_cbu_' + num_items + '" name="transferencia_salida[' + num_items + '][cbu]"  class="transferencia_salida_cbu form-control input-lg " autocomplete="off" autocomplete="off" type="text" placeholder="Nro"></td>';
+        out_put += '<td><input id="transferencia_salida_importe_' + num_items + '" name="transferencia_salida[' + num_items + '][importe]"  class="transferencia_salida_import form-control input-lg " autocomplete="off" autocomplete="off" type="text" placeholder="Importe"></td>';
+        out_put += '<td><input id="transferenciae_salida_fecha_' + num_items + '" name="transferencia_salida[' + num_items + '][fecha]"  class="transferencia_salida_fecha form-control input-lg " autocomplete="off" autocomplete="off" type="text" placeholder="Fecha"></td>';
 
         out_put += '<td><button type="button" class="bt_transfer_out_delete btn btn-flat btn-danger"> <i class="fa fa-times"></i></button></td>';
 

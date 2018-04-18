@@ -202,6 +202,7 @@ class Operations extends CI_Model
 
 	public function add($data = false){
 		
+		$this->db->trans_start();	
 
 		if(!isset($data['tomador'])){
 			$error = array('error'=>'tomador','message'=>'No se envio Datos de Tomador');
@@ -212,8 +213,7 @@ class Operations extends CI_Model
 		$operation_data = array();
 		$tomador_id=0;
 		$get_agente=$this->db->get_where('agente',array('cuit'=>$data['tomador']['cuit']));
-		//$this->db->trans_start();
-
+		
 		if($get_agente->num_rows()==0){	
 			$agente_tomador= array(
 				'nombre'=>$data['tomador']['razon_social'],
@@ -234,7 +234,182 @@ class Operations extends CI_Model
 			$tomador_id = $data['tomador']['id'];
 		}
 
+		$operation_params=array(
+			'agente_tenedor_id'=>$tomador_id,			
+			'inversor_id'=>$data['inversor_id'],
+			'observacion'=>$data['observacion'],
+			'neto'=>$data['neto_final'],
+			'estado'=>0,
+			'created'=>date('Y-m-d h:m:i'),			
+		);
+
+		$operacion_result= $this->db->insert('operacion', $operation_params);
+		$operacion_id = $this->db->insert_id();
+
+		$operation_totals=array();
+		foreach($data['emisor'] as $key => $emisor){
+			
+			if(!$this->existe_agente($emisor['cuit'])){
+				$emisor_id = $this->agrega_agente($emisor);
+			}else{
+				$emisor_id = $emisor['id'];	
+			}
+			
+			foreach($emisor['cheque'] as $chKey=>$cheque){
+				$importe=str_replace('$','',$cheque['importe']);				
+
+				$cheque_params=array(
+					'fecha'=>date('Y-m-d',strtotime($cheque['fecha'])),
+					'bancoId'=>$cheque['banco_id'],
+					'numero'=>$cheque['nro'],
+					'importe'=>floatval($importe),
+					'estado'=>'AC',
+					'observacion'=>null,
+					'espropio'=>1,
+					'tipo'=>1,
+					'vencimiento'=>null,
+					'agenteId'=>$emisor_id
+				);
+				$this->db->insert('cheques',$cheque_params);
+				$cheque_id=$this->db->insert_id();
+
+				$operacion_detalle=array(
+					'operacion_id'=>$operacion_id,
+					'cheque_id'=>$cheque_id,
+					'emisor_id'=>$emisor_id,
+					'banco_id'=>$cheque['banco_id'],
+					'nro_cheque'=>$cheque['nro'],
+					'importe'=>floatval($importe),
+					'fecha_venc'=>date('Y-m-d',strtotime($cheque['fecha'])),
+					'nro_dias'=>$cheque['dias'],
+					'tasa_mensual'=>floatval($cheque['tasa_mensual']),
+					'interes'=>floatval($cheque['interes']),
+					'impuesto_cheque'=>($cheque['impuesto']),
+					'gastos'=>floatval($cheque['gasto']),
+					'compra'=>floatval($cheque['compra']),
+					'comision_valor'=>floatval($cheque['comision_porcentaje']),
+					'comision_total'=>floatval($cheque['comision_importe']),
+					'subtotal'=>floatval('0'),
+					'iva'=>floatval($cheque['iva']),
+					'sellado'=>floatval($cheque['sellado']),
+					'neto'=>floatval($cheque['neto']),
+				);
+
+				$this->db->insert('operacion_detalle',$operacion_detalle);
+				$operacion_detalle_id=$this->db->insert_id();	
+				
+				$operation_totals[]=$operacion_detalle;
+			}
+			
+		}
+
+
 		
+		$operation_params=array(
+			'importe'=>0,	
+			'tasa_mensual'=>0,
+			'interes'=>0,
+			'impuesto_cheque'=>0,
+			'gastos'=>0,
+			'compra'=>0,
+			'comision_valor'=>0,
+			'comision_total'=>0,
+			'subtotal'=>0,
+			'iva'=>0,
+			'sellado'=>0,
+			'neto'=>0,
+		);
+		foreach($operation_totals  as $details){
+			
+			$operation_params['importe']+=$details['importe'];
+			$operation_params['tasa_mensual']+=0;
+			$operation_params['interes']+=$details['interes'];
+			$operation_params['impuesto_cheque']+=$details['impuesto_cheque'];
+			$operation_params['gastos']+=$details['gastos'];
+			$operation_params['compra']+=$details['compra'];
+			$operation_params['comision_valor']+=$details['comision_valor'];
+			$operation_params['comision_total']+=$details['comision_total'];
+			$operation_params['subtotal']+=$details['subtotal'];
+			$operation_params['iva']+=$details['iva'];
+			$operation_params['sellado']+=$details['sellado'];
+			$operation_params['neto']+=$details['neto'];
+
+		}
+		
+
+		$this->db->where('id', $operacion_id);
+		$this->db->update('operacion', $operation_params); 
+
+
+		if(isset($data['cheque_salida'])){	
+			foreach($data['cheque_salida'] as $key => $cheque_salida){
+
+				$temp_cheque=array(
+					'fecha'=>date('Y-m-d',strtotime($cheque_salida['fecha'])),
+					'bancoId'=>$cheque_salida['banco_id'],
+					'numero'=>$cheque_salida['nro'],
+					'importe'=>floatval($cheque_salida['importe']),
+					'estado'=>'AC',
+					'observacion'=>null,
+					'espropio'=>1,
+					'tipo'=>2,
+					'vencimiento'=>null,
+					'agenteId'=>$tomador_id
+				);
+				$this->db->insert('cheques',$temp_cheque);
+				$cheque_id=$this->db->insert_id();
+				$operacion_detalle=array(
+					'operacion_id'=>$operacion_id,
+					'cheque_id'=>$cheque_id,
+					'emisor_id'=>$tomador_id,
+					'banco_id'=>$cheque_salida['banco_id'],
+					'nro_cheque'=>$cheque_salida['nro'],
+					'importe'=>floatval($cheque_salida['importe']),
+					'fecha_venc'=>date('Y-m-d',strtotime($cheque_salida['fecha'])),
+					'nro_dias'=>1,
+				);
+				$this->db->insert('operacion_detalle',$operacion_detalle);
+				$operacion_detalle_id=$this->db->insert_id();
+			}
+
+
+			
+		}
+
+		// Inserta Tranferencias de Salida
+		if(isset($data['transferencia_salida'])){			
+			foreach($data['transferencia_salida'] as $key=>$item){			
+				
+				$temp_transf= array(
+					'banco_id' => $item['banco_id'],
+					'cbu_nro' => (is_numeric($item['cbu']))?$item['cbu']:0,
+					'cbu_alias' => (!is_numeric($item['cbu']))?$item['cbu']:'',
+					'importe'=>floatval($item['importe']),
+					'fecha'=>date('Y-m-d',strtotime($item['fecha'])),
+					'estado' =>'AC'
+				);
+
+				$this->db->insert('transferencias',$temp_transf);
+				$transferencia_id=$this->db->insert_id();
+				
+				$operacion_detalle=array(
+					'operacion_id'=>$operacion_id,
+					'transferencia_id'=>$transferencia_id,
+				);
+				$this->db->insert('operacion_detalle_transferencia',$operacion_detalle);
+				$operacion_detalle_tranferencia_id=$this->db->insert_id();
+				
+			}
+		}	
+
+
+
+		$this->db->trans_complete();
+		return true;
+		
+		
+		
+
 		$operacion_padre_id=0;
 		$operacion_ids = array();
 		$this->db->trans_start();	
@@ -261,10 +436,36 @@ class Operations extends CI_Model
 			}else{
 				$emisor_id = $emisor['id'];
 			}
-
+			$totals=array();
 			foreach($emisor['cheque']as $ckey => $cheque ){
 				
 				$importe=str_replace('$','',$cheque['importe']);
+
+				/*$operation_params=array(
+					'agente_emisor_id'=>$emisor_id,
+					'agente_tenedor_id'=>$tomador_id,
+					'banco_id'=>$cheque['banco_id'],
+					'nro_cheque'=>$cheque['nro'],
+					'importe'=>floatval($importe),
+					'fecha_venc'=>date('Y-m-d',strtotime($cheque['fecha'])),
+					'nro_dias'=>$cheque['dias'],
+					'tasa_mensual'=>floatval($cheque['tasa_mensual']),
+					'interes'=>floatval($cheque['interes']),
+					'impuesto_cheque'=>($cheque['impuesto']),
+					'gastos'=>floatval($cheque['gasto']),
+					'compra'=>floatval($cheque['compra']),
+					'comision_valor'=>floatval($cheque['comision_porcentaje']),
+					'comision_total'=>floatval($cheque['comision_importe']),
+					'subtotal'=>floatval('0'),
+					'iva'=>floatval($cheque['iva']),
+					'sellado'=>floatval($cheque['sellado']),
+					'neto'=>floatval($cheque['neto']),
+					'inversor_id'=>$data['inversor_id'],
+					'observacion'=>$data['observacion'],	
+					'operacion_padre'=>$operacion_padre_id,	
+					'estado'=>0,
+					'created'=>date('Y-m-d h:m:i'),			
+				);*/
 
 				$operation_params=array(
 					'agente_emisor_id'=>$emisor_id,
@@ -292,7 +493,7 @@ class Operations extends CI_Model
 					'created'=>date('Y-m-d h:m:i'),			
 				);
 
-						
+				$totals[]=$operation_params;	
 				//INSERTA DATOS DE OPERACION
 				$operacion_result= $this->db->insert('operacion', $operation_params);
 				$operacion_id = $this->db->insert_id();
@@ -392,6 +593,16 @@ class Operations extends CI_Model
 		//die("FIN");
 		
 		return true;
+	}
+
+
+	private function existe_agente($cuit=''){
+		var_dump("==> CUIT: ".$cuit);
+		$query=$this->db->get_where('agente',array('cuit'=>$cuit));
+		return ($query->num_rows()!=0);
+	}
+	private function agrega_agente($data,$type=1){
+
 	}
 	public function add_old($data=false){
 		

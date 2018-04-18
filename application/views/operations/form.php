@@ -16,7 +16,7 @@
             <h3 class="h3_section">Tomador</h3>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-12">
-                <input id="tomador_cuit" name="tomador[cuit]"  class="form-control input-lg typeahead" data-provide="typeahead" type="text" placeholder="CUIT">
+                <input id="tomador_cuit" name="tomador[cuit]"  class="form-control input-lg typeahead" data-provide="typeahead" autocomplete="off"  type="text" placeholder="CUIT">
             </div>
             <div class="col-lg-5 col-md-5 col-sm-12 clearfix">
                 <input id="tomador_razo_social" name="tomador[razon_social]"  class="form-control input-lg" type="text" placeholder="Razón Social">
@@ -37,10 +37,10 @@
                 <div class="row">
                     <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor tag1 ">Emisor</label>
                     <div class="col-lg-2 col-md-2 col-sm-12">
-                        <input id="emisor_cuit" name="emisor[0][cuit]"  class="form-control input-lg emisor_cuit typeahead"  type="text" placeholder="CUIT">
+                        <input id="emisor_cuit" name="emisor[0][cuit]"  class="form-control input-lg emisor_cuit typeahead"   autocomplete="off" type="text" placeholder="CUIT">
                     </div>
                     <div class="col-lg-5 col-md-6 col-sm-12 clearfix">
-                        <input id="emisor_razon_social" name="emisor[0][razon_social]"  class="form-control input-lg emisor_razon" type="text" placeholder="Razón Social">
+                        <input id="emisor_razon_social" name="emisor[0][razon_social]"  class="form-control input-lg emisor_razon" autocomplete="off" type="text" placeholder="Razón Social">
                     </div>
                     <input type="hidden" id="emisor_id" name="emisor[0][id]" class="emisor_id">                    
                     <div class="col-lg-3 text-left" style="">                
@@ -54,64 +54,64 @@
                     <div class="row">
                         <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Cheque :</label>
                         <div class="col-lg-2 col-md-2 col-sm-12">
-                            <input  id="cheque_nro" name="emisor[0][cheque][0][nro]"  class="cheque_nro form-control input-lg typeahead" data-provide="typeahead" type="text" placeholder="Nro">   
+                            <input  id="cheque_nro" name="emisor[0][cheque][0][nro]"  class="cheque_nro form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Nro">   
                         </div>
                         <div class="col-lg-4 col-md-2 col-sm-12">
-                            <input id="cheque_banco" name="emisor[0][cheque][0][banco]"  class="cheque_banco  form-control input-lg typeahead" type="text" placeholder="Banco">   
+                            <input id="cheque_banco" name="emisor[0][cheque][0][banco]"  class="cheque_banco  form-control input-lg typeahead" autocomplete="off" type="text" placeholder="Banco">   
                             <input id="cheque_banco_id" name="emisor[0][cheque][0][banco_id]" class="cheque_banco_id" type="hidden" >
                         </div>
                         <div class="col-lg-3 col-md-2 col-sm-12">
-                            <input id="cheque_importe" name="emisor[0][cheque][0][importe]"  class="form-control input-lg cheque_importe text-right" type="text" placeholder="Importe $">   
+                            <input id="cheque_importe" name="emisor[0][cheque][0][importe]"  class="form-control input-lg cheque_importe text-right" autocomplete="off" type="text" placeholder="Importe $">   
                         </div>    
                     </div>
                     <div class="row">
                         <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Plazo :</label>
                         <div class="col-lg-2 col-md-2 col-sm-12">
-                            <input id="cheque_fecha" name="emisor[0][cheque][0][fecha]"  class="cheque_fecha form-control input-lg "  data-provide="datepicker" type="text" placeholder="Vencimiento">   
+                            <input id="cheque_fecha" name="emisor[0][cheque][0][fecha]"  class="cheque_fecha form-control input-lg "  data-provide="datepicker" autocomplete="off" type="text" placeholder="Vencimiento">   
                         </div>  
                         <div class="col-lg-1 col-md-2 col-sm-12">
                             <input id="cheque_dias" name="emisor[0][cheque][0][dias]"  class="cheque_dia form-control input-lg "  type="text" placeholder="Días">   
                         </div> 
                         <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Tasas :</label>
                         <div class="col-lg-2 col-md-2 col-sm-12">
-                            <input id="tasa_mensual" name="emisor[0][cheque][0][tasa_mensual]"  class="cheque_tasa_mensual form-control input-lg typeahead" data-provide="typeahead" type="text" placeholder="Mensual" >   
+                            <input id="tasa_mensual" name="emisor[0][cheque][0][tasa_mensual]"  class="cheque_tasa_mensual form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Mensual" >   
                         </div> 
                         <div class="col-lg-2 col-md-2 col-sm-12">
-                            <input id="tasa_anual" name="emisor[0][cheque][0][tasa_anual]"  class="cheque_tasa_anual form-control input-lg typeahead" data-provide="typeahead" type="text" placeholder="Anual">   
+                            <input id="tasa_anual" name="emisor[0][cheque][0][tasa_anual]"  class="cheque_tasa_anual form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Anual">   
                         </div> 
                     </div>
                     <div class="row">
                         <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Interes :</label>
                         <div class="col-lg-2 col-md-2 col-sm-12">
-                            <input id="interes" name="emisor[0][cheque][0][interes]"  class="cheque_interes form-control input-lg typeahead" data-provide="typeahead" type="text" placeholder="Cliente $">   
+                            <input id="interes" name="emisor[0][cheque][0][interes]"  class="cheque_interes form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Cliente $">   
                         </div> 
                         <label for="emisor_cuit" class="col-lg-2 col-md-1 col-sm-12 control-label emisor ">Comisión :</label>
                         <div class="col-lg-2 col-md-2 col-sm-12">
-                            <input id="comision_porcentaje" name="emisor[0][cheque][0][comision_porcentaje]"  class="cheque_comision_porcentaje form-control input-lg typeahead" data-provide="typeahead" type="text" placeholder="%">   
+                            <input id="comision_porcentaje" name="emisor[0][cheque][0][comision_porcentaje]"  class="cheque_comision_porcentaje form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="%">   
                         </div> 
                         <div class="col-lg-2 col-md-2 col-sm-12">
-                            <input id="comision_importe" name="emisor[0][cheque][0][comision_importe]"  class="cheque_comision_importe form-control input-lg typeahead" data-provide="typeahead" type="text" placeholder="$">   
+                            <input id="comision_importe" name="emisor[0][cheque][0][comision_importe]"  class="cheque_comision_importe form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="$">   
                         </div> 
                     </div>
                     <div class="row">
                         <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Cobro Varios :</label>
                         <div class="col-lg-2 col-md-2 col-sm-12">
-                            <input id="impuesto" name="emisor[0][cheque][0][impuesto]"  class="cheque_impuesto form-control input-lg typeahead" data-provide="typeahead" type="text" placeholder="Impuesto Cheque">   
+                            <input id="impuesto" name="emisor[0][cheque][0][impuesto]"  class="cheque_impuesto form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Impuesto Cheque">   
                         </div> 
                         <div class="col-lg-2 col-md-2 col-sm-12">
-                            <input id="gasto" name="emisor[0][cheque][0][gasto]"  class="cheque_gasto form-control input-lg typeahead" data-provide="typeahead" type="text" placeholder="Gastos $">   
+                            <input id="gasto" name="emisor[0][cheque][0][gasto]"  class="cheque_gasto form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Gastos $">   
                         </div>                        
                         <div class="col-lg-2 col-md-2 col-sm-12">
-                            <input id="iva" name="emisor[0][cheque][0][iva]"  class="cheque_iva form-control input-lg typeahead" data-provide="typeahead" type="text" placeholder="IVA(21%)">   
+                            <input id="iva" name="emisor[0][cheque][0][iva]"  class="cheque_iva form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="IVA(21%)">   
                         </div> 
                         <div class="col-lg-2 col-md-2 col-sm-12">
-                            <input id="sellado" name="emisor[0][cheque][0][sellado]"  class="cheque_sellado form-control input-lg typeahead" data-provide="typeahead" type="text" placeholder="Sellado">   
+                            <input id="sellado" name="emisor[0][cheque][0][sellado]"  class="cheque_sellado form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Sellado">   
                         </div>
                     </div>                    
                     <div class="row">
                         <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Neto x Cheque :</label>
                         <div class="col-lg-3 col-md-2 col-sm-12">
-                        <input id="neto_cheche" name="emisor[0][cheque][0][neto]"  class="cheque_neto form-control input-lg " type="text" placeholder="Neto x Cheque">   
+                        <input id="neto_cheche" name="emisor[0][cheque][0][neto]"  class="cheque_neto form-control input-lg " autocomplete="off" type="text" placeholder="Neto x Cheque">   
                             <input id="compra" name="emisor[0][cheque][0][compra]"  class="cheque_compra form-control input-lg " type="hidden" >   
                         </div> 
                     </div>
