@@ -41,16 +41,15 @@ class Operations extends CI_Model
 		
 		$this->db->order_by('id', 'DESC');
 		$query= $this->db->get('operacion');
-		//echo $this->db->last_query();
-				//die("fin");
+		
 		
 		if ($query->num_rows()!=0)
 		{
 			$result=$query->result_array();
 
 			foreach($result as $key=>$item){
-				$banco=$this->db->get_where('banco',array('id'=>$item['banco_id']));				
-				$result[$key]['banco']=$banco->row()->razon_social;
+				//$banco=$this->db->get_where('banco',array('id'=>$item['banco_id']));				
+				//$result[$key]['banco']='';//$banco->row()->razon_social;
 
 				$tomador=$this->db->get_where('agente',array('id'=>$item['agente_tenedor_id']));				
 				$result[$key]['tomador']=$tomador->row()->razon_social == '' ? $tomador->row()->nombre."  ".$tomador->row()->apellido : $tomador->row()->razon_social;

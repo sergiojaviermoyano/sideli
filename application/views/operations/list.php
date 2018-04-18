@@ -21,7 +21,7 @@
                             <tr >     
                                 <th>Operacion Id</th>                          
                                 <th >Tenedor</th>
-                                <th >Banco</th>
+                                <!-- <th >Banco</th> -->
                                 <th class="text-center">Fecha</th>
                                 <th class="text-right">Importe</th>
                                 <th class="text-right">Neto</th>
@@ -34,7 +34,7 @@
                                 <tr>
                                     <td><?php echo $item['id']?> </td>
                                     <td><?php echo ($item['tomador']!='')? strtoupper($item['tomador']):' '?></td>
-                                    <td><?php echo $item['banco']?></td>
+                                    
                                     <td class="text-center"><?php echo date("d-m-Y", strtotime($item['fecha_venc'])); ?></td>
                                     <td class="text-right"><?php echo "$ ".number_format($item['importe'], 2, ',', '.'); ?></td>
                                     <td style="text-align: right"><?php echo "$ ".number_format($item['neto'], 2, ',', '.'); ?></td>
