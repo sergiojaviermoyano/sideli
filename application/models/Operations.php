@@ -74,42 +74,51 @@ class Operations extends CI_Model
 		{
 			$action = $data['act'];
 			$id = $data['id'];
-
 			$data = array();
-
 			$query= $this->db->get_where('operacion',array('id'=>$id));
 			if ($query->num_rows() != 0)
 			{	
-				$temp=$query->row();				
-				$data['operation'] = $temp[0];
+				$temp=$query->row_array();	
+				
+				$data['operation'] = $temp;
+				$detalle_operacion=$this->db->query("select od.`*`,
+				(select razon_social from banco where id = od.banco_id) as 'banco_nombre',
+				(select razon_social from agente where id = od.emisor_id) as 'agente_razon_social',
+				(select CONCAT(nombre,' ',apellido) from agente where id = od.emisor_id) as 'agente_nombre_apellido',
+				c.tipo as tipo 
+				from operacion_detalle as od INNER JOIN cheques as c ON od.cheque_id = c.id where od.operacion_id='".$id."';");
+				
+				if($detalle_operacion->num_rows()!=0){
+					$data['detalle_operacion']= $detalle_operacion->result_array();					
+				}
 
 				//Inversor
-				$query= $this->db->get_where('inversor',array('id' => $temp[0]['inversor_id']));
+				$query= $this->db->get_where('inversor',array('id' => $temp['inversor_id']));
 				if ($query->num_rows() != 0)
 				{
-					$inversor = $query->result_array();
-					$data['inversor'] = $inversor[0];
+					$inversor = $query->row_array();
+					$data['inversor'] = $inversor;
 				}
 				//Tenedor
-				$query= $this->db->get_where('agente',array('id' => $temp[0]['agente_tenedor_id']));
+				$query= $this->db->get_where('agente',array('id' => $temp['agente_tenedor_id']));
 				if ($query->num_rows() != 0)
 				{
-					$tenedor = $query->result_array();
-					$data['tenedor'] = $tenedor[0];
+					$tenedor = $query->row_array();
+					$data['tenedor'] = $tenedor;
 				}
 				//Banco
-				$query= $this->db->get_where('banco',array('id' => $temp[0]['banco_id']));
+				$query= $this->db->get_where('banco',array('id' => $temp['banco_id']));
 				if ($query->num_rows() != 0)
 				{
-					$banco = $query->result_array();
-					$data['banco'] = $banco[0];
+					$banco = $query->row_array();
+					$data['banco'] = $banco;
 				}
 				//Emisor
-				$query= $this->db->get_where('agente',array('id' => $temp[0]['agente_emisor_id']));
+				$query= $this->db->get_where('agente',array('id' => $temp['agente_emisor_id']));
 				if ($query->num_rows() != 0)
 				{
-					$emisor = $query->result_array();
-					$data['emisor'] = $emisor[0];
+					$emisor = $query->row_array();
+					$data['emisor'] = $emisor;
 				}
 
 				//---------------------
@@ -120,7 +129,7 @@ class Operations extends CI_Model
 				$this->db->join('operacion_detalle', 'operacion_detalle.cheque_id = cheques.id');;
 				$this->db->where(array('operacion_detalle.operacion_id' => $data['operation']['id'], 'cheques.tipo' => 2));
 				$query = $this->db->get();
-				echo $this->db->last_query();
+				//echo $this->db->last_query();
 				if ($query->num_rows() != 0)
 				{
 					foreach($query->result() as $che)
@@ -142,7 +151,7 @@ class Operations extends CI_Model
 				$this->db->join('operacion_detalle_transferencia', 'operacion_detalle_transferencia.transferencia_id = transferencias.id');;
 				$this->db->where(array('operacion_detalle_transferencia.operacion_id' => $data['operation']['id']));
 				$query = $this->db->get();
-				echo $this->db->last_query();
+				//echo $this->db->last_query();
 				if ($query->num_rows() != 0)
 				{
 					foreach($query->result() as $che)

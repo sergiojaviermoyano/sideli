@@ -10,7 +10,7 @@
 <div class="row">
   <div class="col-xs-6">
       <label style="text-decoration: underline"> Datos Tenedor </s></label><br>
-      <label> Nombre y Apellido: <strong style="color: #dd4b39"> <?php echo $data['tenedor']['apellido'].', '.$data['tenedor']['nombre'];?></strong> </label><br>
+      <label> Nombre y Apellido: <strong style="color: #dd4b39"> <?php echo ($data['tenedor']['razon_social']!='')?$data['tenedor']['razon_social']: $data['tenedor']['apellido'].', '.$data['tenedor']['nombre'];?></strong> </label><br>
       <label> CUIT: <strong style="color: #dd4b39"> <?php echo $data['tenedor']['cuit'];?></strong> </label><br>
       <label> Dirección: <strong style="color: #dd4b39"> <?php echo $data['tenedor']['domicilio'];?></strong> </label>
     </div>
@@ -26,6 +26,36 @@
 	<div class="col-xs-12">
   		<label style="text-decoration: underline"> Valores Tomados </label><br>
   		<table width="100%" class="table table-bordered table-hover datatable">
+				<thead>
+					<tr style="text-align: center">
+						<th style="text-align: center">Banco</th>
+						<th style="text-align: center">Número</th>
+						<th style="text-align: center">Librador</th>
+						<th style="text-align: center">Fecha Pago</th>
+						<th style="text-align: center">Tasa</th>
+						<th style="text-align: center">Días</th>
+						<th style="text-align: center">Importe</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach($data['detalle_operacion'] as $key=>$detalle):?>
+						<?php if($detalle['tipo'] == 1):?>
+							<tr class="text-center">
+								<td><?php echo $detalle['banco_nombre'] ?></td>
+								<td><?php echo $detalle['nro_cheque'] ?></td>
+								<td><?php echo ($detalle['agente_razon_social']!='')?$detalle['agente_razon_social']:$detalle['agente_nombre_apellido'] ?></td>
+								<td><?php echo date('d-m-Y',strtotime($detalle['fecha_venc'])) ?></td>
+								<td><?php echo $detalle['nro_dias'] ?></td>
+								<td><?php echo $detalle['tasa_mensual'] ?></td>
+								<td><?php echo sprintf('%0.2f', $detalle['importe']);  ?></td>
+								
+								
+							</tr>
+						<?php endif;?>
+					
+					<?php endforeach;?>
+				</tbody>
+			<!--
 			<tr style="text-align: center">
         <th style="text-align: center">Banco</th>
         <th style="text-align: center">Número</th>
@@ -43,7 +73,7 @@
 			<td style="text-align: center"><?php echo number_format($data['operation']['tasa_mensual'], 2, ',', '.');?></td>
 			<td style="text-align: center"><?php echo number_format($data['operation']['nro_dias'], 0, ',', '.');?></td>
 			<td style="text-align: center"><?php echo number_format($data['operation']['importe'], 2, ',', '.');?></td>
-			</td></tr>
+			</td></tr> -->
 		</table><br>
 
 		<table width="100%">
