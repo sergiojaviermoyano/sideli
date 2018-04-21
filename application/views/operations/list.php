@@ -96,8 +96,8 @@
 </div>
 
 <div class="modal fade" id="modalFactura" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
+  <div class="modal-dialog modal-lg" role="document" style="width:90% !important; height: 100%;  margin: 0;  padding: 0;">>
+    <div class="modal-content" style="height: auto;min-height: 100%;  border-radius: 0;">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">Datos de Facturación</h4>
@@ -312,7 +312,9 @@
                       WaitingClose();
                       var url = "./assets/reports/" + result;
                       $('#printDoc').attr('src', url);
-                      setTimeout("$('#modalPrint').modal('show')",800);
+                      $("#link_download").attr('href',url);
+                      $('#modalPrint').modal('show')
+                      //setTimeout("$('#modalPrint').modal('show')",800);
               },
         error: function(result){
               WaitingClose();
