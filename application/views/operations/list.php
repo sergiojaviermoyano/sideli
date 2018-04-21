@@ -215,6 +215,7 @@
 
     WaitingOpen('Generando reporte...');
     LoadIconAction('modalAction__','Print');
+    $("#link_download").attr('href',null);
     $.ajax({
             type: 'POST',
             data: {
@@ -222,12 +223,16 @@
             },
         url: 'index.php/operation/printOperation',
         success: function(result){
+            console.log(result);
             WaitingClose();
-            var url = "./assets/reports/" + result;
+            var url = "./assets/reports/" + result.file_url;
             $('#printDoc').attr('src', url);
-            setTimeout("$('#modalPrint').modal('show')",800);
+            $("#link_download").attr('href',url);
+            $('#modalPrint').modal('show');
+            //setTimeout("$('#modalPrint').modal('show')",800);
         },
         error: function(result){
+
               WaitingClose();
               ProcesarError(result.responseText, 'modalPrint');
             },

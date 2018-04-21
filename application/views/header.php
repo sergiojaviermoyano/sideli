@@ -119,19 +119,23 @@
 
 <!-- Modal -->
 <div class="modal fade" id="modalPrint" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-lg" role="document" style="">
-    <div class="modal-content">
+  <div class="modal-dialog modal-lg " role="document" style="width:90% !important; height: 100%;  margin: 0;  padding: 0;">
+    <div class="modal-content" style="height: auto;min-height: 100%;  border-radius: 0;">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel__"><span id="modalAction__"> </span> Comprobante</h4>
       </div>
       <div class="modal-body" id="modalBodyPrint">
         <div>
-          <iframe style="width: 100%; height:auto; border:none; min-height: 600px;" id="printDoc" src=""></iframe>
+          <iframe style="width: 100%; height:auto; border:none; min-height: 800px;" id="printDoc" src=""></iframe>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <a href="#" id="link_download" class="btn bg-olive"  target="_blank"><i class="fa fa-download"></i>Descargar</a>
+        <!-- 
+        <button type="button" class="btn bg-olive" data-dismiss="modal"><i class="fa fa-download"></i>Descargar</button>
+        -->
       </div>
     </div>
   </div>

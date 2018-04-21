@@ -35,9 +35,9 @@ class Operations extends CI_Model
 		if($estado){
 			$this->db->where("estado",$estado);
 		}
-		if($padres){
+		/*if($padres){
 			$this->db->where("operacion_padre=",0);
-		}
+		}*/
 		
 		$this->db->order_by('id', 'DESC');
 		$query= $this->db->get('operacion');
@@ -81,7 +81,7 @@ class Operations extends CI_Model
 				$temp=$query->row_array();	
 				
 				$data['operation'] = $temp;
-				$detalle_operacion=$this->db->query("select od.`*`,
+				$detalle_operacion=$this->db->query("select od.*,
 				(select razon_social from banco where id = od.banco_id) as 'banco_nombre',
 				(select razon_social from agente where id = od.emisor_id) as 'agente_razon_social',
 				(select CONCAT(nombre,' ',apellido) from agente where id = od.emisor_id) as 'agente_nombre_apellido',
@@ -669,17 +669,35 @@ class Operations extends CI_Model
 	}
 
 	function printOperation($data = null){
+		
 		if($data == null)
 		{
 			return false;
 		}
 		else
 		{
+			$id= $data['id'];
+
 			if(!file_exists( 'assets/reports/'.$data['id'].'.pdf' )){
 				$data['act'] = 'Print';
+				
 				$result = $this->getOperation($data);
+
+				
+
+				$detalle_operacion=$this->db->query("select od.*,
+				(select razon_social from banco where id = od.banco_id) as 'banco_nombre',
+				(select razon_social from agente where id = od.emisor_id) as 'agente_razon_social',
+				(select CONCAT(nombre,' ',apellido) from agente where id = od.emisor_id) as 'agente_nombre_apellido',
+				c.tipo as tipo 
+				from operacion_detalle as od INNER JOIN cheques as c ON od.cheque_id = c.id where od.operacion_id='".$id."';");
+				
+				if($detalle_operacion->num_rows()!=0){
+					$data['detalle_operacion']= $detalle_operacion->result_array();					
+				}
+				
 				//Inversor
-				var_dump($result['operation']['inversor_id']);
+				
 				$query= $this->db->get_where('inversor',array('id' => $result['operation']['inversor_id']));
 				if ($query->num_rows() != 0)
 				{
@@ -738,6 +756,7 @@ class Operations extends CI_Model
 				$html.= '<th style="text-align: center;">Cheque Nº</th><th style="text-align: center;">Importe</th><th style="text-align: center;">Fecha</th>';
 				$html.= '</tr>';
 				$html.= '</thead>';
+				
 				//Get Cheques 
 				$this->db->select('cheques.*');
 				$this->db->from('cheques');
@@ -753,6 +772,8 @@ class Operations extends CI_Model
 					$html.= 	'<td style="text-align: center">'.date("d-m-Y", strtotime($che->fecha)).'</td>';
 					$html.= '</tr>';
 				}
+				
+				
 				//Get Transferencias
 				$this->db->select('transferencias.*');
 				$this->db->from('transferencias');
@@ -779,6 +800,7 @@ class Operations extends CI_Model
 					
 				}
 				$html.= '</table></td></tr>';
+				
 				//-----------------------------------------------------
 				$html.= '<tr><td><br></td></tr>';
 				//Segunda
@@ -787,17 +809,36 @@ class Operations extends CI_Model
 				$html.= 'monto total, asciende a la suma de: pesos '.$this->convertNumber($result['operation']['importe']).' - ( $ '.number_format($result['operation']['importe'], 2, ',', '.').' ) ';
 				$html.= 'de acuerdo al detalle que figura en la planilla que se expone a continuación:';
 				$html.= '</td></tr>';
+
+				
+				
 				//Pagos
 				$html.= '<tr><td><br>';
 				$html.= '<table width="100%" style="border: 1px solid #000;">';
-				$html.= '<tr style="text-align: center"><th >Banco</th><th>Número</th><th>Firmante</th><th>Vencimiento</th><th>Importe</th></tr>';
-				$html.= '<tr>';
-				$html.= '<td style="text-align: center">'.$data['banco']['razon_social'].'</td>';
-				$html.= '<td style="text-align: center">'.$result['operation']['nro_cheque'].'</td>';
-				$html.= '<td style="text-align: center">'.($data['emisor']['razon_social'] == '' ? $data['emisor']['nombre'].' '.$data['emisor']['apellido'] : $data['emisor']['razon_social']).'</td>';
-				$html.= '<td style="text-align: center">'.date("d-m-Y", strtotime($result['operation']['fecha_venc'])).'</td>';
-				$html.= '<td style="text-align: center">'.number_format($result['operation']['importe'], 2, ',', '.').'</td>';
-				$html.= '</td></tr></table>';
+				$html.= '<thead>';
+				$html.= '<tr style="text-align: center">';
+				$html.= '<th >Banco</th><th>Número</th><th>Firmante</th><th>Vencimiento</th><th>Importe</th>';
+				$html.= '</tr>';				
+				$html.= '</thead>';
+				$html.= '<tbody>';
+				foreach($data['detalle_operacion'] as $detalle){
+					if($detalle['tipo']==1){
+						$html.='<tr style="text-align: center">';
+						$html.= '<td>'.$detalle['banco_nombre'].'</td>'; 
+						$html.= '<td>'.$detalle['nro_cheque'].'</td>'; 
+						$html.= '<td>'.(($detalle['agente_razon_social']!='')?$detalle['agente_razon_social']:$detalle['agente_nombre_apellido']).'</td>'; 
+						$html.= '<td>'.date('d-m-Y',strtotime($detalle['fecha_venc'])).'</td>'; 
+						$html.= '<td>'.sprintf('%0.2f', $detalle['importe']).'</td>'; 
+						$html.= '</tr>';
+					}
+					
+				}
+				$html.= '</tbody>';
+
+				$html.= '</table>';
+				$html.= '</td></tr>';
+
+				//die($html);
 				//-----------------------------------------------------
 				$html.= '<tr><td><br></td></tr>';
 				//Tercera
@@ -849,7 +890,8 @@ class Operations extends CI_Model
 				$html.= '</td></tr>';
 				$html.= '</table>';
 
-				
+				//echo $html;
+
 				//se incluye la libreria de dompdf
 				require_once("assets/plugin/HTMLtoPDF/dompdf/dompdf_config.inc.php");
 				//se crea una nueva instancia al DOMPDF
@@ -867,7 +909,8 @@ class Operations extends CI_Model
 				$output = $dompdf->output();
 				file_put_contents('assets/reports/'.$data['id'].'.pdf', $output);
 			}
-			return $data['id'].'.pdf';
+
+			echo json_encode(array('result'=>'true','file_url'=>$data['id'].'.pdf'));
 		}
     }
 
