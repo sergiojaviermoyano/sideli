@@ -34,6 +34,7 @@ function getValores(callback) {
 
 function set_valores(valores) {
     //#TODO: CONTINUAR AQUI
+    var _cheque_min_dias = $(".emisor_section").find('.min_days');
     var _cheque_tasa_mensual = $(".emisor_section").find('.cheque_tasa_mensual');
     var _cheque_tasa_anual = $(".emisor_section").find('.cheque_tasa_anual');
     var _cheque_comision_porcentaje = $(".emisor_section").find('.cheque_comision_porcentaje');
@@ -42,6 +43,12 @@ function set_valores(valores) {
     $.each(_cheque_tasa_mensual, function(index, item) {
         if ($(item).val() == '') {
             $(item).val(valores[0].tasa);
+        }
+    });
+
+    $.each(_cheque_gasto, function(index, item) {
+        if ($(item).val() == '') {
+            $(item).val(valores[0].gastos);
         }
     });
     $.each(_cheque_tasa_anual, function(index, item) {
@@ -55,9 +62,9 @@ function set_valores(valores) {
             $(item).val(valores[0].comision);
         }
     });
-    $.each(_cheque_gasto, function(index, item) {
+    $.each(_cheque_min_dias, function(index, item) {
         if ($(item).val() == '') {
-            $(item).val(valores[0].gastos);
+            $(item).val(valores[0].min_days);
         }
     });
 
@@ -313,60 +320,65 @@ var form_operacion = function() {
         output += '         <div class="row">';
         output += '                 <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Cheque :</label>';
         output += '                  <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="cheque_nro_' + num_item + '" name="emisor[' + num_item + '][cheque][0][nro]"  class="cheque_nro form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Nro"> ';
+        output += '                         <small>Nro</small> <input id="cheque_nro_' + num_item + '" name="emisor[' + num_item + '][cheque][0][nro]"  class="cheque_nro form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Nro"> ';
         output += '                     </div>';
         output += '                     <div class="col-lg-4 col-md-2 col-sm-12">';
-        output += '                         <input id="cheque_banco_' + num_item + '" name="emisor[' + num_item + '][cheque][0][banco]"  class="cheque_banco   form-control input-lg"  type="text" placeholder="Banco"> ';
+        output += '                        <small>Banco</small> <input id="cheque_banco_' + num_item + '" name="emisor[' + num_item + '][cheque][0][banco]"  class="cheque_banco   form-control input-lg"  type="text" placeholder="Banco"> ';
         output += '                         <input id="cheque_banco_id_' + num_item + '" name="emisor[' + num_item + '][cheque][0][banco_id]" class="cheque_banco_id" type="hidden" > ';
         output += '                     </div>';
         output += '                     <div class="col-lg-3 col-md-2 col-sm-12">';
-        output += '                         <input id="cheque_importe" name="emisor[' + num_item + '][cheque][0][importe]"  class="form-control input-lg cheque_importe text-right"  type="text" placeholder="Importe $">';
+        output += '                         <small>Importe</small> <input id="cheque_importe" name="emisor[' + num_item + '][cheque][0][importe]"  class="form-control input-lg cheque_importe text-right"  type="text" placeholder="Importe $">';
         output += '                     </div> ';
         output += '                 </div> ';
         output += '                 <div class="row">';
         output += '                     <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Tasas :</label>';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="cheque_fecha_' + num_item + '" data-provide="datepicker" name="emisor[' + num_item + '][cheque][0][fecha]"  class="cheque_fecha form-control input-lg "  type="text" placeholder="Vencimiento">';
+        output += '                         <small>Fecha Ven.</small> <input id="cheque_fecha_' + num_item + '" data-provide="datepicker" name="emisor[' + num_item + '][cheque][0][fecha]"  class="cheque_fecha form-control input-lg "  type="text" placeholder="Vencimiento">';
         output += '                     </div>  ';
         output += '                     <div class="col-lg-1 col-md-2 col-sm-12">';
-        output += '                         <input id="cheque_dias_' + num_item + '" name="emisor[' + num_item + '][cheque][0][dias]"  class="cheque_dia form-control input-lg " autocomplete="off" type="text" placeholder="Días">  ';
+        output += '                         <small>Nro Días</small> <input id="cheque_dias_' + num_item + '" name="emisor[' + num_item + '][cheque][0][dias]"  class="cheque_dia form-control input-lg " autocomplete="off" type="text" placeholder="Días">  ';
+        output += '                         <input type="checkbox" id="min_dias' + num_item + '" class="cheque_set_min_dias" > min Días ';    
+        output += '                         <input type="hidden" id="min_days' + num_item + '" class="min_days" >';    
         output += '                     </div> ';
         output += '                     <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Plazo :</label>';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="tasa_mensual_' + num_item + '" name="emisor[' + num_item + '][cheque][0][tasa_mensual]"  class="cheque_tasa_mensual form-control input-lg "  type="text" placeholder="Mensual">  ';
+        output += '                         <small>% Mensual</small><input id="tasa_mensual_' + num_item + '" name="emisor[' + num_item + '][cheque][0][tasa_mensual]"  class="cheque_tasa_mensual form-control input-lg "  type="text" placeholder="Mensual">  ';
         output += '                     </div> ';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="tasa_anual_' + num_item + '" name="emisor[' + num_item + '][cheque][0][tasa_anual]"  class="cheque_tasa_anual form-control input-lg " autocomplete="off" type="text" placeholder="Anual">  ';
+        output += '                        <small>Anual</small> <input id="tasa_anual_' + num_item + '" name="emisor[' + num_item + '][cheque][0][tasa_anual]"  class="cheque_tasa_anual form-control input-lg " autocomplete="off" type="text" placeholder="Anual" readonly>  ';
         output += '                     </div> ';
         output += '                 </div>';
         output += '                 <div class="row">';
         output += '                     <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Interes :</label>';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="interes_' + num_item + '" name="emisor[' + num_item + '][cheque][0][interes]"  class="cheque_interes form-control input-lg " data-provide="" autocomplete="off" type="text" placeholder="Cliente $">  ';
+        output += '                        <small>Interes</small>  <input id="interes_' + num_item + '" name="emisor[' + num_item + '][cheque][0][interes]"  class="cheque_interes form-control input-lg " data-provide="" autocomplete="off" type="text" placeholder="Cliente $">  ';
         output += '                     </div> ';
         output += '                     <label for="emisor_cuit" class="col-lg-2 col-md-1 col-sm-12 control-label emisor ">Interes :</label>';
         output += '                     <div class="col-lg-1 col-md-2 col-sm-12">';
-        output += '                         <input id="comision_porcentaje_' + num_item + '" name="emisor[' + num_item + '][cheque][0][comision_porcentaje]"  class="cheque_comision_porcentaje cheque_comision_porcentaje form-control input-lg "  type="text" placeholder="%"> ';
+        output += '                         <small>%</small> <input id="comision_porcentaje_' + num_item + '" name="emisor[' + num_item + '][cheque][0][comision_porcentaje]"  class="cheque_comision_porcentaje cheque_comision_porcentaje form-control input-lg "  type="text" placeholder="%">  ';
         output += '                     </div> ';
         output += '                     <div class="col-lg-1 col-md-2 col-sm-12">';
-        output += '                         <input id="comision_importe_' + num_item + '" name="emisor[' + num_item + '][cheque][0][comision_importe]"  class="cheque_comision_importe form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="$">  ';
+        output += '                         <small>$</small> <input id="comision_importe_' + num_item + '" name="emisor[' + num_item + '][cheque][0][comision_importe]"  class="cheque_comision_importe form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="$">  ';
         output += '                     </div> ';
         output += '                 </div>';
         output += '                 <div class="row">';
         output += '                     <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Cobro Varios :</label>';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="impuesto_' + num_item + '" name="emisor[' + num_item + '][cheque][0][impuesto]"  class="cheque_impuesto form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Impuesto Cheque"> ';
+        output += '                         <small>Impuesto Cheque</small><input id="impuesto_' + num_item + '" name="emisor[' + num_item + '][cheque][0][impuesto]"  class="cheque_impuesto form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Impuesto Cheque" readonly> ';
         output += '                     </div> ';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="gasto_' + num_item + '" name="emisor[' + num_item + '][cheque][0][gasto]"  class="cheque_gasto form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Gastos $"> ';
+        output += '                          <small>Gasto</small><input id="gasto_' + num_item + '" name="emisor[' + num_item + '][cheque][0][gasto]"  class="cheque_gasto form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Gastos $" readonly> ';
         output += '                     </div>';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="iva_' + num_item + '" name="emisor[' + num_item + '][cheque][0][iva]"  class="cheque_iva form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="IVA(21%)"> ';
+        output += '                        <small>IVA </small>  <input id="iva_' + num_item + '" name="emisor[' + num_item + '][cheque][0][iva]"  class="cheque_iva form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="IVA(21%)" readonly> ';
         output += '                     </div> ';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="sellado_' + num_item + '" name="emisor[' + num_item + '][cheque][0][sellado]"  class="cheque_sellado form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Sellado">   ';
+        output += '                        <small>Sellado $</small> <input id="sellado_' + num_item + '" name="emisor[' + num_item + '][cheque][0][sellado]"  class="cheque_sellado form-control input-lg typeahead" data-provide="typeahead" autocomplete="off" type="text" placeholder="Sellado" readonly>   ';
         output += '                     </div>';
-        output += '                 </div>';
+        output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
+        output += '                          <br> <input type="checkbox" id="editar' + num_item + '" class="cheque_editar_varios" >  Editar   ';
+        output += '                     </div>';
+        output += '                 </div> <br>';
         output += '                 <div class="row">';
         output += '                     <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Neto x Cheque :</label>';
         output += '                     <div class="col-lg-3 col-md-2 col-sm-12">';
@@ -385,6 +397,8 @@ var form_operacion = function() {
         $(".emisor_section").find("op_valor_item:last").focus();
 
         $('.cheque_importe').maskMoney({ allowNegative: false, thousands: '', decimal: '.' });
+        $('.cheque_tasa_mensual').maskMoney({ allowNegative: false, thousands: '', decimal: '.' });
+        $('.cheque_iva,.cheque_sellado,.cheque_gasto').maskMoney({ allowNegative: false, thousands: '', decimal: '.' });
 
         $(this).data('num_item', num_item + 1);
         $('.cheque_fecha').datepicker(_date_picker_data);
@@ -393,7 +407,10 @@ var form_operacion = function() {
     });
     //DELETE EMISOR
     $(".emisor_section").on('click', '.bt_delete_emisor', function() {
+        
+        
         $(this).closest(".op_valor_item").remove();
+        $("form").find('.cheque_neto').trigger('change');
         return false;
     });
 
@@ -409,14 +426,14 @@ var form_operacion = function() {
         output += '         <div class="row">';
         output += '                 <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Cheque :</label>';
         output += '                  <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="cheque_nro' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][nro]"  class="cheque_nro form-control input-lg"  type="text" placeholder="Nro"> ';
+        output += '                         <small>Nro</small> <input id="cheque_nro' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][nro]"  class="cheque_nro form-control input-lg"  type="text" placeholder="Nro"> ';
         output += '                     </div>';
         output += '                     <div class="col-lg-4 col-md-2 col-sm-12">';
-        output += '                         <input id="cheque_banco' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][banco]"  class="cheque_banco form-control input-lg typeahead"  type="text" placeholder="Banco"> ';
+        output += '                         <small>Banco</small> <input id="cheque_banco' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][banco]"  class="cheque_banco form-control input-lg typeahead"  type="text" placeholder="Banco"> ';
         output += '                         <input id="cheque_banco_id' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][banco_id]" class="cheque_banco_id"  type="hidden" >';
         output += '                     </div>';
         output += '                     <div class="col-lg-3 col-md-2 col-sm-12">';
-        output += '                         <input id="cheque_importe' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][importe]"  class="form-control input-lg cheque_importe text-right"  type="text" placeholder="Importe $">';
+        output += '                         <small>Importe</small> <input id="cheque_importe' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][importe]"  class="form-control input-lg cheque_importe text-right"  type="text" placeholder="Importe $">';
         output += '                     </div> ';
         output += '                     <div class="col-lg-1 text-left" style="">';
         output += '                         <button type="button" class="bt_delete_cheque btn btn-flat btn-danger"> <i class="fa fa-times"></i></button>';
@@ -425,47 +442,52 @@ var form_operacion = function() {
         output += '                 <div class="row">';
         output += '                     <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Tasas :</label>';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="cheque_fecha' + _nro_cheque + '" data-provide="datepicker" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][fecha]"  class="cheque_fecha form-control input-lg "  type="text" placeholder="Vencimiento">';
+        output += '                         <small>Fecha Ven.</small> <input id="cheque_fecha' + _nro_cheque + '" data-provide="datepicker" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][fecha]"  class="cheque_fecha form-control input-lg "  type="text" placeholder="Vencimiento">';
         output += '                     </div>  ';
         output += '                     <div class="col-lg-1 col-md-2 col-sm-12">';
-        output += '                         <input id="cheque_dias' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][dias]"  class=" cheque_dia form-control input-lg "  type="text" placeholder="Días">  ';
+        output += '                         <small>Nro Días</small> <input id="cheque_dias' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][dias]"  class=" cheque_dia form-control input-lg "  type="text" placeholder="Días">  ';
+        output += '                         <input type="checkbox" id="min_dias' + _nro_cheque + '" class="cheque_set_min_dias" > min Días ';    
+        output += '                         <input type="hidden" id="min_days' + _nro_cheque + '" class="min_days" >';    
         output += '                     </div> ';
         output += '                     <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Plazo :</label>';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="tasa_mensual' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][tasa_mensual]"  class="cheque_tasa_mensual form-control input-lg "  type="text" placeholder="Mensual">  ';
+        output += '                         <small>% Mensual</small> <input id="tasa_mensual' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][tasa_mensual]"  class="cheque_tasa_mensual form-control input-lg "  type="text" placeholder="Mensual">  ';
         output += '                     </div> ';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="tasa_anual' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][tasa_anual]"  class="cheque_tasa_anual form-control input-lg "  type="text" placeholder="Anual">  ';
+        output += '                        <small>Anual</small> <input id="tasa_anual' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][tasa_anual]"  class="cheque_tasa_anual form-control input-lg "  type="text" placeholder="Anual" readonly>  ';
         output += '                     </div> ';
         output += '                 </div>';
         output += '                 <div class="row">';
         output += '                     <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Interes :</label>';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="interes' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][interes]"  class="cheque_interes form-control input-lg "  type="text" placeholder="Cliente $">  ';
+        output += '                         <small>Interes</small> <input id="interes' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][interes]"  class="cheque_interes form-control input-lg "  type="text" placeholder="Cliente $">  ';
         output += '                     </div> ';
         output += '                     <label for="emisor_cuit" class="col-lg-2 col-md-1 col-sm-12 control-label emisor ">Interes :</label>';
         output += '                     <div class="col-lg-1 col-md-2 col-sm-12">';
-        output += '                         <input id="comision_porcentaje' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][comision_porcentaje]"  class="cheque_comision_porcentaje form-control input-lg "  type="text" placeholder="%"> ';
+        output += '                         <small>%</small> <input id="comision_porcentaje' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][comision_porcentaje]"  class="cheque_comision_porcentaje form-control input-lg "  type="text" placeholder="%"> ';
         output += '                     </div> ';
         output += '                     <div class="col-lg-1 col-md-2 col-sm-12">';
-        output += '                         <input id="comision_importe' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][comision_importe]"  class="cheque_comision_importe form-control input-lg "  type="text" placeholder="$">  ';
+        output += '                         <small>$</small> <input id="comision_importe' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][comision_importe]"  class="cheque_comision_importe form-control input-lg "  type="text" placeholder="$">  ';
         output += '                     </div> ';
         output += '                 </div>';
         output += '                 <div class="row">';
         output += '                     <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Cobro Varios :</label>';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="impuesto' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][impuesto]"  class="cheque_impuesto form-control input-lg "  type="text" placeholder="Impuesto Cheque"> ';
+        output += '                         <small>Impuesto Cheque</small> <input id="impuesto' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][impuesto]"  class="cheque_impuesto form-control input-lg "  type="text" placeholder="Impuesto Cheque" readonly>  ';
         output += '                     </div> ';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="gasto' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][gasto]"  class="cheque_gasto form-control input-lg "  type="text" placeholder="Gastos $"> ';
+        output += '                         <small>Gasto</small><input id="gasto' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][gasto]"  class="cheque_gasto form-control input-lg "  type="text" placeholder="Gastos $" readonly> ';
         output += '                     </div>';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="iva' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][iva]"  class="cheque_iva form-control input-lg " autocomplete="off" type="text" placeholder="IVA(21%)"> ';
+        output += '                         <small>IVA </small> <input id="iva' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][iva]"  class="cheque_iva form-control input-lg " autocomplete="off" type="text" placeholder="IVA(21%)" readonly> ';
         output += '                     </div> ';
         output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
-        output += '                         <input id="sellado' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][sellado]"  class="cheque_sellado form-control input-lg " autocomplete="off" type="text" placeholder="Sellado">   ';
+        output += '                         <small>Sellado $</small><input id="sellado' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][sellado]"  class="cheque_sellado form-control input-lg " autocomplete="off" type="text" placeholder="Sellado" readonly>   ';
         output += '                     </div>';
-        output += '                 </div>';
+        output += '                     <div class="col-lg-2 col-md-2 col-sm-12">';
+        output += '                           <br><input type="checkbox" id="editar' + _nro_cheque + '" class="cheque_editar_varios" >  Editar   ';
+        output += '                     </div>';
+        output += '                 </div>  <br>';
         output += '                 <div class="row">';
         output += '                     <label for="emisor_cuit" class="col-lg-1 col-md-1 col-sm-12 control-label emisor ">Neto x Cheque :</label>';
         output += '                     <div class="col-lg-3 col-md-2 col-sm-12">';
@@ -478,6 +500,9 @@ var form_operacion = function() {
         $(this).closest('.op_valor_item').append(output);
         $(this).data('num', _nro_cheque + 1);
         $('.cheque_importe').maskMoney({ allowNegative: false, thousands: '', decimal: '.' });
+        $('.cheque_tasa_mensual').maskMoney({ allowNegative: false, thousands: '', decimal: '.' });
+        $('.cheque_iva,.cheque_sellado,.cheque_gasto').maskMoney({ allowNegative: false, thousands: '', decimal: '.' });
+
         $('.cheque_fecha').datepicker(_date_picker_data);
         set_valores(valores_gral);
         return false;
@@ -487,6 +512,7 @@ var form_operacion = function() {
     //DELETE CHEQUE
     $(".emisor_section").on('click', '.bt_delete_cheque', function() {
         $(this).closest(".cheques_section").remove();
+        $(".emisor_section").find('.cheque_neto').trigger('change');
         return false;
     });
 
@@ -501,8 +527,9 @@ var form_operacion = function() {
         var _cheque_tasa_anuall = (_div_parent.find(".cheque_tasa_anual").val() != '') ? parseFloat(_div_parent.find(".cheque_tasa_anual").val()) : 0;
         var _cheque_comision_porcentaje = (_div_parent.find(".cheque_tasa_anual").val() != '') ? parseFloat(_div_parent.find(".cheque_comision_porcentaje").val()) : 0;
         var _cheque_comision_importe = (_div_parent.find(".cheque_tasa_anual").val() != '') ? parseFloat(_div_parent.find(".cheque_comision_importe").val()) : 0;
+        console.log("CHECK GASTOS");
         var _cheque_gasto = (_div_parent.find(".cheque_gasto").val() != '') ? parseFloat(_div_parent.find(".cheque_gasto").val()) : 0;
-
+        console.log(_cheque_gasto);
         var _interes = _importe * (_cheque_tasa_anuall / 365) * (_dias / 100);
         _div_parent.find(".cheque_interes").val(_interes.toFixed(2));
 
@@ -512,11 +539,27 @@ var form_operacion = function() {
         var _impuesto_cheque = _importe * (parseFloat(1.2) / 100);
         _div_parent.find('.cheque_impuesto').val(_impuesto_cheque.toFixed(2));
 
-        var _iva = (parseFloat(_interes) + parseFloat(_comision_importe)) * (21 / 100);
-        _div_parent.find('.cheque_iva').val(_iva.toFixed(2));
+       
 
-        var _sellado = (_importe * (0.5 / 100)) + (_importe * (0.5 / 100) * (20 / 100)) + (_importe * (0.5 / 100) * (20 / 100));
-        _div_parent.find('.cheque_sellado').val(_sellado.toFixed(2));
+        var _sellado = 0;
+        var _iva = 0;
+        if (!_div_parent.find(".cheque_editar_varios").is(':checked')){
+
+            _iva = (parseFloat(_interes) + parseFloat(_comision_importe)) * (21 / 100);
+            _div_parent.find('.cheque_iva').val(_iva.toFixed(2));
+
+            _sellado = (_importe * (0.5 / 100)) + (_importe * (0.5 / 100) * (20 / 100)) + (_importe * (0.5 / 100) * (20 / 100));
+            _div_parent.find('.cheque_sellado').val(_sellado.toFixed(2));
+            
+            _cheque_gasto= _div_parent.find(".cheque_gasto").val();
+            _div_parent.find(".cheque_gasto").val()
+        }else{
+
+            _iva =_div_parent.find('.cheque_iva').val();            
+            _sellado =_div_parent.find('.cheque_sellado').val();
+            
+        }
+        
 
         var _compra = _importe - _interes - _impuesto_cheque - _cheque_gasto;
         var _neto_parcial = _compra - _comision_importe;
@@ -533,6 +576,24 @@ var form_operacion = function() {
     })
 
     $(".emisor_section").on('change', '.cheque_dia', function() {
+        var _div_parent = $(this).closest('.cheques_section');
+        /*if(_div_parent.find('.cheque_set_min_dias').is(':checked')){
+            alert("Setea dias");
+        }else{
+            alert("UNSetea dias");     
+            console.debug("===> MIN DAYS: %o",min_day);
+            _div_parent.find(".cheque_dia").trigger('change');
+        }*/
+
+        var _div_parent = $(this).closest('.cheques_section');
+        min_day= _div_parent.find(".min_days").val();
+
+        /*
+        var  min_day= _div_parent.find(".min_days").val();
+            console.debug("===> MIN DAYS: %o",min_day);
+            _div_parent.find(".cheque_dia").val(min_day);
+        */
+
         var today = new Date();
         if($(this).val()!=''){
             var days = $(this).val();
@@ -549,12 +610,47 @@ var form_operacion = function() {
         var _div_parent = $(this).closest('.cheques_section');
         _div_parent.find('.cheque_fecha').val(today.getDate() + '-' + mes + '-' + today.getFullYear());
         _div_parent.find('.cheque_importe').trigger('change');
+
     });
 
+    $(".emisor_section").on('change','.cheque_set_min_dias_no_funca',function(){
+        var _div_parent = $(this).closest('.cheques_section');
+        /*if($(this).is(':checked')){
+            
+        }else{
+            console.debug("===> MIN DAYS: %o",min_day);
+            _div_parent.find(".cheque_dia").trigger('change');
+        }*/
+
+         _div_parent.find(".cheque_dia").trigger('change');
+    });
+
+
     $(".emisor_section").on('change', '.cheque_tasa_mensual', function() {
-        console.debug("===> cheque_tasa_mensual: %o ",$(this).val());
+        var tasa = parseFloat($(this).val());
+        var anual = tasa*12;
+        $(this).closest('.cheques_section').find('.cheque_tasa_anual ').val(anual);
         $(this).closest('.cheques_section').find('.cheque_importe').trigger('change');  
     });
+
+
+    $(".emisor_section").on('click','.cheque_editar_varios',function(){
+        var _div_parent = $(this).closest('.cheques_section');
+        
+        if($(this).is(':checked')){
+            console.log("ENABLE edit");
+            _div_parent.find(".cheque_impuesto,.cheque_gasto,.cheque_iva,.cheque_sellado ").attr('readonly',false);
+        }else{
+            console.log("DISABLE edit");
+            _div_parent.find(".cheque_impuesto,.cheque_gasto,.cheque_iva,.cheque_sellado ").attr('readonly',true);            
+            
+        }
+    });
+
+    $(".emisor_section").on('change', '.cheque_gasto,.cheque_comision_porcentaje, .cheque_iva,.cheque_sellado', function() {
+        $(this).closest('.cheques_section').find('.cheque_importe').trigger('change');
+    });
+
 
 
     $(".emisor_section").on('change', '.cheque_neto', function() {
@@ -637,7 +733,7 @@ var form_operacion = function() {
         return false;
     });
 
-    $('.table_cheque').on('click', '.cheque_salida_fecha', function() {
+    $('.table_cheque').on('focus', '.cheque_salida_fecha', function() {
         $(this).datepicker({
             minDate: today,
             dateFormat: 'dd-mm-yy',
@@ -721,7 +817,7 @@ var form_operacion = function() {
         return false;
     });
 
-    $('.table_tranfer').on('click', '.transferencia_salida_fecha', function() {
+    $('.table_tranfer').on('focus', '.transferencia_salida_fecha', function() {
         $(this).datepicker({
             minDate: today,
             dateFormat: 'dd-mm-yy',
@@ -812,6 +908,8 @@ var form_operacion = function() {
     $('.cheque_salida_importe').maskMoney({ allowNegative: false, thousands: '', decimal: '.' });
     $('.transferencia_salida_import').maskMoney({ allowNegative: false, thousands: '', decimal: '.' });
     $('.cheque_importe').maskMoney({ allowNegative: false, thousands: '', decimal: '.' });
+    $('.cheque_tasa_mensual').maskMoney({ allowNegative: false, thousands: '', decimal: '.' });
+    $('.cheque_iva,.cheque_sellado,.cheque_gasto').maskMoney({ allowNegative: false, thousands: '', decimal: '.' });
 
 
     

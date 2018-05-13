@@ -5645,7 +5645,7 @@ hr.divider_hr {
 
 .cheques_section {
     background-color: #f8f8f8b7;
-    margin: 20px 0px;
+    margin: 10px 0px;
     padding-top: 10px;
 }
 
@@ -5669,7 +5669,7 @@ hr.divider_hr {
 }
 
 .cheques_section .cheque_dia {
-    width: 80px !important;
+    width: 60px !important;
 }
 
 .neto_final_div {

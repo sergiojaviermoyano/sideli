@@ -309,7 +309,7 @@ var form_operacion = function() {
         output += '                         <input id="cheque_nro_' + num_item + '" name="emisor[' + num_item + '][cheque][0][nro]"  class="cheque_nro form-control input-lg typeahead" data-provide="typeahead" type="text" placeholder="Nro"> ';
         output += '                     </div>';
         output += '                     <div class="col-lg-4 col-md-2 col-sm-12">';
-        output += '                         <input id="cheque_banco_' + num_item + '" name="emisor[' + num_item + '][cheque][0][banco]"  class="cheque_banco   form-control input-lg"  type="text" placeholder="Banco"> ';
+        output += '                         <input id="cheque_banco_' + num_item + '" name="emisor[' + num_item + '][cheque][0][banco]"  class="cheque_banco   form-control input-lg"  autocomplete="off" type="text" placeholder="Banco"> ';
         output += '                         <input id="cheque_banco_id_' + num_item + '" name="emisor[' + num_item + '][cheque][0][banco_id]" class="cheque_banco_id" type="hidden" > ';
         output += '                     </div>';
         output += '                     <div class="col-lg-3 col-md-2 col-sm-12">';
@@ -405,7 +405,7 @@ var form_operacion = function() {
         output += '                         <input id="cheque_nro' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][nro]"  class="qheque_nro form-control input-lg"  type="text" placeholder="Nro"> ';
         output += '                     </div>';
         output += '                     <div class="col-lg-4 col-md-2 col-sm-12">';
-        output += '                         <input id="cheque_banco' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][banco]"  class="cheque_banco form-control input-lg typeahead"  type="text" placeholder="Banco"> ';
+        output += '                         <input id="cheque_banco' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][banco]"  class="cheque_banco form-control input-lg typeahead" autocomplete="off" type="text" placeholder="Banco"> ';
         output += '                         <input id="cheque_banco_id' + _nro_cheque + '" name="emisor[' + _nro_emisor + '][cheque][' + _nro_cheque + '][banco_id]" class="cheque_banco_id"  type="hidden" >';
         output += '                     </div>';
         output += '                     <div class="col-lg-3 col-md-2 col-sm-12">';
@@ -524,6 +524,16 @@ var form_operacion = function() {
         $(this).closest('.cheques_section').find('.cheque_importe').trigger('change');
     });
 
+    $(".emisor_section").on('change', '.cheque_tasa_mensual', function() {
+        console.log("===> .cheque_tasa_mensual");
+        console.log($(this).val());
+        var tasa = parseFloat($(this).val());
+        console.debug("==> TASA AR", tasa);
+
+
+    });
+
+
     $(".emisor_section").on('change', '.cheque_neto', function() {
         var neto_total = 0;
         $.each($(".emisor_section").find('.cheque_neto'), function(index, item) {
@@ -585,7 +595,7 @@ var form_operacion = function() {
 
         var out_put = "";
         out_put += '<tr>';
-        out_put += '<td><input id="cheque_salida_banco' + num_items + '" name="cheque_salida[' + num_items + '][banco]"  class="cheque_salida_banco form-control input-lg typeahead" type="text" placeholder="Banco">';
+        out_put += '<td><input id="cheque_salida_banco' + num_items + '" name="cheque_salida[' + num_items + '][banco]"  class="cheque_salida_banco form-control input-lg typeahead" autocomplete="off" type="text" placeholder="Banco">';
         out_put += '<input id="cheque_salida_banco' + num_items + '" name="cheque_salida[' + num_items + '][banco_id]"  class="cheque_salida_banco_id" type="hidden"></td>';
         out_put += '<td><input id="cheque_salida_nro_' + num_items + '" name="cheque_salida[' + num_items + '][nro]"  class="cheque_salida_nro form-control input-lg " type="text" placeholder="Nro"></td>';
         out_put += '<td><input id="cheque_salida_importe_' + num_items + '" name="cheque_salida[' + num_items + '][importe]"  class="cheque_salida_importe form-control input-lg " type="text" placeholder="Importe"></td>';

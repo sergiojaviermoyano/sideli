@@ -419,7 +419,7 @@ class Operations extends CI_Model
 
 
 	private function existe_agente($cuit=''){
-		var_dump("==> CUIT: ".$cuit);
+		//var_dump("==> CUIT: ".$cuit);
 		$query=$this->db->get_where('agente',array('cuit'=>$cuit));
 		return ($query->num_rows()!=0);
 	}
