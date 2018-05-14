@@ -146,6 +146,7 @@ var form_operacion = function() {
             } while (i < feriados.length);
             fechaAcreditacion = jQuery.datepicker.formatDate('yy-mm-dd', newdate);
             newdate.setDate(newdate.getDate() + total_days);
+            
             _input_dia.val(total_days).trigger('change');
         }
     }
@@ -577,22 +578,12 @@ var form_operacion = function() {
 
     $(".emisor_section").on('change', '.cheque_dia', function() {
         var _div_parent = $(this).closest('.cheques_section');
-        /*if(_div_parent.find('.cheque_set_min_dias').is(':checked')){
+        var min_day= _div_parent.find(".min_days").val();
+        if(_div_parent.find('.cheque_set_min_dias').is(':checked') && min_day!==$(this).val()){
             alert("Setea dias");
-        }else{
-            alert("UNSetea dias");     
-            console.debug("===> MIN DAYS: %o",min_day);
-            _div_parent.find(".cheque_dia").trigger('change');
-        }*/
-
-        var _div_parent = $(this).closest('.cheques_section');
-        min_day= _div_parent.find(".min_days").val();
-
-        /*
-        var  min_day= _div_parent.find(".min_days").val();
-            console.debug("===> MIN DAYS: %o",min_day);
-            _div_parent.find(".cheque_dia").val(min_day);
-        */
+            console.log("SET NEW CANT DAY WITHOUT CHANGE DATE");
+            return false;
+        }
 
         var today = new Date();
         if($(this).val()!=''){
@@ -613,16 +604,19 @@ var form_operacion = function() {
 
     });
 
-    $(".emisor_section").on('change','.cheque_set_min_dias_no_funca',function(){
+    $(".emisor_section").on('change','.cheque_set_min_dias',function(){
         var _div_parent = $(this).closest('.cheques_section');
-        /*if($(this).is(':checked')){
-            
-        }else{
-            console.debug("===> MIN DAYS: %o",min_day);
-            _div_parent.find(".cheque_dia").trigger('change');
-        }*/
+        
+        if($(this).is(':checked')){
+            min_day= _div_parent.find(".min_days").val();
+            console.log("\n ==> cheque_set_min_dias enable"); 
+            _div_parent.find(".cheque_dia").val(min_day);
+        }else{           
+            console.log("\n ==> cheque_set_min_dias unenable");             
+           _div_parent.find(".cheque_dia").trigger('change');
+        }
 
-         _div_parent.find(".cheque_dia").trigger('change');
+        //_div_parent.find(".cheque_dia").trigger('change');
     });
 
 
