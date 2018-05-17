@@ -1306,12 +1306,14 @@ class Operations extends CI_Model
 				$this->db->join('operacion_detalle', 'operacion_detalle.cheque_id = cheques.id');;
 				$this->db->where(array('operacion_detalle.operacion_id' => $result['operation']['id'], 'cheques.tipo' => 2));
 				$query_cheques = $this->db->get();
-				//echo $this->db->last_query();
+
+				//echo $this->db->last_query();				
 				//die();
+
 				$html_cheques_listado='';
 				$html_cheques_listado_pie=array();
 
-				if ($query_cheques->num_rows() != 0 && $query_cheques->num_rows() > 1)
+				if ( $query_cheques->num_rows() > 0 )
 				{	
 					//$html_cheques_listado_pie=($query_cheques->num_rows()==0)?'CON CHEQUE ':'CON CHEQUES ';
 					$html_cheques_listado.= '<tr style="text-align: center"><th>Banco</th><th>Número</th><th>Importe</th><th>Fecha</th></tr>';	
@@ -1329,6 +1331,7 @@ class Operations extends CI_Model
 					}
 					
 				}
+				
 				//Obtiene Detalle Transferencias:
 				
 				$this->db->select('transferencias.*');
@@ -1380,7 +1383,9 @@ class Operations extends CI_Model
 				$html.= '</thead>';
 				
 				$html.= '<tbody>';
+
 				foreach($data['detalle_operacion'] as $detalle){
+					
 					if($detalle['tipo']==1){
 						$html.='<tr style="text-align: center; font-size:15px; padding:10px !important;">';
 						$html.= '<td>'.$detalle['banco_nombre'].'</td>'; 
@@ -1391,7 +1396,8 @@ class Operations extends CI_Model
 						$html.= '<td>'.$detalle['nro_dias'].'</td>'; 
 						$html.= '<td>'.sprintf('%0.2f', $detalle['importe']).'</td>'; 
 						$html.= '</tr>';
-					}					
+					}				
+					
 				}
 				$html.= '</tbody>'; 
 
@@ -1433,6 +1439,7 @@ class Operations extends CI_Model
 				//$html.= 'ESTA OPERACION SE CANCELA CON CHEQUE '.$data['banco']['razon_social'].' N° '.$result['operation']['nro_cheque'].'</td></tr>';
 				$html.= 'ESTA OPERACION SE CANCELA  ';
 
+
 				if(!empty($html_cheques_listado_pie)){
 					$html.= "CON CHEQUE/S ".implode(',',$html_cheques_listado_pie);
 				}
@@ -1462,8 +1469,6 @@ class Operations extends CI_Model
 				
 				$html.= '</table>';
 				
-				//echo $html;
-				//die($html);
 				//se incluye la libreria de dompdf
 				require_once("assets/plugin/HTMLtoPDF/dompdf/dompdf_config.inc.php");
 				//se crea una nueva instancia al DOMPDF

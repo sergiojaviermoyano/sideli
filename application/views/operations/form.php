@@ -259,7 +259,7 @@
     <div  class="tab-pane" id="step3">
         <div class="col-lg-12">
             <h2>Liquidación de Compra de Valores:</h2>
-            <h3>Soluciones y Finansas Empresarias S.A</h3>
+            <h3>Soluciones y Finanzas Empresarias S.A</h3>
             <h4>Cliente:       &nbsp;<span class="cliente_nombre"> </span> </h4>
             <h4>Domicilio:     &nbsp;<span class="cliente_domicilio"></span> </h4>
             <h4>Nro de Cuit:   &nbsp;<span class="cliente_cuit"></span> </h4>
