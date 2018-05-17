@@ -35,7 +35,7 @@
                                     <td><?php echo $item['id']?> </td>
                                     <td><?php echo ($item['tomador']!='')? strtoupper($item['tomador']):' '?></td>
                                     
-                                    <td class="text-center"><?php echo date("d-m-Y", strtotime($item['fecha_venc'])); ?></td>
+                                    <td class="text-center"><?php echo date("d-m-Y", strtotime($item['created'])); ?></td>
                                     <td class="text-right"><?php echo "$ ".number_format($item['importe'], 2, ',', '.'); ?></td>
                                     <td style="text-align: right"><?php echo "$ ".number_format($item['neto'], 2, ',', '.'); ?></td>
                                     <!-- <td><input type="checkbox" value="1" id="inversorEstado" name="inversorEstado" <?php echo ((int)$item['estado']==1)?'checked':''?> ></td> -->
