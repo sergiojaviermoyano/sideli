@@ -753,12 +753,12 @@ class Operations extends CI_Model
 				$html.= '<table width="100%" style="border: 1px solid #000;">';
 				$html.= '<thead>';
 				$html.= '<tr style="text-align: center;">';
-				$html.= '<th style="text-align: center;">Cheque Nº</th><th style="text-align: center;">Importe</th><th style="text-align: center;">Fecha</th>';
+				$html.= '<th style="text-align: center;">Banco</th><th style="text-align: center;">Cheque Nº</th><th style="text-align: center;">Importe</th><th style="text-align: center;">Fecha</th>';
 				$html.= '</tr>';
 				$html.= '</thead>';
 				
 				//Get Cheques 
-				$this->db->select('cheques.*');
+				$this->db->select('cheques.*, (SELECT banco.razon_social FROM banco where banco.id = `cheques`.bancoId  ) as banco_nombre');
 				$this->db->from('cheques');
 				$this->db->join('operacion_detalle', 'operacion_detalle.cheque_id = cheques.id');;
 				$this->db->where(array('operacion_detalle.operacion_id' => $result['operation']['id'], 'cheques.tipo' => 2));
@@ -767,6 +767,7 @@ class Operations extends CI_Model
 				foreach($query->result() as $che)
 				{
 					$html.= '<tr>';
+					$html.= 	'<td style="text-align: center">'.$che->banco_nombre.'</td>';
 					$html.= 	'<td style="text-align: center">'.$che->numero.'</td>';
 					$html.= 	'<td style="text-align: center"> $'.number_format($che->importe, 2, ',', '.').'</td>';
 					$html.= 	'<td style="text-align: center">'.date("d-m-Y", strtotime($che->fecha)).'</td>';
@@ -805,7 +806,7 @@ class Operations extends CI_Model
 				$html.= '<tr><td><br></td></tr>';
 				//Segunda
 				$html.= '<tr><td style="text-indent: 40px; text-align:justify;"><strong>SEGUNDA:</strong>';
-				$html.= ' en el mismo acto, el MUTUARIO entrega al MUTUANTE chueques de pago diferido cuyo ';
+				$html.= ' en el mismo acto, el MUTUARIO entrega al MUTUANTE cheque/s de pago diferido cuyo ';
 				$html.= 'monto total, asciende a la suma de: pesos '.$this->convertNumber($result['operation']['importe']).' - ( $ '.number_format($result['operation']['importe'], 2, ',', '.').' ) ';
 				$html.= 'de acuerdo al detalle que figura en la planilla que se expone a continuación:';
 				$html.= '</td></tr>';
