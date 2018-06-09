@@ -72,12 +72,14 @@ class Valuesgral extends CI_Model
 			$tasa = $data['tasa'];
 			$gast = $data['gast'];
 			$comi = $data['comi'];
+			$days = $data['days'];
 
 			$data = array(
 					   'tasa'		=> $tasa,
 					   'impuestos'	=> $impu,
 					   'gastos'		=> $gast,
-					   'comision'	=> $comi
+					   'comision'	=> $comi,
+					   'min_days'	=> $days,
 					);
 
 			switch($act){

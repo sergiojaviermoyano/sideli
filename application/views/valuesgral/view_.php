@@ -42,5 +42,13 @@
       <input type="text" class="form-control" placeholder="" id="comision" value="<?php echo $data['values']['comision'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
     </div>
 </div><br>
+<div class="row">
+  <div class="col-xs-4">
+      <label style="margin-top: 7px;">Cantidad de Días Mínimo <strong style="color: #dd4b39">*</strong>: </label>
+    </div>
+  <div class="col-xs-5">
+      <input type="text" class="form-control" placeholder="" id="min_days" value="<?php echo $data['values']['min_days'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
+    </div>
+</div><br>
 
 </div>

@@ -10,11 +10,12 @@
           <table id="values" class="table table-bordered table-hover">
             <thead>
               <tr>
-                <th>Tasa</th>
-                <th>Impuesto</th>
-                <th>Gastos</th>
-                <th>Comisión</th>
-                <th width="20%">Acciones</th>
+                <th class="text-center" >Tasa</th>
+                <th class="text-center">Impuesto</th>
+                <th class="text-center">Gastos</th>
+                <th class="text-center">Comisión</th>
+                <th class="text-center">Cant Días Mínimo</th>
+                <th class="text-center" width="15%">Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -28,14 +29,14 @@
                     echo '<td style="text-align: right">'.$v['impuestos'].'</td>';
                     echo '<td style="text-align: right">'.$v['gastos'].'</td>';
                     echo '<td style="text-align: right">'.$v['comision'].'</td>';
-                    echo '<td>';
+                    echo '<td style="text-align: right">'.$v['min_days'].'</td>';
+                    echo '<td class="text-center">';
                     if (strpos($permission,'Edit') !== false) {
-                        echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadValue('.$v['id'].',\'Edit\')"></i>';
+                      echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadValue('.$v['id'].',\'Edit\')"></i>';
                     }
                     if (strpos($permission,'View') !== false) {
-                        echo '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadValue('.$v['id'].',\'View\')"></i> ';
-                    }
-                        
+                      echo '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadValue('.$v['id'].',\'View\')"></i> ';
+                    }                        
                     echo '</td>';
   	                echo '</tr>';
       		        }
@@ -134,6 +135,11 @@
       hayError = true;
     }
 
+    if($('#min_days').val() == '')
+    {
+      hayError = true;
+    }
+
     if(hayError == true){
     	$('#error').fadeIn('slow');
     	return;
@@ -149,7 +155,8 @@
                     tasa: $('#tasa').val(),
                     impu: $('#impuestos').val(),
                     gast: $('#gastos').val(),
-                    comi: $('#comision').val()
+                    comi: $('#comision').val(),
+                    days: $('#min_days').val()
                   },
     		url: 'index.php/valuegral/setValue', 
     		success: function(result){
