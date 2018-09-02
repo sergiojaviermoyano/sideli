@@ -50,6 +50,7 @@ class Investors extends CI_Model
 				$temp['razon_social'] = '';
 				$temp['cuit'] = '';
 				$temp['domicilio'] = '';
+				$temp['factura_nro'] = 0;				
 				$temp['estado'] = 0;
 				$data['inversor'] = $temp;
 			}
@@ -79,6 +80,7 @@ class Investors extends CI_Model
 				'razon_social'=>$data['razon_social'],				
 				'cuit'=>str_replace('-','',$data['cuit']),
 				'domicilio'=>$data['domicilio'],
+				'factura_nro'=>$data['factura_nro'],
 				'estado'=>$data['estado'],
 			);
 			
@@ -108,6 +110,12 @@ class Investors extends CI_Model
 		}
 
 		return true;
+	}
+
+	public function getNextFacturaNro($id){
+		$query=$this->db->query('select (max(factura_nro)+1) as next_factura_id from operacion where inversor_id='.$id.' order by factura_nro desc ;');
+		//var_dump($query->row_array());
+		return $query->row_array();
 	}
     
 }

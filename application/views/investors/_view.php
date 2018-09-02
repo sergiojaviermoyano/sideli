@@ -36,6 +36,13 @@
 </div>
 
 <div class="form-group">
+  <label class="col-sm-3">Numeración Factura : </label>
+  <div class="col-sm-9">
+    <input type="text" class="form-control" id="InversorFacturaNro" name="InversorFacturaNro"  value="<?php echo $data['inversor']['factura_nro'] ?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>/>
+  </div>
+</div>
+
+<div class="form-group">
   <label class="col-sm-3">Habilitado : </label>
   <div class="col-sm-9">
     <input type="checkbox" class="" id="InversorEstado" name="InversorEstado"  value="1" <?php echo ((int)$data['inversor']['estado']==1)?'checked':''; ?> <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?> />

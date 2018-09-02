@@ -167,6 +167,7 @@
         cuit: $('#InversorCuit').val(),
         razon_social: $('#InversorRazonSocial').val(),
         domicilio: $('#InversorDomicilio').val(),
+        factura_nro: $('#InversorFacturaNro').val(),
         estado: $('#InversorEstado').val(),
       },
       url: 'index.php/investor/setInvestor', 

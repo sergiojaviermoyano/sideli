@@ -55,7 +55,7 @@
                                         if (strpos($permission,'View') !== false) {
                                             //echo '<i class="fa fa-fw fa-dollar" style="color: #00a65a ; cursor: pointer; margin-left: 15px;" onclick="PrintLiq('.$item['id'].',\'View\')"></i> ';
                                             if($item['factura_tipo']=='' && $item['factura_nro']==''){
-                                                echo '<i class="fa fa-fw fa-dollar" style="color: #00a65a ; cursor: pointer; margin-left: 15px;" onclick="addFactura('.$item['id'].')"></i> ';
+                                                echo '<i class="fa fa-fw fa-dollar" style="color: #00a65a ; cursor: pointer; margin-left: 15px;" onclick="addFactura('.$item['id'].','.$item['inversor_id'].')"  data-inid="'.$item['inversor_id'].'"></i> ';
                                             }else{
                                                 echo '<i class="fa fa-fw fa-dollar" style="color: #00a65a ; cursor: pointer; margin-left: 15px;" onclick="PrintLiq('.$item['id'].',\'View\')"></i> ';
                                             }
@@ -105,6 +105,7 @@
         <div class="modal-body">
        
             <input type="hidden" id="o_id" >
+            <input type="hidden" id="inversor_id" >
             <div class="form-group">
                 
                 <label for="recipient-name" class="control-label">Tipo de Factura:</label>                
@@ -240,11 +241,28 @@
         });
   }
 
-  function addFactura(id){
+    function addFactura(id,inversor_id){     
+        $.ajax({
+            type: 'GET',
+            url: '<?php echo base_url(); ?>index.php/investor/getInvoiceNro/'+inversor_id+'/'+"<?php echo $permission; ?>",
+            success: function(result){                
+                $("#modalFactura").find("#factura_nro").val(result.next_factura_id);
+                $("#modalFactura").find("#inversor_id").val(inversor_id);
+                $("#modalFactura").find("#o_id").val(id);
+                $("#modalFactura").modal('show');
+                console.debug("OK=>%o",result);
+            },
+            error: function(result){
+                console.debug(result);
 
-    $("#modalFactura").find("#o_id").val(id);
-    $("#modalFactura").modal('show');
-  }
+                    WaitingClose();
+                    ProcesarError(result.responseText, 'modalOper');
+                    //$("#modalFactura").modal('hide');
+            },
+            dataType: 'json'
+        });
+        $("#modalFactura").modal('show');
+    }
 
   function refresh_view(){
         WaitingOpen();
@@ -268,6 +286,7 @@
     }
   $("#add_factura_btn").click(function(){
         var id=$("#modalFactura").find("#o_id").val();
+        var inversor_id=$("#modalFactura").find("#inversor_id").val();
         var factur_tipo= $("#modalFactura input[type=radio]:checked").val();
         if($("#factura_nro").val()==''){
             alert("Debe Ingresar un nro de Factura");
@@ -279,7 +298,7 @@
         WaitingOpen("Cargando Factura");
         $.ajax({
             type: 'POST',
-            data: {id: id, tipo : factur_tipo,nro : factura_nro},
+            data: {id: id, inversor_id:inversor_id,tipo : factur_tipo,nro : factura_nro},
             url: 'index.php/operation/setFactura',
             success: function(result){
                 WaitingClose();

@@ -1500,6 +1500,11 @@ class Operations extends CI_Model
 		$result=$this->db->update(
 			'operacion',array('factura_tipo'=>$data['tipo'],'factura_nro'=>$data['nro']),array('id'=>$data['id'])
 		);
+
+		/*$result=$this->db->update(
+			'operacion',array('factura_tipo'=>$data['tipo'],'factura_nro'=>$data['nro']),array('id'=>$data['id'])
+		);*/
+
 		if($result){
 			return true;
 		}else{

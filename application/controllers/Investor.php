@@ -39,7 +39,9 @@ class investor extends CI_Controller {
 		}
 	}
 
-	
+	function getInvoiceNro($id){		
+		echo json_encode($this->Investors->getNextFacturaNro($id));
+	}
 
 
 }
