@@ -37,6 +37,8 @@ class operation extends CI_Controller {
 
 
 	public function addOperation(){
+		
+		
 		if($result=$this->Operations->add($this->input->post())){
 			
 			echo json_encode($this->load->view('operations/list', array('result'=>true), true));

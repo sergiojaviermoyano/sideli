@@ -39,7 +39,8 @@
                                     <td class="text-right"><?php echo "$ ".number_format($item['importe'], 2, ',', '.'); ?></td>
                                     <td style="text-align: right"><?php echo "$ ".number_format($item['neto'], 2, ',', '.'); ?></td>
                                     <!-- <td><input type="checkbox" value="1" id="inversorEstado" name="inversorEstado" <?php echo ((int)$item['estado']==1)?'checked':''?> ></td> -->
-                                    <td style="text-align: center">
+                                    <td class="text-center">
+                                        <div class="btn-gruop">
                                         <?php 
                                         
                                         /*
@@ -47,26 +48,32 @@
                                             echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadOperation('.$item['id'].',\'Edit\')"></i>';
                                         }*/
                                         if (strpos($permission,'View') !== false) {
-                                            echo '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadOperation('.$item['id'].',\'View\')"></i>';
-                                        }
-                                        if (strpos($permission,'View') !== false) {
-                                            echo '<i class="fa fa-fw fa-file-text-o" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="Print('.$item['id'].',\'View\')"></i> ';
-                                        }
-                                        if (strpos($permission,'View') !== false) {
+
+                                            echo '<button class="btn bg-aqua btn-xs" title="Ver Detalle" alt="Ver Detalle" style="margin-right: 3px;"> <i class="fa fa-fw fa-search" style="cursor: pointer; " onclick="LoadOperation('.$item['id'].',\'View\')"></i> </button>';
+                                            //echo '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadOperation('.$item['id'].',\'View\')"></i>';
+                                        
+                                            echo '<button class="btn bg-orange btn-xs" title="Imprimir Contrato" alt="Imprimir Contrato">  <i class="fa fa-fw fa-file-text-o" style=" cursor: pointer; " onclick="Print('.$item['id'].',\'View\')"></i></button> ';
+                                            //echo '<i class="fa fa-fw fa-file-text-o" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="Print('.$item['id'].',\'View\')"></i> ';
+                                       
                                             //echo '<i class="fa fa-fw fa-dollar" style="color: #00a65a ; cursor: pointer; margin-left: 15px;" onclick="PrintLiq('.$item['id'].',\'View\')"></i> ';
                                             if($item['factura_tipo']=='' && $item['factura_nro']==''){
-                                                echo '<i class="fa fa-fw fa-dollar" style="color: #00a65a ; cursor: pointer; margin-left: 15px;" onclick="addFactura('.$item['id'].','.$item['inversor_id'].')"  data-inid="'.$item['inversor_id'].'"></i> ';
+                                                echo '<button class="btn bg-olive btn-xs" title=" Cargar Nro de Factura" alt="Cargar Nro de Factura"> <i class="fa fa-fw fa-dollar" style="color: #00a65a ; cursor: pointer; margin-left: 15px;" onclick="addFactura('.$item['id'].','.$item['inversor_id'].')"  data-inid="'.$item['inversor_id'].'"></i> </button> ';
                                             }else{
-                                                echo '<i class="fa fa-fw fa-dollar" style="color: #00a65a ; cursor: pointer; margin-left: 15px;" onclick="PrintLiq('.$item['id'].',\'View\')"></i> ';
+                                                echo '<button class="btn bg-olive btn-xs" title="Imprimir Liquidacíon" alt="Imprimir Liquidacíon"> <i class="fa fa-fw fa-dollar" style="cursor: pointer; " onclick="PrintLiq('.$item['id'].',\'View\')"></i> </button> ';
                                             }
+                                        }
+
+                                        if (strpos($permission,'Del') !== false) {
+                                            echo '<button class="btn bg-maroon btn-xs" title="Eliminar Operacíon" alt="Eliminar Operacíon"> <i class="fa fa-fw fa-trash-o" style="cursor: pointer;;" onclick="Delete('.$item['id'].',\'Del\')"></i> </button>';
                                         }
                                         ?>
                                         <input type="hidden" id="factura_<?php echo $item['id']?>" data-tipo="<?echo $item['factura_tipo']?>" data-nro="<?echo $item['factura_nro']?>">
+                                    </div>
                                     </td>
                                 </tr>
                                 <?php endforeach;?>
                             </tbody>
-                        </tabl>
+                        </table>
                     </div> 
             </div>
         </div>
@@ -141,6 +148,27 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+
+<div class="modal fade" id="modalDeleteOp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog  modal-lg modal-dialog_main op_modal-dialog" role="document" style="">
+    <div class="modal-content op_modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"><span id="modalAction"> </span> Operación</h4> 
+      </div>
+      <div class="modal-body " id="modalBodyDelete">
+          <!-- CARGA FORMULARIO OPERACIONES -->
+          
+      </div>
+      <div class="modal-footer">      
+        <button type="button" class="btn btn-default btn-flat margin " data-dismiss="modal" style="margin-bottom:0px;">Cancelar</button>
+        <button type="button" class="btn bg-navy btn-flat margin hidden" id="btnBack1" data-step="1">Volver</button>
+        <button type="button" class="btn bg-navy btn-flat margin" id="btnNext1"  data-step="2">Siguiente</button>
+        <button type="button" class="btn btn-primary hidden" id="btnSave" >Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
     $(function () {
         $('#inversores').DataTable({
@@ -341,6 +369,10 @@
             },
             dataType: 'json'
         });
+    }
+
+    function DeleteOp(id){
+
     }
     
 

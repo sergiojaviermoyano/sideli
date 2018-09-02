@@ -7,8 +7,37 @@ class Operations extends CI_Model
 	{
 		parent::__construct();
 		//$this->add_column();
+		$this->create_log_table();
 	}
-
+	public function create_log_table(){
+		$this->load->dbforge();    
+		$this->dbforge->add_field('id');
+		$this->dbforge->add_field(array(
+            'user_id' => array(
+                'type' => 'INT',
+                'constraint' => 11,
+                'DEFAULT' =>0
+            ),            
+            'operacion_id' => array(  /// Monto SOlicitado
+				'type' => 'INT',
+                'constraint' => 11,
+                'DEFAULT' =>0
+            ),
+            'comment' => array( //Nro de Cuotas a pagar
+				'type' => 'TEXT',
+                'DEFAULT' =>NULL
+            ),
+            'status' => array(
+                'type' => 'INT',
+                'constraint' => '1',
+                'DEFAULT' =>0
+            ),
+            'date_added' => array(
+				'type' => 'DATETIME',
+            ),
+        ));        
+        $this->dbforge->create_table('operacion_log',true);
+	}
 	function add_column(){
 		$sql="SELECT * FROM `operacion` LIMIT 1" ;
 		$query=$this->db->query($sql);
@@ -66,6 +95,8 @@ class Operations extends CI_Model
 	}
 
 	function getOperation($data){
+
+		
 		if($data == null)
 		{
 			return false;
@@ -76,8 +107,9 @@ class Operations extends CI_Model
 			$id = $data['id'];
 			$data = array();
 			$query= $this->db->get_where('operacion',array('id'=>$id));
-			if ($query->num_rows() != 0)
-			{	
+			if ($query->num_rows() != 0){	
+
+				$this->addlog($id,'Abre Operacíon');
 				$temp=$query->row_array();	
 				
 				$data['operation'] = $temp;
@@ -237,7 +269,7 @@ class Operations extends CI_Model
 			$this->db->set('updated', 'NOW()', FALSE);
 			$result= $this->db->insert('agente', $agente_tomador);
 			$tomador_id = $this->db->insert_id();
-			$this->db->trans_complete();
+			
 		}else{
 			$tomador_id = $data['tomador']['id'];
 		}
@@ -280,6 +312,7 @@ class Operations extends CI_Model
 				);
 				$this->db->insert('cheques',$cheque_params);
 				$cheque_id=$this->db->insert_id();
+				
 
 				$operacion_detalle=array(
 					'operacion_id'=>$operacion_id,
@@ -302,16 +335,17 @@ class Operations extends CI_Model
 					'sellado'=>floatval($cheque['sellado']),
 					'neto'=>floatval($cheque['neto']),
 				);
-
-				$this->db->insert('operacion_detalle',$operacion_detalle);
-				$operacion_detalle_id=$this->db->insert_id();	
 				
+				$this->db->insert('operacion_detalle',$operacion_detalle);
+
+				$operacion_detalle_id=$this->db->insert_id();					
 				$operation_totals[]=$operacion_detalle;
 			}
 			
 		}
 
-
+		
+		
 		
 		$operation_params=array(
 			'importe'=>0,	
@@ -327,10 +361,11 @@ class Operations extends CI_Model
 			'sellado'=>0,
 			'neto'=>0,
 		);
+
 		foreach($operation_totals  as $details){
 			
 			$operation_params['importe']+=$details['importe'];
-			$operation_params['tasa_mensual']+=0;
+			$operation_params['tasa_mensual']+=0;//$details['tasa_mensual'];
 			$operation_params['interes']+=$details['interes'];
 			$operation_params['impuesto_cheque']+=$details['impuesto_cheque'];
 			$operation_params['gastos']+=$details['gastos'];
@@ -1511,6 +1546,27 @@ class Operations extends CI_Model
 			return false;
 		}
 		
+	}
+
+	public function addlog($operacion_id=0,$comment='',$status=0){
+
+		if(isset($this->session->userdata['user_data'][0]['usrId'])){
+			var_dump($this->session->userdata['user_data'][0]['usrId']);
+			$data=array(
+				'user_id'=>$this->session->userdata['user_data'][0]['usrId'],
+				'operacion_id'=>$operacion_id,
+				'comment'=>$comment,
+				'status'=>1,
+				'date_added'=>date('Y-m-d H:i:s'),
+				
+			);
+
+			var_dump($data);
+			return $this->db->insert('operacion_log',$data);
+		}
+		die();/*$data=array(
+
+		);*/
 	}
 }
 	
