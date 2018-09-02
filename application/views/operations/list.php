@@ -57,14 +57,14 @@
                                        
                                             //echo '<i class="fa fa-fw fa-dollar" style="color: #00a65a ; cursor: pointer; margin-left: 15px;" onclick="PrintLiq('.$item['id'].',\'View\')"></i> ';
                                             if($item['factura_tipo']=='' && $item['factura_nro']==''){
-                                                echo '<button class="btn bg-olive btn-xs" title=" Cargar Nro de Factura" alt="Cargar Nro de Factura"> <i class="fa fa-fw fa-dollar" style="color: #00a65a ; cursor: pointer; margin-left: 15px;" onclick="addFactura('.$item['id'].','.$item['inversor_id'].')"  data-inid="'.$item['inversor_id'].'"></i> </button> ';
+                                                echo '<button class="btn bg-olive btn-xs" title=" Cargar Nro de Factura" alt="Cargar Nro de Factura"> <i class="fa fa-fw fa-dollar" style="cursor: pointer;" onclick="addFactura('.$item['id'].','.$item['inversor_id'].')"  data-inid="'.$item['inversor_id'].'"></i> </button> ';
                                             }else{
                                                 echo '<button class="btn bg-olive btn-xs" title="Imprimir Liquidacíon" alt="Imprimir Liquidacíon"> <i class="fa fa-fw fa-dollar" style="cursor: pointer; " onclick="PrintLiq('.$item['id'].',\'View\')"></i> </button> ';
                                             }
                                         }
 
                                         if (strpos($permission,'Del') !== false) {
-                                            echo '<button class="btn bg-maroon btn-xs" title="Eliminar Operacíon" alt="Eliminar Operacíon"> <i class="fa fa-fw fa-trash-o" style="cursor: pointer;;" onclick="Delete('.$item['id'].',\'Del\')"></i> </button>';
+                                            echo '<button class="btn bg-maroon btn-xs" title="Eliminar Operacíon" alt="Eliminar Operacíon"> <i class="fa fa-fw fa-trash-o" style="cursor: pointer;;" onclick="DeleteOp('.$item['id'].')"></i> </button>';
                                         }
                                         ?>
                                         <input type="hidden" id="factura_<?php echo $item['id']?>" data-tipo="<?echo $item['factura_tipo']?>" data-nro="<?echo $item['factura_nro']?>">
@@ -150,21 +150,37 @@
 
 
 <div class="modal fade" id="modalDeleteOp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog  modal-lg modal-dialog_main op_modal-dialog" role="document" style="">
+  <div class="modal-dialog  modal-sm modal-dialog_main op_modal-dialog" role="document" style="">
     <div class="modal-content op_modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel"><span id="modalAction"> </span> Operación</h4> 
+        <h4 class="modal-title" id="myModalLabel"><span id="modalAction"> </span> Borrar Operacíon</h4> 
       </div>
       <div class="modal-body " id="modalBodyDelete">
-          <!-- CARGA FORMULARIO OPERACIONES -->
-          
+        <div class="row">
+            <div class="col-md-12">
+           
+                <div class="form-group">
+                    <input type="hidden" id="operacion_id" >
+                    <label>Motivo por el que desea Eliminar Operacíon? :</label>
+                    <label class="radio-inline">
+                        <input type="radio" id="OperationInversor1" name="motivo" value="Error de Carga de Datos" >Error de Carga de Datos
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" id="OperationInversor1" name="motivo" value="Error de Carga de Datos" >Cliente No Deséa continuar con la Operacíon
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Descripcíon: </label>
+                    <textarea class="form-control" name="comentario" id="comentario" cols="20" rows="5"></textarea>
+                </div>
+            </div>
+        </div>
+
       </div>
       <div class="modal-footer">      
         <button type="button" class="btn btn-default btn-flat margin " data-dismiss="modal" style="margin-bottom:0px;">Cancelar</button>
-        <button type="button" class="btn bg-navy btn-flat margin hidden" id="btnBack1" data-step="1">Volver</button>
-        <button type="button" class="btn bg-navy btn-flat margin" id="btnNext1"  data-step="2">Siguiente</button>
-        <button type="button" class="btn btn-primary hidden" id="btnSave" >Guardar</button>
+        <button type="button" class="btn btn-primary" id="submit_delete" >Guardar</button>
       </div>
     </div>
   </div>
@@ -373,7 +389,55 @@
 
     function DeleteOp(id){
 
+        console.log(id);
+        $("#modalDeleteOp").find("#modalBodyDelete #operacion_id").val(id);
+        $("#modalDeleteOp").modal('show');        
     }
+
+    $(document).on('click','#submit_delete',function(){
+        var operacion_id=$("#modalBodyDelete").find('#operacion_id').val();
+        var radios=$("#modalBodyDelete").find('input:radio');
+        var comentario="sdsad";//$("#modalBodyDelete").find('textarea');
+        console.debug("===> operacion_id: %o",operacion_id);
+        console.debug("===> radio: %o",radios.length);
+        var motivo=false;
+        $.each(radios,function(i,item){
+            if($(item).is(':checked')){
+                motivo=$(item).val();
+            }
+        });
+
+        if(!motivo){
+            alert("DEBE SELECCIONAR UN MOTIVO");
+            return false;
+        }
+
+        var data_ajax = {
+            'dataType': 'json',
+            'method': 'POST',
+            data:{id:operacion_id,razon:motivo, comment:comentario},
+            'url': 'index.php/operation/deleteOperation/'+"<?php echo $permission; ?>",
+            success: function(response) {
+                console.debug("===> response:%o", response);
+                if (response.result) {
+                    $("#modalDeleteOp  input").val(null);
+                    $("#modalDeleteOp").modal('hide');
+                    location.reload();
+
+                    return false;
+                }
+                return false;
+
+            },
+            error: function(error) {
+                console.debug("===> ERROR: %o", error);
+            }
+        };
+        console.debug("===> data_ajax: %o", data_ajax);
+        $.ajax(data_ajax);
+  
+        return false;
+    });
     
 
 

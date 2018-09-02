@@ -14,7 +14,7 @@ class operation extends CI_Controller {
 	public function index($permission)
 	{
 		
-		//var_dump($permission);
+		
 		$data['list'] = $this->Operations->List_all(false,true);
 		
 		$data['permission'] = $permission;
@@ -47,6 +47,14 @@ class operation extends CI_Controller {
 		}
 		
 
+	}
+
+	public function deleteOperation(){
+		if($result=$this->Operations->delete($this->input->post())){
+			echo json_encode(array('result'=>true));
+		}else{
+			echo json_encode(array('result'=>false));
+		}
 	}
 
 	public function setFactura(){

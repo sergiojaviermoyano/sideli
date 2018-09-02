@@ -64,6 +64,8 @@ class Operations extends CI_Model
 		if($estado){
 			$this->db->where("estado",$estado);
 		}
+
+		$this->db->where("estado!=",2);
 		/*if($padres){
 			$this->db->where("operacion_padre=",0);
 		}*/
@@ -285,7 +287,7 @@ class Operations extends CI_Model
 
 		$operacion_result= $this->db->insert('operacion', $operation_params);
 		$operacion_id = $this->db->insert_id();
-
+		$this->addlog($operacion_id,'Crea Operacion');
 		$operation_totals=array();
 		foreach($data['emisor'] as $key => $emisor){
 			
@@ -313,7 +315,7 @@ class Operations extends CI_Model
 				$this->db->insert('cheques',$cheque_params);
 				$cheque_id=$this->db->insert_id();
 				
-
+				$this->addlog($operacion_id,'Operacion: '.$operacion_id.' Compra Cheque:'.$cheque['nro'].' del Banco: '.$cheque['banco_id'].' ');
 				$operacion_detalle=array(
 					'operacion_id'=>$operacion_id,
 					'cheque_id'=>$cheque_id,
@@ -337,8 +339,10 @@ class Operations extends CI_Model
 				);
 				
 				$this->db->insert('operacion_detalle',$operacion_detalle);
+				
+				$operacion_detalle_id=$this->db->insert_id();	
+				$this->addlog($operacion_id,'Operacion: '.$operacion_id.' Con detalle de Operacíon:'.$operacion_detalle_id.' del Datos: '.serialize($operacion_detalle).' ');
 
-				$operacion_detalle_id=$this->db->insert_id();					
 				$operation_totals[]=$operacion_detalle;
 			}
 			
@@ -382,6 +386,7 @@ class Operations extends CI_Model
 
 		$this->db->where('id', $operacion_id);
 		$this->db->update('operacion', $operation_params); 
+		$this->addlog($operacion_id,'Operacion: '.$operacion_id.'Actualizada  Datos: '.serialize($operation_params).' ');
 
 
 		if(isset($data['cheque_salida'])){	
@@ -413,6 +418,8 @@ class Operations extends CI_Model
 				);
 				$this->db->insert('operacion_detalle',$operacion_detalle);
 				$operacion_detalle_id=$this->db->insert_id();
+				$this->addlog($operacion_id,'Operacion: '.$operacion_id.' Paga con cheques['.$cheque_id.']:'.$cheque_salida['nro'].': '.serialize($operacion_detalle).' ');
+
 			}
 
 
@@ -450,6 +457,19 @@ class Operations extends CI_Model
 		$this->db->trans_complete();
 		return true;
 		
+	}
+
+	public function delete($data){
+		
+		$this->db->where('id', $data['id']);		
+		if($this->db->update('operacion', array('estado'=>2))){
+			$this->addlog($data['id'],'Operacion: '.$data['id'].' fue eliminada por '.$data['razon'].', Comentario: '.$data['comment'].' ');
+			return true;
+		}else{
+			$this->addlog($data['id'],'Operacion: '.$data['id'].' Error al intentar elimnar Operacion por '.$data['razon'].', Comentario: '.$data['comment'].' ');
+			return false;
+		}
+
 	}
 
 
@@ -1548,10 +1568,11 @@ class Operations extends CI_Model
 		
 	}
 
+	
+
 	public function addlog($operacion_id=0,$comment='',$status=0){
 
 		if(isset($this->session->userdata['user_data'][0]['usrId'])){
-			var_dump($this->session->userdata['user_data'][0]['usrId']);
 			$data=array(
 				'user_id'=>$this->session->userdata['user_data'][0]['usrId'],
 				'operacion_id'=>$operacion_id,
@@ -1559,14 +1580,10 @@ class Operations extends CI_Model
 				'status'=>1,
 				'date_added'=>date('Y-m-d H:i:s'),
 				
-			);
-
-			var_dump($data);
+			);			
 			return $this->db->insert('operacion_log',$data);
 		}
-		die();/*$data=array(
-
-		);*/
+		
 	}
 }
 	
