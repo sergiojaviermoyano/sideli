@@ -45,8 +45,9 @@
 								<td><?php echo $detalle['nro_cheque'] ?></td>
 								<td><?php echo ($detalle['agente_razon_social']!='')?$detalle['agente_razon_social']:$detalle['agente_nombre_apellido'] ?></td>
 								<td><?php echo date('d-m-Y',strtotime($detalle['fecha_venc'])) ?></td>
+								<td><?php echo round($detalle['tasa_mensual'],2) ?></td>
 								<td><?php echo $detalle['nro_dias'] ?></td>
-								<td><?php echo $detalle['tasa_mensual'] ?></td>
+								
 								<td><?php echo sprintf('%0.2f', $detalle['importe']);  ?></td>
 								
 								
@@ -60,7 +61,7 @@
         <th style="text-align: center">Banco</th>
         <th style="text-align: center">Número</th>
         <th style="text-align: center">Librador</th>
-        <th style="text-align: center">Fecha Pago</th>
+        <th style="text-align: center">Fecha Pago adsad</th>
         <th style="text-align: center">Tasa</th>
         <th style="text-align: center">Días</th>
         <th style="text-align: center">Importe</th>
@@ -70,8 +71,8 @@
 			<td style="text-align: center"><?php echo $data['operation']['nro_cheque'];?></td>
 			<td style="text-align: center"><?php echo $data['emisor']['apellido'] . ' ' . $data['emisor']['nombre'];?></td>
 			<td style="text-align: center"><?php echo date("d-m-Y", strtotime($data['operation']['fecha_venc']));?></td>
-			<td style="text-align: center"><?php echo number_format($data['operation']['tasa_mensual'], 2, ',', '.');?></td>
 			<td style="text-align: center"><?php echo number_format($data['operation']['nro_dias'], 0, ',', '.');?></td>
+			<td style="text-align: center"><?php echo number_format($data['operation']['tasa_mensual'], 2, ',', '.');?></td>
 			<td style="text-align: center"><?php echo number_format($data['operation']['importe'], 2, ',', '.');?></td>
 			</td></tr> -->
 		</table><br>
