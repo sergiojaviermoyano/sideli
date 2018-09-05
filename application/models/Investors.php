@@ -87,8 +87,6 @@ class Investors extends CI_Model
 			switch($action){
 				case 'Add':{
 					$this->db->trans_start();
-					//$this->db->set('created', 'NOW()', FALSE);
-					//$this->db->set('updated', 'NOW()', FALSE);
 					$result= $this->db->insert('inversor', $data_temp);
 					$idInvestor = $this->db->insert_id();
 					$this->db->trans_complete();
@@ -113,9 +111,15 @@ class Investors extends CI_Model
 	}
 
 	public function getNextFacturaNro($id){
-		$query=$this->db->query('select (max(factura_nro)+1) as next_factura_id from operacion where inversor_id='.$id.' order by factura_nro desc ;');
-		//var_dump($query->row_array());
-		return $query->row_array();
+
+		$query=$this->db->query('select (factura_nro+1) next_factura_id from inversor where id='.$id.' order by factura_nro desc ;');
+		if ($query->num_rows() != 0){			
+			return $query->row_array();
+		}else{
+			$query=$this->db->query('select (max(factura_nro)+1) as next_factura_id from inversor where inversor_id='.$id.' order by factura_nro desc ;');
+			return $query->row_array();
+		}
+		
 	}
     
 }

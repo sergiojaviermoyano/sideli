@@ -66,9 +66,6 @@ class Operations extends CI_Model
 		}
 
 		$this->db->where("estado!=",2);
-		/*if($padres){
-			$this->db->where("operacion_padre=",0);
-		}*/
 		
 		$this->db->order_by('id', 'DESC');
 		$query= $this->db->get('operacion');
@@ -1548,6 +1545,7 @@ class Operations extends CI_Model
 
 	public function setFactura($data){
 		
+		
 		if(!isset($data['id'])){
 			return false;
 		}
@@ -1556,11 +1554,10 @@ class Operations extends CI_Model
 			'operacion',array('factura_tipo'=>$data['tipo'],'factura_nro'=>$data['nro']),array('id'=>$data['id'])
 		);
 
-		/*$result=$this->db->update(
-			'operacion',array('factura_tipo'=>$data['tipo'],'factura_nro'=>$data['nro']),array('id'=>$data['id'])
-		);*/
-
 		if($result){
+
+			$this->db->update('inversor',array('factura_nro'=>(int)$data['nro']+1),array('id'=>$data['inversor_id']));
+
 			return true;
 		}else{
 			return false;
