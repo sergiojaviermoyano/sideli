@@ -184,6 +184,7 @@
       </div>
     </div>
   </div>
+  <input type="hidden" value="<?php echo base_url()?>" id="url">
 </div>
 <script>
     $(function () {
@@ -213,7 +214,7 @@
 
     var idx = 0;
     var action = '';
-  
+    var url= $("#url").val();
     function LoadOperation(id__, action_){
         idx = id__;
         action = action_;
@@ -222,7 +223,8 @@
         $.ajax({
             type: 'POST',
             data: { id : idx, act: action_ },
-            url: 'index.php/operation/getOperation', 
+           // url: 'index.php/operation/getOperation', 
+            url: url+'operation/getOperation', 
             beforeSend:function(){
                 WaitingClose();
             },

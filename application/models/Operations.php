@@ -106,6 +106,7 @@ class Operations extends CI_Model
 			$id = $data['id'];
 			$data = array();
 			$query= $this->db->get_where('operacion',array('id'=>$id));
+			//echo $this->db->last_query();
 			if ($query->num_rows() != 0){	
 
 				$this->addlog($id,'Abre Operacíon');
@@ -241,7 +242,7 @@ class Operations extends CI_Model
 
 	public function add($data = false){
 		
-		$this->db->trans_start();	
+		//$this->db->trans_start();	
 
 		if(!isset($data['tomador'])){
 			$error = array('error'=>'tomador','message'=>'No se envio Datos de Tomador');
@@ -451,7 +452,7 @@ class Operations extends CI_Model
 
 
 
-		$this->db->trans_complete();
+		//$this->db->trans_complete();
 		return true;
 		
 	}
@@ -461,6 +462,20 @@ class Operations extends CI_Model
 		$this->db->where('id', $data['id']);		
 		if($this->db->update('operacion', array('estado'=>2))){
 			$this->addlog($data['id'],'Operacion: '.$data['id'].' fue eliminada por '.$data['razon'].', Comentario: '.$data['comment'].' ');
+			//$this->db->update
+			$this->db->select("cheque_id");
+			$this->db->where('operacion_id',$data['id']);
+			$query=$this->db->get('operacion_detalle');
+			//var_dump($query->result_array()	);
+
+			foreach($query->result_array() as $key=>$item){
+				//var_dump($item	);
+				$this->db->where('id',$item['cheque_id']);
+				$this->db->update('cheques',array('estado'=>'IN'));
+				$this->addlog($data['id'],'Cheque: '.$item['cheque_id'].' fue eliminado de Operacion: '.$data['id'].' por '.$data['razon'].', Comentario: '.$data['comment'].' ');
+			}
+			die("FIN");
+			
 			return true;
 		}else{
 			$this->addlog($data['id'],'Operacion: '.$data['id'].' Error al intentar elimnar Operacion por '.$data['razon'].', Comentario: '.$data['comment'].' ');
@@ -697,7 +712,7 @@ class Operations extends CI_Model
 					//$this->db->set('created', 'NOW()', FALSE);
 					//$this->db->set('updated', 'NOW()', FALSE);
 					$result= $this->db->insert('inversor', $data_temp);
-					echo $this->db->last_query();
+					//echo $this->db->last_query();
 					$idInvestor = $this->db->insert_id();
 					$this->db->trans_complete();
 					break;
@@ -1556,7 +1571,7 @@ class Operations extends CI_Model
 
 		if($result){
 
-			$this->db->update('inversor',array('factura_nro'=>(int)$data['nro']+1),array('id'=>$data['inversor_id']));
+			$this->db->update('inversor',array('factura_nro'=>(int)$data['nro']),array('id'=>$data['inversor_id']));
 
 			return true;
 		}else{
